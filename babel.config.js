@@ -1,9 +1,8 @@
 module.exports = (api) => {
-  api.cache(true);
+  api.cache(true)
   return {
     presets: [['babel-preset-expo', { jsxRuntime: 'automatic' }]],
     plugins: [
-      'nativewind/babel',
       [
         '@tamagui/babel-plugin',
         {
@@ -16,6 +15,7 @@ module.exports = (api) => {
 
       // NOTE: this is only necessary if you are using reanimated for animations
       'react-native-reanimated/plugin',
+      "nativewind/babel",
     ],
-  };
-};
+  }
+}

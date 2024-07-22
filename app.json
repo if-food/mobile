@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "iffood",
-    "slug": "iffood",
+    "name": "expo-router-example",
+    "slug": "expo-router-example",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -10,7 +10,7 @@
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#2c2d33"
+      "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {

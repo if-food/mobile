@@ -26,14 +26,13 @@ export default function InfosLogin() {
   const changeText = () => {
     const newIndex = (currentTextIndex + 1) % texts.length;
     setCurrentTextIndex(newIndex);
-    changeImage();  // Chama changeImage após atualizar o índice do texto
+    changeImage(); 
   };
 
   const changeImage = () => {
     const newIndex = (currentImageIndex + 1) % images.length;
     setCurrentImageIndex(newIndex);
     
-    // Verifica se é a primeira imagem (currentImageIndex === 0) e chama login()
     if (newIndex === 0) {
       login();
     }
