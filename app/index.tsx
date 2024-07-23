@@ -1,8 +1,6 @@
 import { TamaguiProvider, createTamagui } from '@tamagui/core'
 import { useFonts } from 'expo-font'
 import { config } from '@tamagui/config/v3'
-import { Text } from 'tamagui'
-import Introduction from './introduction'
 import InfosLogin from './infosLogin/index';
 // you usually export this from a tamagui.config.ts file
 

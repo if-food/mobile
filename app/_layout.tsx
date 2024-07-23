@@ -2,11 +2,7 @@ import '../tamagui-web.css';
 
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from '@react-navigation/native';
+import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { Provider } from './Provider';
@@ -61,8 +57,51 @@ function RootLayoutNav() {
           <Stack.Screen
             name="cadastro/index"
             options={{
-              headerShown: false,
-              animation: 'slide_from_right'
+              headerTitle: 'Cadastro',
+              headerShown: true,
+              animation: 'slide_from_right',
+              headerStyle: {
+                backgroundColor: '#24A645',
+              },
+              headerTintColor: '#fff',
+            }}
+          />
+
+          <Stack.Screen
+            name="login/index"
+            options={{
+              headerTitle: 'Login',
+              animation: 'slide_from_right',
+              headerStyle: {
+                backgroundColor: '#24A645',
+              },
+              headerTintColor: '#fff',
+            }}
+          />
+
+          <Stack.Screen
+            name="forgotMyPassword/index"
+            options={{
+              headerShown: true,
+              headerTitle: 'Recuperar senha',
+              animation: 'slide_from_right',
+              headerStyle: {
+                backgroundColor: '#24A645',
+              },
+              headerTintColor: '#fff',
+            }}
+          />
+
+          <Stack.Screen
+            name="forgotMyPassword/newPassword"
+            options={{
+              headerShown: true,
+              headerTitle: 'Recuperar senha',
+              animation: 'slide_from_right',
+              headerStyle: {
+                backgroundColor: '#24A645',
+              },
+              headerTintColor: '#fff',
             }}
           />
 
@@ -70,7 +109,7 @@ function RootLayoutNav() {
             name="introduction/index"
             options={{
               headerShown: false,
-              animation: 'slide_from_right'
+              animation: 'slide_from_right',
             }}
           />
         </Stack>
