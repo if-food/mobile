@@ -1,8 +1,7 @@
-import { Ionicons } from '@expo/vector-icons'; // Importe o ícone que você deseja usar, por exemplo, Ionicons
+import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { Input, View } from 'tamagui';
-
 
 const CustomInput = ({ placeholder, value, onChangeText, secureTextEntry }) => {
   const [mostrarSenha, setMostrarSenha] = useState(false);

@@ -3,6 +3,7 @@ import { View, Text, Form, Input, Image, Button } from 'tamagui';
 import imageOne from '../../assets/images/login/icon-01.png';
 import { ScrollView, TouchableOpacity } from 'react-native';
 import CustomInput from '../../components/customInput';
+import ButtonCustom from '../../components/ButtonCustom';
 
 export default function Cadastro() {
   const [nome, setNome] = useState('');
@@ -57,13 +58,7 @@ export default function Cadastro() {
             >
               Nome
             </Text>
-            <Input
-              placeholder="Insira seu nome"
-              value={nome}
-              onChangeText={setNome}
-              width={352}
-              height={56}
-            />
+            <Input placeholder="Insira seu nome" value={nome} onChangeText={setNome} width={352} height={56} />
           </View>
 
           <View style={{ paddingBottom: 24 }}>
@@ -77,13 +72,7 @@ export default function Cadastro() {
             >
               Insira seu E-mail
             </Text>
-            <Input
-              placeholder="Insira seu E-mail"
-              value={email}
-              onChangeText={setEmail}
-              width={352}
-              height={56}
-            />
+            <Input placeholder="Insira seu E-mail" value={email} onChangeText={setEmail} width={352} height={56} />
           </View>
 
           <View style={{ height: 140 }}>
@@ -97,16 +86,10 @@ export default function Cadastro() {
             >
               Senha
             </Text>
-            <CustomInput
-              placeholder="Insira sua senha"
-              value={senha}
-              onChangeText={handleSenhaChange}
-              secureTextEntry={true}
-            />
+            <CustomInput placeholder="Insira sua senha" value={senha} onChangeText={handleSenhaChange} secureTextEntry={true} />
             {!senhaValida && (
               <Text style={{ color: 'red', fontSize: 12 }}>
-                A senha deve ter pelo menos 6 caracteres, um maiúsculo e um{' '}
-                {'\n'}
+                A senha deve ter pelo menos 6 caracteres, um maiúsculo e um {'\n'}
                 caractere especial (!@#$&*)
               </Text>
             )}
@@ -123,17 +106,8 @@ export default function Cadastro() {
             >
               Confirmar senha
             </Text>
-            <CustomInput
-              placeholder="Confirme sua senha"
-              value={senhaConfirmacao}
-              onChangeText={handleSenhaConfirmacaoChange}
-              secureTextEntry={true}
-            />
-            {!senhaConfirmacaoValida && (
-              <Text style={{ color: 'red', fontSize: 12 }}>
-                As senhas não coincidem
-              </Text>
-            )}
+            <CustomInput placeholder="Confirme sua senha" value={senhaConfirmacao} onChangeText={handleSenhaConfirmacaoChange} secureTextEntry={true} />
+            {!senhaConfirmacaoValida && <Text style={{ color: 'red', fontSize: 12 }}>As senhas não coincidem</Text>}
           </View>
         </Form>
 
@@ -141,20 +115,7 @@ export default function Cadastro() {
           <Image source={imageOne} style={{ width: 160, height: 160 }} />
         </View>
 
-        <Button
-          style={{
-            backgroundColor:
-              senhaValida && senhaConfirmacaoValida ? '#3a953e' : '#ccc',
-            color: '#f5f5f5',
-            marginBottom: 24,
-            width: 352,
-            marginTop: 32,
-          }}
-          onPress={handleSubmit}
-          disabled={!senhaValida || !senhaConfirmacaoValida}
-        >
-          Cadastrar
-        </Button>
+        <ButtonCustom texto="Continuar" />
       </View>
     </ScrollView>
   );
