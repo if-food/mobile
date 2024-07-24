@@ -8,11 +8,17 @@ import imageOne from '../../assets/images/login/icon-01.png';
 import { Pressable } from 'react-native';
 import ButtonCustom from 'components/ButtonCustom';
 
+import { ChevronRight } from 'lucide-react-native';
+
 export default function Login() {
   const router = useRouter();
 
   const esqueciSenha = () => {
     router.push('../forgotMyPassword');
+  };
+
+  const irParaCriarConta = () => {
+    router.push('../cadastro');
   };
 
   const {
@@ -29,17 +35,17 @@ export default function Login() {
   };
 
   return (
-    <View className="flex-1 items-center justify-between bg-[#2c2d33] pt-6 px-6">
+    <View className="flex-1 items-center justify-between bg-[#2c2d33] pt-6">
       <Form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
-        <View style={{ width: '100%' }}>
-          <View style={{ marginBottom: 24 }}>
+        <View className="items-center">
+          <View className="mb-6">
             <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16, paddingBottom: 8 }}>Insira seu E-mail</Text>
             <Controller control={control} name="email" render={({ field: { onChange, onBlur, value } }) => <Input placeholder="Insira seu E-mail" width={352} height={56} onChangeText={onChange} onBlur={onBlur} value={value} style={{ borderColor: errors.email ? 'red' : '#ccc', borderWidth: 1 }} />} />
             {errors.email && <Text style={{ color: 'red', marginTop: 4 }}>{errors.email.message}</Text>}
           </View>
 
           <View style={{ marginBottom: 24 }}>
-            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16, paddingBottom: 8 }}>Insira sua senha</Text>
+            <Text className="text-[#fff] text-bold text-[16px] pb-2">Insira sua senha</Text>
             <Controller control={control} name="password" render={({ field: { onChange, onBlur, value } }) => <Input placeholder="Insira sua senha" width={352} height={56} secureTextEntry onChangeText={onChange} onBlur={onBlur} value={value} style={{ borderColor: errors.password ? 'red' : '#ccc', borderWidth: 1 }} />} />
             {errors.password && <Text style={{ color: 'red', marginTop: 4 }}>{errors.password.message}</Text>}
             <View className="flex-row items-center justify-end pt-4">
@@ -54,8 +60,18 @@ export default function Login() {
           </View>
         </View>
       </Form>
+      <View>
+        <View className="flex-row items-center justify-center">
+          <Text className="text-[#fff] font-bold">Não tem uma conta?</Text>
+          <Text> </Text>
+          <Pressable onPress={irParaCriarConta} className="py-6">
+            <Text className="text-[#fff] font-thin underline">Crie uma</Text>
+          </Pressable>
+        </View>
 
-      <ButtonCustom onPress={handleSubmit(onSubmit)} texto="Login" />
+        <ButtonCustom onPress={handleSubmit(onSubmit)} icon={<Image style={{ width: 30, height: 30 }} source={require('../../assets/images/icons/googleIcon.svg')} />} texto="Continuar com o Google" />
+        <ButtonCustom onPress={handleSubmit(onSubmit)} icon={ChevronRight} texto="Entrar" />
+      </View>
     </View>
   );
 }
