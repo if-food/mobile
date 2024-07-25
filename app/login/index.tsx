@@ -15,6 +15,10 @@ export default function Login() {
     router.push('../forgotMyPassword');
   };
 
+  const irParaCadastro = () => {
+    router.push('../cadastro');
+  };
+
   const {
     control,
     handleSubmit,
@@ -55,7 +59,17 @@ export default function Login() {
         </View>
       </Form>
 
-      <ButtonCustom onPress={handleSubmit(onSubmit)} texto="Login" />
+      <View className="items-center">
+        <View className="flex-row items-center">
+          <Text className="text-[#fff] font-bold">Não tem uma conta? {' '}</Text>
+          
+          <Pressable onPress={irParaCadastro} className="py-6">
+            <Text className="text-[#fff] font-thin underline">Crie uma!</Text>
+          </Pressable>
+        </View>
+        <ButtonCustom texto="Continuar com o Google" />
+        <ButtonCustom onPress={handleSubmit(onSubmit)} texto="Login" />
+      </View>
     </View>
   );
 }
