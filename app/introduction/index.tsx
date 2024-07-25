@@ -1,5 +1,7 @@
 import { Text, View, Image, Button } from 'tamagui'
 import { useRouter } from 'expo-router';
+import { LogIn, UserPlus } from 'lucide-react-native';
+import ButtonCustom from './../../components/ButtonCustom/index';
 
 export default function Introduction() {
   const router = useRouter(); 
@@ -9,7 +11,7 @@ export default function Introduction() {
     router.push('../login');
   };
   const cadastro = () => {
-    router.push('../forgotMyPassword/newPassword');
+    router.push('../cadastro');
   }
   
   return (
@@ -21,9 +23,10 @@ export default function Introduction() {
         <Text className='font-bold text-center text-white text-[24px] leading-[31px] pb-[24px]'>Falta pouco para matar {'\n'}sua fome!</Text>
         <Text className='font-light text-center text-white text-[12px] leading-[15px] pb-[24px]'>O que deseja? 🍽️</Text>
 
-        <Button className='bg-[#3a953e] text-[#f5f5f5] mb-[24px] w-[300px]' onPress={login}>Login</Button>
-        <Button className='bg-[#3a953e] text-[#f5f5f5] mb-[24px]' onPress={cadastro}>Cadastre-se</Button>
-        <Button className='bg-[#3a953e] text-[#f5f5f5]'>Continue com Google</Button>
+        <ButtonCustom icon={LogIn} texto='Login' onPress={login}/>
+        <ButtonCustom icon={UserPlus} texto='Cadastre-se' onPress={cadastro}/>
+        <ButtonCustom texto='Continuar com o Google' onPress={cadastro}/>
+
       </View>
     </View>
   )

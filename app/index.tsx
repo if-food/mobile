@@ -2,6 +2,7 @@ import { TamaguiProvider, createTamagui } from '@tamagui/core'
 import { useFonts } from 'expo-font'
 import { config } from '@tamagui/config/v3'
 import InfosLogin from './infosLogin/index';
+import TestScreen from './testScreen';
 // you usually export this from a tamagui.config.ts file
 
 const tamaguiConfig = createTamagui(config)

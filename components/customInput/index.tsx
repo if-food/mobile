@@ -1,36 +1,19 @@
-import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
-import { TouchableOpacity } from 'react-native';
-import { Input, View } from 'tamagui';
+import { Input, Text, View } from 'tamagui';
 
-const CustomInput = ({ placeholder, value, onChangeText, secureTextEntry }) => {
-  const [mostrarSenha, setMostrarSenha] = useState(false);
+interface InputCustom {
+  placeholder?: string;
+  titleInput?: string;
+  subtitleInput?: string;
+  secureTextEntry?: boolean;
+}
 
-  const toggleMostrarSenha = () => {
-    setMostrarSenha((prev) => !prev);
-  };
+const CustomInput = ({placeholder = '', titleInput = '', subtitleInput = '', secureTextEntry = false}: InputCustom) => {
 
   return (
-    <View style={{ position: 'relative', width: '100%' }}>
-      <Input
-        placeholder={placeholder}
-        value={value}
-        onChangeText={onChangeText}
-        secureTextEntry={!mostrarSenha ? secureTextEntry : false}
-        style={{
-          height: 56,
-          borderColor: '#ccc',
-          borderWidth: 1,
-          borderRadius: 5,
-          paddingHorizontal: 40,
-        }}
-      />
-      <TouchableOpacity
-        style={{ position: 'absolute', right: 10, top: 12 }}
-        onPress={toggleMostrarSenha}
-      >
-        <Ionicons name={mostrarSenha ? 'eye-off' : 'eye'} size={24} color="gray" />
-      </TouchableOpacity>
+    <View className='pb-6'>
+      {titleInput ? <Text className='text-[16px] font-bold text-[#fff] pb-2'>{titleInput}</Text> : null}
+      {subtitleInput ? <Text className='text-[12px] font-thin text-[#fff] pb-2'>{subtitleInput}</Text> : null}
+      <Input secureTextEntry={secureTextEntry} placeholder={placeholder} className='w-[320px] h-[48px] bg-[#E3E3E3] text-[#16161d]'/>
     </View>
   );
 };
