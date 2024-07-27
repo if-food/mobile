@@ -11,7 +11,7 @@ export default function CardRecintosFamosos({ source, titleRestaurant, onPress }
   return (
     <View className="items-center">
       <TouchableOpacity className='items-center' onPress={onPress}>
-        <Image className="w-16 h-15 pb-1" source={source} />
+        <Image className="w-16 h-15 mb-2" source={source} />
         <Text className="text-[16px] text-[#fff] font-bold">{titleRestaurant}</Text>
       </TouchableOpacity>
     </View>
