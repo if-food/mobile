@@ -16,6 +16,10 @@ export default function Login() {
     router.push('../forgotMyPassword');
   };
 
+  const home = () => {
+    router.push('../home');
+  };
+
   const irParaCadastro = () => {
     router.push('../cadastro');
   };
@@ -69,7 +73,7 @@ export default function Login() {
           </Pressable>
         </View>
         <ButtonCustom texto="Continuar com o Google" />
-        <ButtonCustom onPress={handleSubmit(onSubmit)} texto="Login" />
+        <ButtonCustom onPress={home} texto="Login" />
       </View>
     </View>
   );

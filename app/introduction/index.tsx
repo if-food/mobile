@@ -1,12 +1,13 @@
-import { Text, View, Image, Button } from 'tamagui'
+import { Text, View, Button } from 'tamagui'
 import { useRouter } from 'expo-router';
 import { LogIn, UserPlus } from 'lucide-react-native';
 import ButtonCustom from './../../components/ButtonCustom/index';
+import { Image } from 'react-native';
+
 
 export default function Introduction() {
   const router = useRouter(); 
 
-  
   const login = () => {
     router.push('../login');
   };
@@ -17,7 +18,7 @@ export default function Introduction() {
   return (
     <View className='flex-1 justify-end items-center bg-[#2c2d33] pb-[24px]'>
       <View>
-        <Image source={require('../../assets/images/login/logo.png')} width={160} height={145}/>
+        <Image source={require('../../assets/images/login/logo.png')} className='w-[120px] h-[120px]'/>
         </View>
       <View className='pt-[100px]'>
         <Text className='font-bold text-center text-white text-[24px] leading-[31px] pb-[24px]'>Falta pouco para matar {'\n'}sua fome!</Text>
