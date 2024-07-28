@@ -20,6 +20,7 @@
     "@tamagui/config": "^1.102.3",
     "@tamagui/lucide-icons": "^1.102.3",
     "@tamagui/toast": "^1.102.3",
+    "axios": "^1.6.8",
     "babel-preset-expo": "^11.0.6",
     "burnt": "^0.12.2",
     "expo": "^51.0.22",
