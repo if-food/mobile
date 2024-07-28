@@ -6,8 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import loginSchema from '../../schemas/Login';
 import ButtonCustom from 'components/ButtonCustom';
 import { useRouter } from 'expo-router';
-import { ChevronRight } from 'lucide-react-native';
-import InputCustom from 'components/InputCustom';
+import CustomInput from './../../components/customInput/index';
 
 export default function newPassword() {
   const router = useRouter();
@@ -16,23 +15,25 @@ export default function newPassword() {
     router.push('../login');
   };
 
+  const irParaIntroducao = () => {
+    router.push('../introduction');
+  };
+
   return (
     <View className="flex-1 justify-between items-center h-full bg-[#2c2d33] pt-6">
       <View>
-        <Text className="text-[24px] font-bold text-[#fff]">Nova senha</Text>
-        <InputCustom textoSubtitulo="Nova senha" secureTextEntry placeholder="Insira sua nova senha" />
-        <InputCustom textoSubtitulo="Confirme nova senha" secureTextEntry placeholder="Insira novamente sua senha" />
+        <CustomInput titleInput="Nova senha" subtitleInput="Digite uma nova senha abaixo." placeholder="Insira sua nova senha" />
+        <CustomInput placeholder="Insira novamente sua nova senha" />
       </View>
 
       <View className="items-center">
         <View className="flex-row items-center">
-          <Text className="text-[#fff] font-bold">Lembra sua senha?</Text>
-          <Text>{' '}</Text>
+          <Text className="text-[#fff] font-bold">Lembra sua senha? {' '}</Text>
           <Pressable onPress={irParaLogin} className="py-6">
             <Text className="text-[#fff] font-thin underline">Faça login</Text>
           </Pressable>
         </View>
-        <ButtonCustom icon={ChevronRight} texto="Continuar" />
+        <ButtonCustom onPress={irParaIntroducao} texto="Continuar" />
       </View>
     </View>
   );

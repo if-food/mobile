@@ -4,7 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import loginSchema from '../../schemas/Login';
 import { useRouter } from 'expo-router';
 
-import imageOne from '../../assets/images/login/icon-01.png';
+import login from '../../assets/lottie/login.json';
 import { Pressable } from 'react-native';
 import ButtonCustom from 'components/ButtonCustom';
 
@@ -17,7 +17,11 @@ export default function Login() {
     router.push('../forgotMyPassword');
   };
 
-  const irParaCriarConta = () => {
+  const home = () => {
+    router.push('../home');
+  };
+
+  const irParaCadastro = () => {
     router.push('../cadastro');
   };
 
@@ -56,7 +60,7 @@ export default function Login() {
           </View>
 
           <View className="items-center pt-20">
-            <Image source={imageOne} style={{ width: 160, height: 160 }} />
+          <LottieView style={{ height: 120, width: 120 }} source={login} autoPlay loop />
           </View>
         </View>
       </Form>
@@ -71,6 +75,18 @@ export default function Login() {
 
         <ButtonCustom onPress={handleSubmit(onSubmit)} icon={<Image style={{ width: 30, height: 30 }} source={require('../../assets/images/icons/googleIcon.svg')} />} texto="Continuar com o Google" />
         <ButtonCustom onPress={handleSubmit(onSubmit)} icon={ChevronRight} texto="Entrar" />
+      </View>
+
+      <View className="items-center">
+        <View className="flex-row items-center">
+          <Text className="text-[#fff] font-bold">Não tem uma conta? {' '}</Text>
+          
+          <Pressable onPress={irParaCadastro} className="py-6">
+            <Text className="text-[#fff] font-thin underline">Crie uma!</Text>
+          </Pressable>
+        </View>
+        <ButtonCustom texto="Continuar com o Google" />
+        <ButtonCustom onPress={home} texto="Login" />
       </View>
     </View>
   );
