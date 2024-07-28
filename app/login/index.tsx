@@ -19,6 +19,10 @@ export default function Login() {
     router.push('../cadastro');
   };
 
+  const handleProfile = () => {
+    router.push('../profile');
+  }
+
   const {
     control,
     handleSubmit,
@@ -29,7 +33,7 @@ export default function Login() {
   });
 
   const onSubmit = async (data) => {
-    console.log(data);
+    handleProfile();
   };  
 
   return (
