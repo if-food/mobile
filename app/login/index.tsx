@@ -8,7 +8,6 @@ import LottieView from 'lottie-react-native';
 import login from '../../assets/lottie/login.json';
 import ButtonCustom from 'components/ButtonCustom';
 import CustomInput from 'components/customInput'; 
-
 export default function Login() {
   const router = useRouter();
 
@@ -52,7 +51,7 @@ export default function Login() {
                 />
               )}
             />
-            {errors.email && <Text style={{ color: 'red', marginTop: 4 }}>{errors.email.message}</Text>}
+            {errors.email && <Text style={{ color: 'red' }}>{errors.email.message}</Text>}
           </View>
 
           <View style={{ marginBottom: 24 }}>
