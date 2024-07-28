@@ -14,7 +14,7 @@ export default function Introduction() {
   const cadastro = () => {
     router.push('../cadastro');
   }
-  
+
   return (
     <View className='flex-1 justify-end items-center bg-[#2c2d33] pb-[24px]'>
       <View>
@@ -29,6 +29,6 @@ export default function Introduction() {
         <ButtonCustom texto='Continuar com o Google' onPress={cadastro}/>
 
       </View>
-    </View>
+    </View >
   )
 }

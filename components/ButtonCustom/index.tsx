@@ -2,8 +2,9 @@ import { Button } from 'tamagui'
 
 interface Button {
   texto?: string;
+  hasIconLeft?: boolean;
+  icon?: any
   onPress?: () => void;
-  icon?: any;
 }
 
 export default function ButtonCustom({texto, onPress, icon, ...rest}: Button) {
