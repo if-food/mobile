@@ -1,10 +1,13 @@
-import { View, Text, Form, Input, Image, Button, Separator } from 'tamagui';
+import { View, Text, Form } from 'tamagui';
 import imageOne from '../../assets/images/login/icon-01.png';
-import { Pressable, ScrollView } from 'react-native';
+import { Pressable } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import loginSchema from '../../schemas/Login';
 import ButtonCustom from 'components/ButtonCustom';
+import { ChevronRight } from 'lucide-react-native';
+import InputCustom from 'components/InputCustom';
+
 import { useRouter } from 'expo-router';
 import CustomInput from './../../components/customInput/index';
 
@@ -14,6 +17,7 @@ export default function forgotMyPassword() {
   const irParaLogin = () => {
     router.push('../login');
   };
+  
 
   const irParaNovaSenha = () => {
     router.push('./newPassword')
