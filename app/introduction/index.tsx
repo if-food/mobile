@@ -17,7 +17,7 @@ export default function Introduction() {
   const router = useRouter();
 
   const login = () => {
-    router.push('../login');
+    router.push('../restaurantes');
   };
 
   const cadastro = () => {
