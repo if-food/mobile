@@ -7,7 +7,11 @@ import { useRouter } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import login from '../../assets/lottie/login.json';
 import ButtonCustom from 'components/ButtonCustom';
+<<<<<<< HEAD
 import CustomInput from 'components/customInput'; 
+=======
+import CustomInput from 'components/customInput';
+>>>>>>> homeCarrossel
 export default function Login() {
   const router = useRouter();
 
@@ -28,6 +32,7 @@ export default function Login() {
     mode: 'onBlur',
   });
 
+<<<<<<< HEAD
   const onSubmit = async (data) => {
     console.log(data);
   };  
@@ -51,10 +56,28 @@ export default function Login() {
                 />
               )}
             />
+=======
+  const home = () => {
+    router.push('../home');
+  };
+
+  const onSubmit = async (data) => {
+    console.log(data);
+    home();
+  };
+
+  return (
+    <View className="flex-1 items-center justify-between bg-[#2c2d33] pt-6">
+      <Form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
+        <View className="flex items-center">
+          <View style={{ marginBottom: 24 }}>
+            <Controller control={control} name="email" render={({ field: { onChange, onBlur, value } }) => <CustomInput titleInput="Insira seu E-mail" placeholder="Insira seu E-mail" onChangeText={onChange} onBlur={onBlur} value={value} style={{ justifyContent: 'center' }} />} />
+>>>>>>> homeCarrossel
             {errors.email && <Text style={{ color: 'red' }}>{errors.email.message}</Text>}
           </View>
 
           <View style={{ marginBottom: 24 }}>
+<<<<<<< HEAD
             <Controller
               control={control}
               name="password"
@@ -69,6 +92,9 @@ export default function Login() {
                 />
               )}
             />
+=======
+            <Controller control={control} name="password" render={({ field: { onChange, onBlur, value } }) => <CustomInput titleInput="Insira sua senha" placeholder="Insira sua senha" secureTextEntry onChangeText={onChange} onBlur={onBlur} value={value} />} />
+>>>>>>> homeCarrossel
             {errors.password && <Text style={{ color: 'red', marginTop: 4 }}>{errors.password.message}</Text>}
             <View className="flex-row items-center justify-end pt-4">
               <Pressable onPress={handleForgotPassword} className="px-4">
@@ -91,7 +117,11 @@ export default function Login() {
           </Pressable>
         </View>
         <ButtonCustom texto="Continuar com o Google" />
+<<<<<<< HEAD
         <ButtonCustom onPress={handleSubmit(onSubmit)} texto="Login" /> 
+=======
+        <ButtonCustom onPress={handleSubmit(onSubmit)} texto="Login" />
+>>>>>>> homeCarrossel
       </View>
     </View>
   );
