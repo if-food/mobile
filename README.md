@@ -16,7 +16,7 @@ Para começar a usar o If Food, siga os passos abaixo:
 
 - Node.js
 - Yarn ou npm
-- Android Studio / Xcode (para emulação)
+- expo
 
 ### Passos 🚶
 
