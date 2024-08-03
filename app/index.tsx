@@ -3,6 +3,7 @@ import { useFonts } from 'expo-font'
 import { config } from '@tamagui/config/v3'
 import InfosLogin from './infosLogin/index';
 import TestScreen from './testScreen';
+import Home from './home';
 // you usually export this from a tamagui.config.ts file
 
 const tamaguiConfig = createTamagui(config)
@@ -30,7 +31,7 @@ export default () => {
 
     <TamaguiProvider config={tamaguiConfig}>
 
-      <InfosLogin/>
+      <Home/>
 
     </TamaguiProvider>
 
