@@ -10,7 +10,7 @@ export default function Allright() {
   };
 
   return (
-    <View className="justify-between flex-1 px-10">
+    <View className="justify-between flex-1 px-10 bg-[#2c2d33]">
       <View />
       <View className="items-center">
         <Image source={require('../../assets/images/verifyEmail_Allright/verify.png')} className="w-[128px] h-[128px]" />
