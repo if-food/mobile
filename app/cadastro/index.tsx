@@ -6,6 +6,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import registerSchema from '../../schemas/Register';
 import { Pressable, View, Text } from 'react-native';
+import axios from 'axios';
 
 export default function Cadastro() {
   const router = useRouter();
@@ -24,7 +25,21 @@ export default function Cadastro() {
   });
 
   const onSubmit = async (data) => {
-    console.log(data);
+    try {
+      const response = await axios.post('URL_DA_API_DE_CADASTRO', {
+        nome: data.name,
+        email: data.email,
+        senha: data.password,
+      });
+
+      if (response.data) {
+        alert('Usuário criado com sucesso');
+        router.push('../home');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Erro ao criar usuário. Tente novamente.');
+    }
   };
 
   return (
@@ -48,7 +63,7 @@ export default function Cadastro() {
 
         <View className="items-center">
           <View className="flex-row items-center">
-            <Text className="text-[#fff] font-bold">Lembra sua senha? </Text>
+            <Text className="text-[#fff] font-bold">Lembra sua senha?</Text>
             <Pressable onPress={irParaLogin} className="py-6">
               <Text className="text-[#fff] font-thin underline">Faça login</Text>
             </Pressable>

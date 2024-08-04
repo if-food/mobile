@@ -6,6 +6,8 @@ import TestScreen from './testScreen';
 import Home from './home';
 import RegistroPedidos from './registroPedidos';
 import Restaurantes from './restaurantes';
+import VerifyEmail from './verifyEmail';
+import { View } from 'react-native';
 // you usually export this from a tamagui.config.ts file
 
 const tamaguiConfig = createTamagui(config);
@@ -28,7 +30,9 @@ export default () => {
 
   return (
     <TamaguiProvider config={tamaguiConfig}>
-      <InfosLogin />
+      <View className="bg-[#2c2d33] flex-1">
+        <VerifyEmail />
+      </View>
     </TamaguiProvider>
   );
 };
