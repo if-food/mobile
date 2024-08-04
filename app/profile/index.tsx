@@ -1,4 +1,3 @@
-import React from 'react';
 import { View, Text, FlatList, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -6,9 +5,10 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 const profileItems = [
   { icon: 'person', text: 'Dados Pessoais', route: 'personalData' },
   { icon: 'location-on', text: 'Endereços', route: 'addresses' },
-  { icon: 'payment', text: 'Pagamentos', route: 'payments' },
+  { icon: 'payment', text: 'Métodos de pagamento', route: 'payments' },
   { icon: 'card-giftcard', text: 'Cupons', route: 'coupons' },
-  { icon: 'favorite', text: 'Locais Favoritos', route: 'favorites' },
+  { icon: 'favorite', text: 'Pedidos', route: 'favorites' },
+  { icon: 'question', text: 'Dúvidas', route: 'questions'}
 ];
 
 export default function Profile() {
@@ -34,7 +34,7 @@ export default function Profile() {
   );
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#2c2d33', padding: 16 }}>
+    <View style={{ flex: 1, backgroundColor: '#2c2d33', marginTop: 24 }}>
       <FlatList
         data={profileItems}
         renderItem={renderItem}

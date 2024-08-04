@@ -22,9 +22,6 @@ export default function Introduction() {
 
   const cadastro = () => {
     router.push('../cadastro');
-<<<<<<< HEAD
-  }
-=======
   };
 
   const initialIcons = ['🥑', '🥔', '🥕', '🥜', '🍇', '🍉', '🍊', '🍋', '🍎', '🍏', '🍍', '🍌', '🥗', '🍵', '🧋', '🍅', '🧅'];
@@ -43,7 +40,6 @@ export default function Introduction() {
 
     return () => clearInterval(interval);
   }, [shuffledIcons]);
->>>>>>> homeCarrossel
 
   return (
     <View className="flex-1 justify-end items-center bg-[#2c2d33] pb-[24px]">
@@ -58,12 +54,6 @@ export default function Introduction() {
         <ButtonCustom icon={UserPlus} texto="Cadastre-se" onPress={cadastro} />
         <ButtonCustom texto="Continuar com o Google" onPress={cadastro} />
       </View>
-<<<<<<< HEAD
-    </View >
-  )
-}
-=======
     </View>
   );
 }
->>>>>>> homeCarrossel

@@ -4,10 +4,10 @@ import { config } from '@tamagui/config/v3'
 import InfosLogin from './infosLogin/index';
 import TestScreen from './testScreen';
 import Home from './home';
-// you usually export this from a tamagui.config.ts file
+import Profile from './profile';
+import PersonalData from './personalData';
 
 const tamaguiConfig = createTamagui(config)
-// TypeScript types across all Tamagui APIs
 
 type Conf = typeof tamaguiConfig
 
@@ -31,7 +31,7 @@ export default () => {
 
     <TamaguiProvider config={tamaguiConfig}>
 
-      <Home/>
+      <Profile/>
 
     </TamaguiProvider>
 

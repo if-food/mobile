@@ -1,4 +1,4 @@
-import { object, string, date } from "yup";
+import { object, string } from "yup";
 
 const personalDataSchema = object({
   name: string()
@@ -7,9 +7,8 @@ const personalDataSchema = object({
   email: string()
     .email("Formato inválido")
     .required("Campo obrigatório"),
-  birthDate: date()
+  birthDate: string()
     .required("Campo obrigatório")
-    .max(new Date(), "A data de nascimento não pode ser no futuro")
     .typeError("Data inválida"),
   phone: string()
     .required("Campo obrigatório")
