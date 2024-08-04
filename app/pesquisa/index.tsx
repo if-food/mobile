@@ -1,5 +1,5 @@
 import CustomInput from 'components/customInput';
-import { View, Text } from 'tamagui';
+import { View } from 'react-native';
 import Footer from './../../components/Footer/index';
 
 export default function Pesquisa() {

@@ -11,39 +11,12 @@ interface InputCustom {
   style?: object;
 }
 
-<<<<<<< HEAD
-const CustomInput = ({
-  placeholder = '',
-  titleInput = '',
-  subtitleInput = '',
-  secureTextEntry = false,
-  onChangeText,
-  onBlur,
-  value,
-  style
-}: InputCustom) => {
-
+const CustomInput = ({ placeholder = '', titleInput = '', subtitleInput = '', secureTextEntry = false, onChangeText, onBlur, value, style, ...rest }: InputCustom) => {
   return (
-    <View className='pb-6'>
-      {titleInput ? <Text className='text-[16px] font-bold text-[#fff] pb-2'>{titleInput}</Text> : null}
-      {subtitleInput ? <Text className='text-[12px] font-thin text-[#fff] pb-2'>{subtitleInput}</Text> : null}
-      <Input
-        secureTextEntry={secureTextEntry}
-        placeholder={placeholder}
-        className='w-[320px] h-[48px] bg-[#E3E3E3] text-[#16161d]'
-        onChangeText={onChangeText}
-        onBlur={onBlur}
-        value={value}
-        style={style}
-      />
-=======
-const CustomInput = ({ placeholder = '', titleInput = '', subtitleInput = '', secureTextEntry = false, onChangeText, onBlur, value, style }: InputCustom) => {
-  return (
-    <View className="pb-4">
+    <View>
       {titleInput ? <Text className="text-[16px] font-bold text-[#fff] pb-2">{titleInput}</Text> : null}
       {subtitleInput ? <Text className="text-[12px] font-thin text-[#fff] pb-2">{subtitleInput}</Text> : null}
       <Input secureTextEntry={secureTextEntry} placeholder={placeholder} className="w-[320px] h-[48px] bg-[#E3E3E3] text-[#16161d]" onChangeText={onChangeText} onBlur={onBlur} value={value} style={style} />
->>>>>>> homeCarrossel
     </View>
   );
 };

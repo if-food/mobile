@@ -1,11 +1,10 @@
-import { useState } from 'react';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import { ScrollView, Image, View, Text } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import CardRecintosFamosos from 'components/CardRecintosFamosos';
 import ListRestaurant from 'components/ListRestaurant';
-
+import { useState } from 'react';
 import { useRouter } from 'expo-router';
 
 import imageOne from '../../assets/images/home/imageOne.png';
@@ -15,10 +14,11 @@ import imageThree from '../../assets/images/home/imageThree.png';
 const images = [imageOne, imageTwo, imageThree];
 
 export default function Home() {
-  const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const blank = () => {
+  const router = useRouter();
+
+  const restaurant = () => {
     router.push('../restaurantes');
   };
 
@@ -31,7 +31,7 @@ export default function Home() {
             style={{ borderRadius: 16 }}
             loop
             width={352}
-            height={160} // Ajuste conforme necessário
+            height={160}
             autoPlay={true}
             data={images}
             scrollAnimationDuration={1000}
@@ -115,10 +115,10 @@ export default function Home() {
               price="38,90"
             />
             <ListRestaurant
+              onPress={restaurant}
               source={require('../../assets/images/home/rouned_two.png')}
               titleRestaurant="Rabanette"
               price="99,50"
-              onPress={blank}
             />
             <ListRestaurant
               source={require('../../assets/images/home/rouned_three.png')}
@@ -130,6 +130,7 @@ export default function Home() {
               titleRestaurant="Folha verde"
             />
             <ListRestaurant
+              onPress={restaurant}
               source={require('../../assets/images/home/rouned_two.png')}
               titleRestaurant="Rabanette"
             />

@@ -1,6 +1,6 @@
 import Footer from 'components/Footer';
-import { ScrollView } from 'react-native';
-import { View, Text, Image } from 'tamagui';
+import { Image } from 'tamagui';
+import { View, Text, ScrollView } from 'react-native';
 import CardRestaurantPage from './cardRestaurantPage';
 import ListagemCardapio from './listFood';
 

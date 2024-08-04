@@ -1,4 +1,4 @@
-import { Text, View } from 'tamagui';
+import { Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { LogIn, UserPlus } from 'lucide-react-native';
 import ButtonCustom from './../../components/ButtonCustom/index';
@@ -17,35 +17,14 @@ export default function Introduction() {
   const router = useRouter();
 
   const login = () => {
-    router.push('../restaurantes');
+    router.push('../login');
   };
 
   const cadastro = () => {
     router.push('../cadastro');
-<<<<<<< HEAD
-  }
-=======
   };
 
-  const initialIcons = [
-    '🥑',
-    '🥔',
-    '🥕',
-    '🥜',
-    '🍇',
-    '🍉',
-    '🍊',
-    '🍋',
-    '🍎',
-    '🍏',
-    '🍍',
-    '🍌',
-    '🥗',
-    '🍵',
-    '🧋',
-    '🍅',
-    '🧅',
-  ];
+  const initialIcons = ['🥑', '🥔', '🥕', '🥜', '🍇', '🍉', '🍊', '🍋', '🍎', '🍏', '🍍', '🍌', '🥗', '🍵', '🧋', '🍅', '🧅'];
   const shuffledIcons = shuffleArray([...initialIcons]);
 
   const [currentIcon, setCurrentIcon] = useState(shuffledIcons[0]);
@@ -61,34 +40,20 @@ export default function Introduction() {
 
     return () => clearInterval(interval);
   }, [shuffledIcons]);
->>>>>>> homeCarrossel
 
   return (
     <View className="flex-1 justify-end items-center bg-[#2c2d33] pb-[24px]">
       <View>
-        <Image
-          source={require('../../assets/images/login/logo.png')}
-          className="w-[120px] h-[120px]"
-        />
+        <Image source={require('../../assets/images/login/logo.png')} className="w-[120px] h-[120px]" />
       </View>
       <View className="pt-[100px]">
-        <Text className="font-bold text-center text-white text-[24px] leading-[31px] pb-[24px]">
-          Falta pouco para matar {'\n'}sua fome!
-        </Text>
-        <Text className="font-light text-center text-white text-[12px] leading-[15px] pb-[24px]">
-          O que deseja? {currentIcon}
-        </Text>
+        <Text className="font-bold text-center text-white text-[24px] leading-[31px] pb-[24px]">Falta pouco para matar {'\n'}sua fome!</Text>
+        <Text className="font-light text-center text-white text-[12px] leading-[15px] pb-[24px]">O que deseja? {currentIcon}</Text>
 
         <ButtonCustom icon={LogIn} texto="Login" onPress={login} />
         <ButtonCustom icon={UserPlus} texto="Cadastre-se" onPress={cadastro} />
         <ButtonCustom texto="Continuar com o Google" onPress={cadastro} />
       </View>
-<<<<<<< HEAD
-    </View >
-  )
-}
-=======
     </View>
   );
 }
->>>>>>> homeCarrossel

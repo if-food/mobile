@@ -1,6 +1,6 @@
-import { View, Text, Form } from 'tamagui';
+import { Form } from 'tamagui';
 import imageOne from '../../assets/images/login/icon-01.png';
-import { Pressable } from 'react-native';
+import { Pressable, View, Text } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import loginSchema from '../../schemas/Login';
@@ -17,21 +17,23 @@ export default function forgotMyPassword() {
   const irParaLogin = () => {
     router.push('../login');
   };
-  
 
   const irParaNovaSenha = () => {
-    router.push('./newPassword')
-  }
+    router.push('./newPassword');
+  };
 
   return (
     <View className="flex-1 justify-between items-center h-full bg-[#2c2d33] pt-6">
-
-      <CustomInput titleInput='Esqueceu sua senha?' subtitleInput='Digite o seu E-mail abaixo' placeholder='Insira seu E-mail'/>
+      <CustomInput
+        titleInput="Esqueceu sua senha?"
+        subtitleInput="Digite o seu E-mail abaixo"
+        placeholder="Insira seu E-mail"
+      />
 
       <View className="items-center">
-        <View className='flex-row items-center'>
-          <Text className="text-[#fff] font-bold">Lembra sua senha? {' '}</Text>
-          <Pressable onPress={irParaLogin} className='py-6'>
+        <View className="flex-row items-center">
+          <Text className="text-[#fff] font-bold">Lembra sua senha? </Text>
+          <Pressable onPress={irParaLogin} className="py-6">
             <Text className="text-[#fff] font-thin underline">Faça login</Text>
           </Pressable>
         </View>
