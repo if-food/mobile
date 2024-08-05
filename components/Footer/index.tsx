@@ -1,23 +1,31 @@
-import { Image, Text, View } from 'tamagui'
+import { Image, Text, View } from 'tamagui';
+import { useRouter } from 'expo-router';
+import { Pressable } from 'react-native';
 
 export default function Footer({ title }) {
+  const router = useRouter();
+
+  const navigateTo = (route) => {
+    router.push(route);
+  };
+
   return (
     <View className='h-[60] w-full bg-[#24A645] flex-row items-center justify-evenly rounded-tl-[24px] rounded-tr-[24px] absolute bottom-0'>
-      <View className='flex-none px-7'>
+      <Pressable onPress={() => navigateTo('/home')} className='flex-none px-7'>
         <Image source={require('../../assets/images/footer_component/home.png')} className='w-[24px] h-[24px]'/>
-      </View>
+      </Pressable>
       
-      <View className='flex-none px-7'>
+      <Pressable onPress={() => navigateTo('/search')} className='flex-none px-7'>
         <Image source={require('../../assets/images/footer_component/search_disabled.png')} className='w-[24px] h-[24px]'/>
-      </View>
+      </Pressable>
       
-      <View className='flex-none px-7'>
+      <Pressable onPress={() => navigateTo('/order')} className='flex-none px-7'>
         <Image source={require('../../assets/images/footer_component/orders_disableded.png')} className='w-[18px] h-[24px]'/>
-      </View>
+      </Pressable>
 
-      <View className='flex-none px-7'>
+      <Pressable onPress={() => navigateTo('/profile')} className='flex-none px-7'>
         <Image source={require('../../assets/images/footer_component/profile_disabled.png')} className='w-[24px] h-[24px]'/>
-      </View>
+      </Pressable>
     </View>
-  )
+  );
 }

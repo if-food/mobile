@@ -6,6 +6,8 @@ import TestScreen from './testScreen';
 import Home from './home';
 import Profile from './profile';
 import PersonalData from './personalData';
+import Login from './login';
+import Address from './addresses/address';
 
 const tamaguiConfig = createTamagui(config)
 
@@ -31,7 +33,7 @@ export default () => {
 
     <TamaguiProvider config={tamaguiConfig}>
 
-      <Profile/>
+      <Address/>
 
     </TamaguiProvider>
 

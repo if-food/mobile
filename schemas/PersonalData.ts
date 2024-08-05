@@ -8,14 +8,10 @@ const personalDataSchema = object({
     .email("Formato inválido")
     .required("Campo obrigatório"),
   birthDate: string()
-    .required("Campo obrigatório")
     .typeError("Data inválida"),
-  phone: string()
-    .required("Campo obrigatório")
-    .matches(/^\+?[1-9]\d{1,14}$/, "Formato de telefone inválido"),
+  phone: string(),
   cpf: string()
-    .matches(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "CPF inválido")
-    .required("Campo obrigatório"),
+    .notRequired()
 });
 
 export default personalDataSchema;

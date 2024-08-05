@@ -15,3 +15,5 @@ const addressSchema = object({
     number: string(),
     complement: string()
 })
+
+export default addressSchema;

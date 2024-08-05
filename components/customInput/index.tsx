@@ -11,7 +11,7 @@ interface InputCustom {
   onBlur?: () => void;
   value?: string;
   style?: object;
-  onIconPress?: () => void; 
+  editable?: boolean;
 }
 
 const CustomInput = ({
@@ -23,10 +23,10 @@ const CustomInput = ({
   onBlur,
   value,
   style,
-  onIconPress
+  editable = true 
 }: InputCustom) => {
   return (
-    <View className="pb-4">
+    <View className="pb-2">
       {titleInput ? <Text className="text-[16px] font-bold text-[#fff] pb-2">{titleInput}</Text> : null}
       {subtitleInput ? <Text className="text-[12px] font-thin text-[#fff] pb-2">{subtitleInput}</Text> : null}
       <View style={{ position: 'relative' }}>
@@ -37,18 +37,9 @@ const CustomInput = ({
           onChangeText={onChangeText}
           onBlur={onBlur}
           value={value}
-          style={[style, { paddingRight: 40 }]}
+          style={[style, { paddingRight: 40 }]} 
+          editable={editable}
         />
-        {onIconPress && (
-          <View style={{ position: 'absolute', right: 10, top: '50%', transform: [{ translateY: -12 }] }}>
-            <Icon
-              name="edit"
-              size={24}
-              color="#24A645"
-              onPress={onIconPress}
-            />
-          </View>
-        )}
       </View>
     </View>
   );

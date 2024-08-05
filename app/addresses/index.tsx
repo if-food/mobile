@@ -1,15 +1,15 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View } from "react-native";
 import ButtonCustom from "components/ButtonCustom";
 import Footer from "components/Footer";
 import AddressCard from "components/AddressCard";
+import { useRouter } from "expo-router";
 
 export default function Adresses() {
   const addresses = [
     {
       icon: "home",
       title: "Casa",
-      address: "Rua X, Jaboatão dos Guararapes - PE",
+      address: "Rua X, Jaboatão - PE",
       complement: "Sem complemento",
     },
     {
@@ -19,6 +19,11 @@ export default function Adresses() {
       complement: "Prédio A, Número 201",
     },
   ];
+
+  const router = useRouter();
+  const handleAddress = () => {
+    router.push('./address');
+  };
 
   return (
     <View
@@ -38,7 +43,13 @@ export default function Adresses() {
           complement={address.complement}
         />
       ))}
-      <ButtonCustom texto="Adicionar novo endereço" />
+       <ButtonCustom
+        style={{ width: "90%", marginTop: 16 }}
+        texto="Adicionar novo endereço"
+        iconName="add-circle"
+        iconColor="#1C4F2A"
+        onPress={handleAddress}
+      />
       <Footer title="sssss" />
     </View>
   );
