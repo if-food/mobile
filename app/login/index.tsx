@@ -42,17 +42,17 @@ export default function Login() {
   };
 
   return (
-    <View className="flex-1 items-center justify-between bg-[#2c2d33] pt-16">
+    <View className="flex-1 items-center justify-between bg-[#2c2d33] pt-6">
       <Form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
         <View className="flex items-center">
-          <View style={{ marginBottom: 6 }}>
+          <View style={{ marginBottom: 24 }}>
             <Controller control={control} name="email" render={({ field: { onChange, onBlur, value } }) => <CustomInput titleInput="Insira seu E-mail" placeholder="Insira seu E-mail" onChangeText={onChange} onBlur={onBlur} value={value} style={{ justifyContent: 'center' }} />} />
             {errors.email && <Text style={{ color: 'red' }}>{errors.email.message}</Text>}
           </View>
 
-          <View style={{ marginBottom: 6 }}>
+          <View style={{ marginBottom: 24 }}>
             <Controller control={control} name="password" render={({ field: { onChange, onBlur, value } }) => <CustomInput titleInput="Insira sua senha" placeholder="Insira sua senha" secureTextEntry onChangeText={onChange} onBlur={onBlur} value={value} />} />
-            {errors.password && <Text style={{ color: 'red' }}>{errors.password.message}</Text>}
+            {errors.password && <Text style={{ color: 'red', marginTop: 4 }}>{errors.password.message}</Text>}
             <View className="flex-row items-center justify-end pt-4">
               <Pressable onPress={handleForgotPassword} className="px-4">
                 <Text className="text-[#fff] underline">Esqueci minha senha</Text>
