@@ -25,10 +25,11 @@ Para começar a usar o If Food, siga os passos abaixo:
    ```bash
    git clone https://github.com/usuario/if-food.git
    cd if-food
-   yarn install
    
 ## Instale as dependências 💻
    npm instal
+   ou
+   yarn install
 
 ## Execute a aplicação ✅
    npx expo start
