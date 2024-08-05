@@ -9,14 +9,36 @@ interface InputCustom {
   onBlur?: () => void;
   value?: string;
   style?: object;
+  editable?: boolean;
 }
 
-const CustomInput = ({ placeholder = '', titleInput = '', subtitleInput = '', secureTextEntry = false, onChangeText, onBlur, value, style, ...rest }: InputCustom) => {
+const CustomInput = ({
+  placeholder = '',
+  titleInput = '',
+  subtitleInput = '',
+  secureTextEntry = false,
+  onChangeText,
+  onBlur,
+  value,
+  style,
+  editable = true 
+}: InputCustom) => {
   return (
-    <View className="pt-6">
+    <View className="pb-2">
       {titleInput ? <Text className="text-[16px] font-bold text-[#fff] pb-2">{titleInput}</Text> : null}
       {subtitleInput ? <Text className="text-[12px] font-thin text-[#fff] pb-2">{subtitleInput}</Text> : null}
-      <Input secureTextEntry={secureTextEntry} placeholder={placeholder} className="w-[320px] h-[48px] bg-[#E3E3E3] text-[#16161d]" onChangeText={onChangeText} onBlur={onBlur} value={value} style={style} />
+      <View style={{ position: 'relative' }}>
+        <Input
+          secureTextEntry={secureTextEntry}
+          placeholder={placeholder}
+          className="w-[320px] h-[48px] bg-[#E3E3E3] text-[#16161d]"
+          onChangeText={onChangeText}
+          onBlur={onBlur}
+          value={value}
+          style={[style, { paddingRight: 40 }]} 
+          editable={editable}
+        />
+      </View>
     </View>
   );
 };

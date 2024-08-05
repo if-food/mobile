@@ -4,14 +4,12 @@ import { config } from '@tamagui/config/v3';
 import InfosLogin from './infosLogin/index';
 import TestScreen from './testScreen';
 import Home from './home';
-import RegistroPedidos from './registroPedidos';
-import Restaurantes from './restaurantes';
-import VerifyEmail from './verifyEmail';
-import { View } from 'react-native';
-// you usually export this from a tamagui.config.ts file
+import Profile from './profile';
+import PersonalData from './personalData';
+import Login from './login';
+import Address from './addresses/address';
 
-const tamaguiConfig = createTamagui(config);
-// TypeScript types across all Tamagui APIs
+const tamaguiConfig = createTamagui(config)
 
 type Conf = typeof tamaguiConfig;
 
@@ -30,9 +28,9 @@ export default () => {
 
   return (
     <TamaguiProvider config={tamaguiConfig}>
-      <View className="bg-[#2c2d33] flex-1">
-        <VerifyEmail />
-      </View>
+
+      <Address/>
+
     </TamaguiProvider>
   );
 };

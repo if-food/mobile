@@ -1,11 +1,9 @@
 import { Image, Text, View } from 'tamagui';
 import { useRouter } from 'expo-router';
-
 import home from '../../assets/images/footer_component/home.png';
 import search from '../../assets/images/footer_component/search.png';
 import orders from '../../assets/images/footer_component/orders.png';
 import profile from '../../assets/images/footer_component/profile.png';
-
 import { TouchableOpacity } from 'react-native';
 
 export default function Footer() {

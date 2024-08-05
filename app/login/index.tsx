@@ -19,6 +19,10 @@ export default function Login() {
     router.push('../cadastro');
   };
 
+  const handleProfile = () => {
+    router.push('../profile');
+  }
+
   const {
     control,
     handleSubmit,
