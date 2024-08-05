@@ -209,7 +209,7 @@ export default function PersonalData() {
           onPress={handleSubmit(onSubmit)}
           disabled={!isModified}
         />
-        <Footer title="sssss" />
+        <Footer/>
       </ScrollView>
     </KeyboardAvoidingView>
   );

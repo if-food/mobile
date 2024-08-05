@@ -46,7 +46,7 @@ export default function Profile() {
         keyExtractor={(item) => item.route}
         style={{marginTop: 24}}
       />
-      <Footer title="sssss" />
+      <Footer/>
     </View>
   );
 }

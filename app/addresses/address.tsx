@@ -258,7 +258,7 @@ export default function Address() {
           />
         </View>
       </ScrollView>
-      <Footer title="sssss" />
+      <Footer/>
     </KeyboardAvoidingView>
   );
 }

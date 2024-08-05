@@ -50,7 +50,7 @@ export default function Adresses() {
         iconColor="#1C4F2A"
         onPress={handleAddress}
       />
-      <Footer title="sssss" />
+      <Footer/>
     </View>
   );
 }
