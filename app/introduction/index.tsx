@@ -1,4 +1,4 @@
-import { Text, View } from 'tamagui';
+import { Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { LogIn, UserPlus } from 'lucide-react-native';
 import ButtonCustom from './../../components/ButtonCustom/index';

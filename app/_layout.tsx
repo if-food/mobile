@@ -120,6 +120,48 @@ function RootLayoutNav() {
               animation: 'slide_from_right',
             }}
           />
+
+          <Stack.Screen
+            name="registroPedidos/index"
+            options={{
+              headerShown: true,
+              headerTitle: 'Pedidos',
+              animation: 'slide_from_right',
+              headerStyle: {
+                backgroundColor: '#24A645',
+              },
+              headerTintColor: '#fff',
+            }}
+          />
+
+          <Stack.Screen
+            name="pesquisa/index"
+            options={{
+              headerShown: true,
+              headerTitle: 'Pesquisa',
+              animation: 'slide_from_right',
+              headerStyle: {
+                backgroundColor: '#24A645',
+              },
+              headerTintColor: '#fff',
+            }}
+          />
+
+          <Stack.Screen
+            name="restaurantes/index"
+            options={{
+              headerShown: false,
+              animation: 'slide_from_right',
+            }}
+          />
+
+          <Stack.Screen
+            name="verifyEmail/allright"
+            options={{
+              headerShown: false,
+              animation: 'slide_from_right',
+            }}
+          />
         </Stack>
       </ThemeProvider>
     </Provider>

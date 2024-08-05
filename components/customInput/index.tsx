@@ -1,6 +1,4 @@
-import React from 'react';
 import { View, Text, Input } from 'tamagui';
-import Icon from 'react-native-vector-icons/MaterialIcons'; 
 
 interface InputCustom {
   placeholder?: string;
