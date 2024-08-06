@@ -187,7 +187,7 @@ function RootLayoutNav() {
           />
 
           <Stack.Screen
-            name="restaurantes/orderRestaurant/checkout"
+            name="checkout/index"
             options={{
               headerShown: true,
               headerTitle: 'Eco Bag',

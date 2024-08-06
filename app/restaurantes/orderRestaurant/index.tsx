@@ -8,7 +8,7 @@ export default function OrderRestaurant() {
   const router = useRouter();
 
   const goToCheckout = () => {
-    router.push('./restaurantes/orderRestaurant/checkout');
+    router.push('./checkout');
   };
 
   return (
