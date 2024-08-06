@@ -148,6 +148,71 @@ function RootLayoutNav() {
           />
 
           <Stack.Screen
+            name="profile/index"
+            options={{
+              headerShown: true,
+              headerTitle: 'Perfil',
+              animation: 'slide_from_right',
+              headerStyle: {
+                backgroundColor: '#24A645',
+              },
+              headerTintColor: '#fff',
+            }}
+          />
+
+          <Stack.Screen
+            name="personalData/index"
+            options={{
+              headerShown: true,
+              headerTitle: 'Perfil',
+              animation: 'slide_from_right',
+              headerStyle: {
+                backgroundColor: '#24A645',
+              },
+              headerTintColor: '#fff',
+            }}
+          />
+
+          <Stack.Screen
+            name="addresses/index"
+            options={{
+              headerShown: true,
+              headerTitle: 'Endereços',
+              animation: 'slide_from_right',
+              headerStyle: {
+                backgroundColor: '#24A645',
+              },
+              headerTintColor: '#fff',
+            }}
+          />
+
+          <Stack.Screen
+            name="restaurantes/orderRestaurant/checkout"
+            options={{
+              headerShown: true,
+              headerTitle: 'Eco Bag',
+              animation: 'slide_from_right',
+              headerStyle: {
+                backgroundColor: '#24A645',
+              },
+              headerTintColor: '#fff',
+            }}
+          />
+
+          <Stack.Screen
+            name="addresses/address"
+            options={{
+              headerShown: true,
+              headerTitle: 'Novo Enderço',
+              animation: 'slide_from_right',
+              headerStyle: {
+                backgroundColor: '#24A645',
+              },
+              headerTintColor: '#fff',
+            }}
+          />
+
+          <Stack.Screen
             name="restaurantes/index"
             options={{
               headerShown: false,
