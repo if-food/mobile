@@ -10530,4 +10530,3 @@ zustand@^4.3.8:
   integrity sha512-/BPMyLKJPtFEvVL0E9E9BTUM63MNyhPGlvxk1XjrfWTUlV+BR8jufjsovHzrtR6YNcBEcL7cMHovL1n9xHawEg==
   dependencies:
     use-sync-external-store "1.2.0"
-
