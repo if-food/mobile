@@ -2,19 +2,18 @@ import ButtonCustom from 'components/ButtonCustom';
 import Footer from 'components/Footer';
 import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import Address from './../../addresses/address';
+import Address from './../addresses/address';
 
 export default function OrderRestaurant() {
   const router = useRouter();
 
   const goToCheckout = () => {
-    router.push('./checkout');
+    router.push('../checkout');
   };
 
   return (
     <View className="flex-1 bg-[#2c2d33]">
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <Image source={require('../../../assets/images/restaurante/rabanete.png')} />
         <View className="px-4 py-4">
           <View>
             <Text className="text-[40px] font-bold text-[#fff]">Rabanete</Text>

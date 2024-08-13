@@ -1,4 +1,5 @@
-import { Image, Text, View } from 'tamagui';
+import { Image, Text } from 'tamagui';
+import { View } from 'react-native';
 import { useRouter } from 'expo-router';
 import home from '../../assets/images/footer_component/home.png';
 import search from '../../assets/images/footer_component/search.png';

@@ -1,4 +1,5 @@
-import { View, Image, Text } from 'tamagui';
+import { Image, Text } from 'tamagui';
+import { View } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 
 interface OrdersCardProps {
@@ -9,13 +10,7 @@ interface OrdersCardProps {
   price?: number;
 }
 
-export default function OrdersCard({
-  name = 'Insira um nome',
-  description = 'Insira uma descrição',
-  status = 'status',
-  source,
-  price = 0,
-}: OrdersCardProps) {
+export default function OrdersCard({ name = 'Insira um nome', description = 'Insira uma descrição', status = 'status', source, price = 0 }: OrdersCardProps) {
   const getStatusColorClass = (status: string) => {
     if (status === 'A caminho' || status === 'Entregue') {
       return 'text-[#24A645]';
@@ -45,11 +40,7 @@ export default function OrdersCard({
         </View>
 
         <View>
-          <Text
-            className={`font-thin text-[16px] ${getStatusColorClass(status)}`}
-          >
-            {status}
-          </Text>
+          <Text className={`font-thin text-[16px] ${getStatusColorClass(status)}`}>{status}</Text>
         </View>
       </View>
     </TouchableOpacity>

@@ -26,7 +26,7 @@ export default function Home() {
     <View className="flex-1 items-center justify-start bg-[#2c2d33]">
       <Header title="Av bulhões 77" />
       <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ flex: 1 }}>
-        <View className="w-full items-center mt-4 px-6">
+        <View className="w-full items-center mt-4">
           <Carousel
             style={{ borderRadius: 16 }}
             loop
@@ -69,8 +69,8 @@ export default function Home() {
             </ScrollView>
           </View>
 
-          <View className="w-full">
-            <Text className="text-white pt-10 text-xl font-bold pb-4">Recintos famosos</Text>
+          <View className="w-full px-4 mb-14">
+            <Text className="text-white pt-10 text-[32px] font-bold pb-4">Recintos famosos</Text>
             <ListRestaurant source={require('../../assets/images/home/rouned_one.png')} titleRestaurant="Folha verde" distance="6,8" price="38,90" />
             <ListRestaurant onPress={restaurant} source={require('../../assets/images/home/rouned_two.png')} titleRestaurant="Rabanette" price="99,50" />
             <ListRestaurant source={require('../../assets/images/home/rouned_three.png')} titleRestaurant="Sacia Fome" />

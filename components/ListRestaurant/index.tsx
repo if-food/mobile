@@ -1,4 +1,5 @@
-import { View, Image, Text } from 'tamagui';
+import { Image, Text } from 'tamagui';
+import { View } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 
 interface ListRestaurant {
@@ -10,25 +11,14 @@ interface ListRestaurant {
   price?: string;
 }
 
-export default function ListRestaurant({
-  source,
-  titleRestaurant = 'titulo',
-  onPress,
-  distance = '0',
-  price = '0,0',
-}: ListRestaurant) {
+export default function ListRestaurant({ source, titleRestaurant = 'titulo', onPress, distance = '0', price = '0,0' }: ListRestaurant) {
   return (
-    <TouchableOpacity
-      className="flex-row items-center h-[70px] mb-10"
-      onPress={onPress}
-    >
+    <TouchableOpacity className="flex-row items-center h-[70px] mb-10" onPress={onPress}>
       <View>
         <Image className="w-[64px] h-[64px] rounded-full" source={source} />
       </View>
       <View className="pl-4 h-full justify-center">
-        <Text className="text-[#fff] text-[20px] font-bold">
-          {titleRestaurant}
-        </Text>
+        <Text className="text-[#fff] text-[20px] font-bold">{titleRestaurant}</Text>
         <View className="flex-row items-center">
           <Text className="text-[#fff] text-[12px]">{titleRestaurant}</Text>
           <Text className="text-[#fff] text-[12px]"> - </Text>

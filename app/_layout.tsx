@@ -215,8 +215,13 @@ function RootLayoutNav() {
           <Stack.Screen
             name="restaurantes/index"
             options={{
-              headerShown: false,
+              headerShown: true,
+              headerTitle: 'Rabanete',
               animation: 'slide_from_right',
+              headerStyle: {
+                backgroundColor: '#24A645',
+              },
+              headerTintColor: '#fff',
             }}
           />
 
@@ -225,6 +230,19 @@ function RootLayoutNav() {
             options={{
               headerShown: false,
               animation: 'slide_from_right',
+            }}
+          />
+
+          <Stack.Screen
+            name="restaurantes/orderRestaurant/index"
+            options={{
+              headerShown: true,
+              headerTitle: 'Rabanete',
+              animation: 'slide_from_right',
+              headerStyle: {
+                backgroundColor: '#24A645',
+              },
+              headerTintColor: '#fff',
             }}
           />
         </Stack>
