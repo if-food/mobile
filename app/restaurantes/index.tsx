@@ -4,7 +4,6 @@ import { View, Text, ScrollView } from 'react-native';
 import CardRestaurantPage from './cardRestaurantPage';
 import ListagemCardapio from './listFood';
 import { useRouter } from 'expo-router';
-import OrderRestaurant from '../../orderRestaurant/index';
 
 const formatPrice = (price: number) => {
   return price.toLocaleString('pt-BR', {
@@ -17,7 +16,7 @@ export default function Restaurantes() {
   const router = useRouter();
 
   const order = () => {
-    router.push('./orderRestaurant');
+    router.push('../orderRestaurant');
   };
 
   return (

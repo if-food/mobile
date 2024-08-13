@@ -14,6 +14,7 @@ export default function OrderRestaurant() {
   return (
     <View className="flex-1 bg-[#2c2d33]">
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <Image source={require('../../assets/images/restaurante/rabanete.png')} />
         <View className="px-4 py-4">
           <View>
             <Text className="text-[40px] font-bold text-[#fff]">Rabanete</Text>

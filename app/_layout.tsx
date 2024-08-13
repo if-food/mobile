@@ -234,7 +234,7 @@ function RootLayoutNav() {
           />
 
           <Stack.Screen
-            name="restaurantes/orderRestaurant/index"
+            name="orderRestaurant/index"
             options={{
               headerShown: true,
               headerTitle: 'Rabanete',
