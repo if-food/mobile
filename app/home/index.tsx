@@ -56,7 +56,7 @@ export default function Home() {
 
           <View className="w-full mt-6">
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-              <View className="flex-row justify-between">
+              <View className="flex-row justify-between pl-1">
                 <CardRecintosFamosos titleRestaurant="Da terra" source={require('../../assets/images/home/card_one.png')} />
                 <CardRecintosFamosos titleRestaurant="Rabanette" source={require('../../assets/images/home/card_two.png')} />
                 <CardRecintosFamosos titleRestaurant="Sacia Fome" source={require('../../assets/images/home/card_three.png')} />
