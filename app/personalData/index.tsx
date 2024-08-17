@@ -8,8 +8,10 @@ import { Form } from "tamagui";
 import Footer from "components/Footer";
 import CustomInput from "components/customInput";
 import { formatBirthDate, formatCPF, formatPhoneNumber } from "utils/formatters";
+import axios from "axios";
 
 export default function PersonalData() {
+  const [clients, setClients] = useState([]);
   const [userData, setUserData] = useState({
     name: "João da Silva",
     email: "joao.silva@example.com",
@@ -30,6 +32,28 @@ export default function PersonalData() {
     resolver: yupResolver(personalDataSchema),
     mode: "onBlur",
   });
+
+  useEffect(() => {
+    const loadClients = async () => {
+      getAllClients();
+      console.log("Todos os clientes:", clients);
+    };
+
+    loadClients();
+  }, []);
+
+  async function getAllClients() {
+    try {
+      const response = await axios.get("https://api-1-drn7.onrender.com/api/cliente");
+      console.log("API Response:", response);
+      console.log("Data:", response.data);
+      setClients(response.data);
+      return response.data;
+    } catch (err) {
+      console.error("Error:", JSON.stringify(err, null, 2));
+      return [];
+    }
+  }
 
   useEffect(() => {
     setValue("name", userData.name);

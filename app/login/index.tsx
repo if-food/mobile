@@ -45,7 +45,7 @@ export default function Login() {
     <View className="flex-1 items-center justify-between bg-[#2c2d33] pt-6">
       <Form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
         <View className="flex items-center">
-          <View style={{ marginBottom: 24 }}>
+          <View style={{ marginBottom: 8 }}>
             <Controller
               control={control}
               name="email"
