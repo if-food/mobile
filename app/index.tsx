@@ -9,6 +9,7 @@ import PersonalData from './personalData';
 import Login from './login';
 import Address from './addresses/address';
 import OrderRestaurant from '../orderRestaurant';
+import Cadastro from './cadastro';
 
 const tamaguiConfig = createTamagui(config);
 
@@ -29,7 +30,7 @@ export default () => {
 
   return (
     <TamaguiProvider config={tamaguiConfig}>
-      <Home />
+      <Cadastro />
     </TamaguiProvider>
   );
 };

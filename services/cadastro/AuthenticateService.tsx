@@ -7,7 +7,7 @@ interface UserCad {
 
 export async function singInClient(userEmail = '', password = ''): Promise<UserCad> {
   try {
-    const response = await api.post('/cliente', {
+    const response = await api.post('/auth', {
       email: userEmail,
       password: password,
     });
