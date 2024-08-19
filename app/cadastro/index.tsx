@@ -30,8 +30,7 @@ export default function Cadastro() {
       const response = await axios.post("https://api-1-drn7.onrender.com/api/cliente", {
         nome: data.name,
         email: data.email,
-        password: data.password,
-        role: "CLIENTE"
+        password: data.password
       });
 
       if (response.data) {

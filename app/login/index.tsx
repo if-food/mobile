@@ -8,6 +8,9 @@ import LottieView from 'lottie-react-native';
 import login from '../../assets/lottie/login.json';
 import ButtonCustom from 'components/ButtonCustom';
 import CustomInput from 'components/customInput';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+
 export default function Login() {
   const router = useRouter();
 
@@ -18,10 +21,6 @@ export default function Login() {
   const handleRegister = () => {
     router.push('../cadastro');
   };
-
-  const handleProfile = () => {
-    router.push('../profile');
-  }
 
   const {
     control,
@@ -37,9 +36,17 @@ export default function Login() {
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
-    home();
+    try {
+      const response = await axios.post('https://api-1-drn7.onrender.com/api/auth', {
+        username: data.email,
+        password: data.password,
+      });
+      home();
+    } catch (error) {
+      console.error('Error during login:', error.response?.data || error.message);
+    }
   };
+  
 
   return (
     <View className="flex-1 items-center justify-between bg-[#2c2d33] pt-6">
