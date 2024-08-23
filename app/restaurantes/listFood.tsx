@@ -1,5 +1,5 @@
-import { TouchableOpacity } from 'react-native';
-import { View, Text, Image } from 'tamagui';
+import { TouchableOpacity, View } from 'react-native';
+import { Text, Image } from 'tamagui';
 
 interface CardRestaurantPageProps {
   source?: any;
@@ -15,12 +15,7 @@ const formatPrice = (price: number) => {
   });
 };
 
-export default function ListagemCardapio({
-  source,
-  title,
-  description,
-  price = '0',
-}: CardRestaurantPageProps) {
+export default function ListagemCardapio({ source, title, description, price = '0' }: CardRestaurantPageProps) {
   const numericPrice = parseFloat(price);
 
   return (
@@ -30,9 +25,7 @@ export default function ListagemCardapio({
           <View className="justify-center">
             <Text className="text-[#fff] text-[16px] font-bold">{title}</Text>
             <Text className="text-[#fff] text-[12px]">{description}</Text>
-            <Text className="text-[#24A645] text-[16px] pt-2">
-              {formatPrice(numericPrice)}
-            </Text>
+            <Text className="text-[#24A645] text-[16px] pt-2">{formatPrice(numericPrice)}</Text>
           </View>
           <Image source={source} />
         </View>

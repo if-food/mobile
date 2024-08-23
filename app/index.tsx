@@ -8,8 +8,10 @@ import Profile from './profile';
 import PersonalData from './personalData';
 import Login from './login';
 import Address from './addresses/address';
+import OrderRestaurant from '../orderRestaurant';
+import Cadastro from './cadastro';
 
-const tamaguiConfig = createTamagui(config)
+const tamaguiConfig = createTamagui(config);
 
 type Conf = typeof tamaguiConfig;
 
@@ -28,9 +30,7 @@ export default () => {
 
   return (
     <TamaguiProvider config={tamaguiConfig}>
-
-      <Address/>
-
+      <Cadastro />
     </TamaguiProvider>
   );
 };

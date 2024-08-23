@@ -1,20 +1,24 @@
-import '../tamagui-web.css';
+import "../tamagui-web.css";
 
-import { useEffect } from 'react';
-import { useColorScheme } from 'react-native';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { SplashScreen, Stack } from 'expo-router';
-import { Provider } from './Provider';
+import { useEffect } from "react";
+import { useColorScheme } from "react-native";
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from "@react-navigation/native";
+import { useFonts } from "expo-font";
+import { SplashScreen, Stack } from "expo-router";
+import { Provider } from "./Provider";
 
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
-} from 'expo-router';
+} from "expo-router";
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: 'index',
+  initialRouteName: "index",
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -22,8 +26,8 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [interLoaded, interError] = useFonts({
-    Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
-    InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
+    Inter: require("@tamagui/font-inter/otf/Inter-Medium.otf"),
+    InterBold: require("@tamagui/font-inter/otf/Inter-Bold.otf"),
   });
 
   useEffect(() => {
@@ -45,7 +49,7 @@ function RootLayoutNav() {
 
   return (
     <Provider>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <Stack>
           <Stack.Screen
             name="index"
@@ -57,25 +61,25 @@ function RootLayoutNav() {
           <Stack.Screen
             name="cadastro/index"
             options={{
-              headerTitle: 'Cadastro',
+              headerTitle: "Cadastro",
               headerShown: true,
-              animation: 'slide_from_right',
+              animation: "slide_from_right",
               headerStyle: {
-                backgroundColor: '#24A645',
+                backgroundColor: "#24A645",
               },
-              headerTintColor: '#fff',
+              headerTintColor: "#fff",
             }}
           />
 
           <Stack.Screen
             name="login/index"
             options={{
-              headerTitle: 'Login',
-              animation: 'slide_from_right',
+              headerTitle: "Login",
+              animation: "slide_from_right",
               headerStyle: {
-                backgroundColor: '#24A645',
+                backgroundColor: "#24A645",
               },
-              headerTintColor: '#fff',
+              headerTintColor: "#fff",
             }}
           />
 
@@ -83,12 +87,12 @@ function RootLayoutNav() {
             name="forgotMyPassword/index"
             options={{
               headerShown: true,
-              headerTitle: 'Recuperar senha',
-              animation: 'slide_from_right',
+              headerTitle: "Recuperar senha",
+              animation: "slide_from_right",
               headerStyle: {
-                backgroundColor: '#24A645',
+                backgroundColor: "#24A645",
               },
-              headerTintColor: '#fff',
+              headerTintColor: "#fff",
             }}
           />
 
@@ -96,12 +100,12 @@ function RootLayoutNav() {
             name="forgotMyPassword/newPassword"
             options={{
               headerShown: true,
-              headerTitle: 'Recuperar senha',
-              animation: 'slide_from_right',
+              headerTitle: "Recuperar senha",
+              animation: "slide_from_right",
               headerStyle: {
-                backgroundColor: '#24A645',
+                backgroundColor: "#24A645",
               },
-              headerTintColor: '#fff',
+              headerTintColor: "#fff",
             }}
           />
 
@@ -109,7 +113,7 @@ function RootLayoutNav() {
             name="introduction/index"
             options={{
               headerShown: false,
-              animation: 'slide_from_right',
+              animation: "slide_from_right",
             }}
           />
 
@@ -117,7 +121,7 @@ function RootLayoutNav() {
             name="home/index"
             options={{
               headerShown: false,
-              animation: 'slide_from_right',
+              animation: "slide_from_right",
             }}
           />
 
@@ -125,12 +129,12 @@ function RootLayoutNav() {
             name="registroPedidos/index"
             options={{
               headerShown: true,
-              headerTitle: 'Pedidos',
-              animation: 'slide_from_right',
+              headerTitle: "Pedidos",
+              animation: "slide_from_right",
               headerStyle: {
-                backgroundColor: '#24A645',
+                backgroundColor: "#24A645",
               },
-              headerTintColor: '#fff',
+              headerTintColor: "#fff",
             }}
           />
 
@@ -138,20 +142,103 @@ function RootLayoutNav() {
             name="pesquisa/index"
             options={{
               headerShown: true,
-              headerTitle: 'Pesquisa',
-              animation: 'slide_from_right',
+              headerTitle: "Pesquisa",
+              animation: "slide_from_right",
               headerStyle: {
-                backgroundColor: '#24A645',
+                backgroundColor: "#24A645",
               },
-              headerTintColor: '#fff',
+              headerTintColor: "#fff",
+            }}
+          />
+
+          <Stack.Screen
+            name="profile/index"
+            options={{
+              headerShown: true,
+              headerTitle: "Perfil",
+              animation: "slide_from_right",
+              headerStyle: {
+                backgroundColor: "#24A645",
+              },
+              headerTintColor: "#fff",
+            }}
+          />
+
+          <Stack.Screen
+            name="personalData/index"
+            options={{
+              headerShown: true,
+              headerTitle: "Perfil",
+              animation: "slide_from_right",
+              headerStyle: {
+                backgroundColor: "#24A645",
+              },
+              headerTintColor: "#fff",
+            }}
+          />
+
+          <Stack.Screen
+            name="voucher/index"
+            options={{
+              headerShown: true,
+              headerTitle: "Cupons",
+              animation: "slide_from_right",
+              headerStyle: {
+                backgroundColor: "#24A645",
+              },
+              headerTintColor: "#fff",
+            }}
+          />
+
+          <Stack.Screen
+            name="addresses/index"
+            options={{
+              headerShown: true,
+              headerTitle: "Endereços",
+              animation: "slide_from_right",
+              headerStyle: {
+                backgroundColor: "#24A645",
+              },
+              headerTintColor: "#fff",
+            }}
+          />
+
+          <Stack.Screen
+            name="checkout/index"
+            options={{
+              headerShown: true,
+              headerTitle: "Eco Bag",
+              animation: "slide_from_right",
+              headerStyle: {
+                backgroundColor: "#24A645",
+              },
+              headerTintColor: "#fff",
+            }}
+          />
+
+          <Stack.Screen
+            name="addresses/address"
+            options={{
+              headerShown: true,
+              headerTitle: "Novo Enderço",
+              animation: "slide_from_right",
+              headerStyle: {
+                backgroundColor: "#24A645",
+              },
+              headerTintColor: "#fff",
             }}
           />
 
           <Stack.Screen
             name="restaurantes/index"
             options={{
-              headerShown: false,
-              animation: 'slide_from_right',
+              headerShown: true,
+              headerTitle: "Rabanete",
+              animation: "slide_from_right",
+              headerStyle: {
+                backgroundColor: "#24A645",
+              },
+              headerTintColor: "#fff",
             }}
           />
 
@@ -159,7 +246,20 @@ function RootLayoutNav() {
             name="verifyEmail/allright"
             options={{
               headerShown: false,
-              animation: 'slide_from_right',
+              animation: "slide_from_right",
+            }}
+          />
+
+          <Stack.Screen
+            name="orderRestaurant/index"
+            options={{
+              headerShown: true,
+              headerTitle: "Rabanete",
+              animation: "slide_from_right",
+              headerStyle: {
+                backgroundColor: "#24A645",
+              },
+              headerTintColor: "#fff",
             }}
           />
         </Stack>

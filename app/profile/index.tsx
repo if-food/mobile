@@ -7,7 +7,7 @@ const profileItems = [
   { icon: 'person', text: 'Dados Pessoais', route: 'personalData' },
   { icon: 'location-on', text: 'Endereços', route: 'addresses' },
   { icon: 'payment', text: 'Métodos de pagamento', route: 'payments' },
-  { icon: 'card-giftcard', text: 'Cupons', route: 'coupons' },
+  { icon: 'card-giftcard', text: 'Cupons', route: 'voucher' },
   { icon: 'favorite', text: 'Pedidos', route: 'favorites' },
   { icon: 'help', text: 'Dúvidas?', route: 'questions'}
 ];

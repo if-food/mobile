@@ -11,7 +11,7 @@ import axios from 'axios';
 export default function Cadastro() {
   const router = useRouter();
 
-  const irParaLogin = () => {
+  const handleLogin = () => {
     router.push('../login');
   };
 
@@ -26,45 +26,53 @@ export default function Cadastro() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post('URL_DA_API_DE_CADASTRO', {
+      console.log(data);
+      const response = await axios.post("https://api-1-drn7.onrender.com/api/cliente", {
         nome: data.name,
         email: data.email,
-        senha: data.password,
+        password: data.password
       });
 
       if (response.data) {
-        alert('Usuário criado com sucesso');
-        router.push('../home');
+        console.log('Usuário criado com sucesso');
+        console.log(response.data);
+        handleLogin();
       }
     } catch (error) {
-      console.error(error);
-      alert('Erro ao criar usuário. Tente novamente.');
+      if (error.response) {
+        console.error('Erro:', error.response.data);
+        alert(`Erro: ${error.response.data.message || 'Solicitação inválida'}`);
+      } else {
+        console.error('Erro desconhecido:', error.message);
+        alert('Erro desconhecido. Tente novamente.');
+      }
     }
   };
 
+
   return (
-    <View className="flex-1 justify-between items-center bg-[#2c2d33] pt-[24px]">
+    <View className="flex-1 justify-between items-center bg-[#2c2d33] pt-[32px]">
       <Form onSubmit={handleSubmit(onSubmit)} className="w-full flex-1 justify-between">
         <View className="flex items-center justify-between">
           <View className="h-[400px]">
             <Controller control={control} name="name" render={({ field: { onChange, onBlur, value } }) => <CustomInput titleInput="Nome" placeholder="Insira seu nome" onChangeText={onChange} onBlur={onBlur} value={value} />} />
-            {errors.name && <Text className="text-[#f00] leading-4 py-2">{errors.name.message}</Text>}
+            {errors.name && <Text className="text-[#f00] leading-4 py-1">{errors.name.message}</Text>}
 
             <Controller control={control} name="email" render={({ field: { onChange, onBlur, value } }) => <CustomInput titleInput="E-mail" placeholder="Insira seu E-mail" onChangeText={onChange} onBlur={onBlur} value={value} />} />
-            {errors.email && <Text className="text-[#f00] leading-4 py-2">{errors.email.message}</Text>}
+            {errors.email && <Text className="text-[#f00] leading-4 py-1">{errors.email.message}</Text>}
 
             <Controller control={control} name="password" render={({ field: { onChange, onBlur, value } }) => <CustomInput titleInput="Senha" placeholder="Insira sua senha" secureTextEntry onChangeText={onChange} onBlur={onBlur} value={value} />} />
-            {errors.password && <Text className="text-[#f00] leading-4 py-2">{errors.password.message}</Text>}
+            {errors.password && <Text className="text-[#f00] leading-4 py-1">{errors.password.message}</Text>}
 
             <Controller control={control} name="confirmPassword" render={({ field: { onChange, onBlur, value } }) => <CustomInput titleInput="Confirmação senha" placeholder="Insira novamente sua senha" secureTextEntry onChangeText={onChange} onBlur={onBlur} value={value} />} />
-            {errors.confirmPassword && <Text className="text-[#f00] leading-4 py-2">{errors.confirmPassword.message}</Text>}
+            {errors.confirmPassword && <Text className="text-[#f00] leading-4 py-1">{errors.confirmPassword.message}</Text>}
           </View>
         </View>
 
         <View className="items-center">
-          <View className="flex-row items-center">
+          <View className="flex-row items-center gap-1">
             <Text className="text-[#fff] font-bold">Lembra sua senha?</Text>
-            <Pressable onPress={irParaLogin} className="py-6">
+            <Pressable onPress={handleLogin} className="py-6">
               <Text className="text-[#fff] font-thin underline">Faça login</Text>
             </Pressable>
           </View>

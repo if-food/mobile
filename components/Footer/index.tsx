@@ -1,4 +1,5 @@
-import { Image, Text, View } from 'tamagui';
+import { Image, Text } from 'tamagui';
+import { View } from 'react-native';
 import { useRouter } from 'expo-router';
 import home from '../../assets/images/footer_component/home.png';
 import search from '../../assets/images/footer_component/search.png';
@@ -21,6 +22,10 @@ export default function Footer() {
     router.push('../pesquisa');
   };
 
+  const goToProfile = () => {
+    router.push('../profile');
+  };
+
   return (
     <View className="h-[60] w-full bg-[#24A645] flex-row items-center justify-evenly rounded-tl-[24px] rounded-tr-[24px] absolute bottom-0">
       <TouchableOpacity onPress={goToHome}>
@@ -41,7 +46,7 @@ export default function Footer() {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={goToProfile}>
         <View className="flex-none px-7">
           <Image source={profile} className="w-[24px] h-[24px]" />
         </View>
