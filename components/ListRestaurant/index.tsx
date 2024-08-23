@@ -10,11 +10,7 @@ interface ListRestaurant {
   categoriasEnum?: string;
 }
 
-<<<<<<< HEAD
 export default function ListRestaurant({ source, titleRestaurant = 'titulo', onPress, categoriasEnum }: ListRestaurant) {
-=======
-export default function ListRestaurant({ source, titleRestaurant = 'titulo', onPress, distance = '0', price = '0,0' }: ListRestaurant) {
->>>>>>> 2e9b66a6d65909e95a0e0df8c178568e941e4fbd
   return (
     <TouchableOpacity className="flex-row items-center h-[70px] mb-10" onPress={onPress}>
       <View>
