@@ -230,10 +230,10 @@ function RootLayoutNav() {
           />
 
           <Stack.Screen
-            name="restaurantes/index"
+            name="restaurantes/[nomeFantasia]"
             options={{
               headerShown: true,
-              headerTitle: "Rabanete",
+              headerTitle: "[nomeFantasia]",
               animation: "slide_from_right",
               headerStyle: {
                 backgroundColor: "#24A645",
@@ -251,7 +251,7 @@ function RootLayoutNav() {
           />
 
           <Stack.Screen
-            name="orderRestaurant/index"
+            name="orderRestaurant/[index]"
             options={{
               headerShown: true,
               headerTitle: "Rabanete",

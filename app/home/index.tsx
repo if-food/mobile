@@ -74,9 +74,8 @@ export default function Home() {
             {images.map((_, index) => (
               <View
                 key={index}
-                className={`w-2.5 h-2.5 rounded-full mx-1 ${
-                  index === currentIndex ? 'bg-[#24A645]' : 'bg-[#1C4F2A]'
-                }`}
+                className={`w-2.5 h-2.5 rounded-full mx-1 ${index === currentIndex ? 'bg-[#24A645]' : 'bg-[#1C4F2A]'
+                  }`}
               />
             ))}
           </View>
@@ -84,10 +83,13 @@ export default function Home() {
           <View className="w-full mt-6">
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
               <View className="flex-row justify-between pl-1">
-                <CardRecintosFamosos titleRestaurant="Da terra" source={require('../../assets/images/home/card_one.png')} />
-                <CardRecintosFamosos titleRestaurant="Rabanette" source={require('../../assets/images/home/card_two.png')} />
-                <CardRecintosFamosos titleRestaurant="Sacia Fome" source={require('../../assets/images/home/card_three.png')} />
-                <CardRecintosFamosos titleRestaurant="Don Verde" source={require('../../assets/images/home/card_four.png')} />
+                {restaurants.slice(0, 8).map((restaurant) => (
+                  <CardRecintosFamosos
+                    key={restaurant.id}
+                    titleRestaurant={restaurant.nomeFantasia}
+                    source={require('../../assets/images/home/card_one.png')}
+                  />
+                ))}
               </View>
             </ScrollView>
           </View>
@@ -96,9 +98,9 @@ export default function Home() {
             <Text className="text-white pt-10 text-[32px] font-bold pb-4">Recintos famosos</Text>
             {restaurants.map((restaurant) => (
               <ListRestaurant
-                key={restaurant.id} 
-                onPress={restaurant.open ? () => router.push(`../restaurantes/${restaurant.id}`) : null}
-                source={require('../../assets/images/home/rouned_two.png')} 
+                key={restaurant.id}
+                onPress={restaurant.open ? () => router.push(`../restaurantes/${restaurant.nomeFantasia}`) : null}
+                source={require('../../assets/images/home/rouned_two.png')}
                 titleRestaurant={restaurant.nomeFantasia}
                 categoriasEnum={restaurant.categoriasEnum}
               />
