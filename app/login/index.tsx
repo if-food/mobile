@@ -46,14 +46,35 @@ export default function Login() {
       console.error('Error during login:', error.response?.data || error.message);
     }
   };
+  
 
   return (
     <View className="flex-1 items-center justify-between bg-[#2c2d33] pt-6">
       <Form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
         <View className="flex items-center">
           <View style={{ marginBottom: 8 }}>
+<<<<<<< HEAD
             <Controller control={control} name="email" render={({ field: { onChange, onBlur, value } }) => <CustomInput titleInput="Insira seu E-mail" placeholder="Insira seu E-mail" onChangeText={onChange} onBlur={onBlur} value={value} style={{ justifyContent: 'center' }} />} />
             {errors.email && <Text style={{ color: 'red' }}>{errors.email.message}</Text>}
+=======
+            <Controller
+              control={control}
+              name="email"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <CustomInput
+                  titleInput="Insira seu E-mail"
+                  placeholder="Insira seu E-mail"
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                  style={{ justifyContent: 'center' }}
+                />
+              )}
+            />
+            {errors.email && (
+              <Text style={{ color: 'red' }}>{errors.email.message}</Text>
+            )}
+>>>>>>> 2e9b66a6d65909e95a0e0df8c178568e941e4fbd
           </View>
 
           <View style={{ marginBottom: 24 }}>
