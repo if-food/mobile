@@ -230,16 +230,18 @@ function RootLayoutNav() {
           />
 
           <Stack.Screen
-            name="restaurantes/[nomeFantasia]"
-            options={{
+            name="restaurantes/[id]"
+            options={({ route }) => ({
               headerShown: true,
-              headerTitle: "[nomeFantasia]",
+              headerTitle:
+                (route.params as { nomeFantasia?: string })?.nomeFantasia ||
+                "Carregando...",
               animation: "slide_from_right",
               headerStyle: {
                 backgroundColor: "#24A645",
               },
               headerTintColor: "#fff",
-            }}
+            })}
           />
 
           <Stack.Screen

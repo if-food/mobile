@@ -7,20 +7,19 @@ import ButtonCustom from "components/ButtonCustom";
 import { Form } from "tamagui";
 import Footer from "components/Footer";
 import CustomInput from "components/customInput";
-import { formatBirthDate, formatCPF, formatPhoneNumber } from "utils/formatters";
+import { formatBirthDateDisplay, convertToAPIBirthDate, formatCPF, formatPhoneNumber } from "utils/formatters";
 import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function PersonalData() {
-  const [clients, setClients] = useState([]);
-  const [userData, setUserData] = useState({
-    name: "João da Silva",
-    email: "joao.silva@example.com",
-    phone: "(11) 99999-9999",
-    birthDate: "09/10/2004",
-    cpf: "710.788.794-78",
-  });
-
   const [isModified, setIsModified] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [initialData, setInitialData] = useState({
+    nome: "",
+    telefone: "",
+    dataNascimento: "",
+    cpf: ""
+  });
 
   const {
     control,
@@ -34,51 +33,60 @@ export default function PersonalData() {
   });
 
   useEffect(() => {
-    const loadClients = async () => {
-      getAllClients();
-      console.log("Todos os clientes:", clients);
+    const loadUserData = async () => {
+      try {
+        const clienteIdString = await AsyncStorage.getItem('clienteId');
+        if (clienteIdString) {
+          const id = clienteIdString;
+          const response = await axios.get(`https://api-1-drn7.onrender.com/clientes/${id}`);
+          const data = response.data;
+
+          setInitialData({
+            nome: data.nome || "",
+            telefone: data.telefone || "",
+            dataNascimento: formatBirthDateDisplay(data.dataNascimento) || "",
+            cpf: data.cpf || ""
+          });
+
+          setValue("nome", data.nome || "");
+          setValue("telefone", data.telefone || "");
+          setValue("dataNascimento", formatBirthDateDisplay(data.dataNascimento) || "");
+          setValue("cpf", data.cpf || "");
+        }
+      } catch (error) {
+        console.error("Error loading user data:", error);
+      }
     };
-
-    loadClients();
-  }, []);
-
-  async function getAllClients() {
-    try {
-      const response = await axios.get("https://api-1-drn7.onrender.com/api/cliente");
-      console.log("API Response:", response);
-      console.log("Data:", response.data);
-      setClients(response.data);
-      return response.data;
-    } catch (err) {
-      console.error("Error:", JSON.stringify(err, null, 2));
-      return [];
-    }
-  }
-
-  useEffect(() => {
-    setValue("name", userData.name);
-    setValue("email", userData.email);
-    setValue("phone", userData.phone);
-    setValue("birthDate", userData.birthDate);
-    setValue("cpf", userData.cpf);
-  }, [userData, setValue]);
+  
+    loadUserData();
+  }, [setValue]);
 
   const formValues = watch();
 
   useEffect(() => {
-    const hasChanges = Object.keys(userData).some(
-      key => userData[key] !== formValues[key]
+    const hasChanges = Object.keys(formValues).some(
+      key => formValues[key] !== initialData[key]
     );
     setIsModified(hasChanges);
-  }, [formValues, userData]);
+  }, [formValues, initialData]);
 
   const onSubmit = async (data) => {
-    setUserData(prevData => ({
-      ...prevData,
-      ...data
-    }));
-
-    console.log("Updated userData:", data);
+    try {
+      const clienteIdString = await AsyncStorage.getItem('clienteId');
+      if (clienteIdString) {
+        const id = clienteIdString;
+        if (id) {
+          const formattedData = {
+            ...data,
+            dataNascimento: convertToAPIBirthDate(data.dataNascimento),
+          };
+          await axios.put(`https://api-1-drn7.onrender.com/clientes/${id}`, formattedData);
+          console.log("Updated user data:", formattedData);
+        }
+      }
+    } catch (error) {
+      console.error("Error updating user data:", error);
+    }
   };
 
   return (
@@ -89,9 +97,8 @@ export default function PersonalData() {
       <ScrollView
         contentContainerStyle={{
           flexGrow: 1,
-          justifyContent: 'center',
+          paddingTop: 48,
           alignItems: 'center',
-          paddingBottom: 80,
           backgroundColor: "#2c2d33",
         }}
         keyboardShouldPersistTaps="handled"
@@ -103,7 +110,7 @@ export default function PersonalData() {
           <View style={{ alignItems: "center", width: "100%" }}>
             <Controller
               control={control}
-              name="name"
+              name="nome"
               render={({ field: { onChange, onBlur, value } }) => (
                 <View style={{ width: "100%" }}>
                   <CustomInput
@@ -114,8 +121,8 @@ export default function PersonalData() {
                     value={value}
                     style={{ width: "100%" }}
                   />
-                  {errors.name && (
-                    <Text style={{ color: "red" }}>{errors.name.message}</Text>
+                  {errors.nome && (
+                    <Text style={{ color: "red" }}>{errors.nome.message}</Text>
                   )}
                 </View>
               )}
@@ -125,29 +132,7 @@ export default function PersonalData() {
           <View style={{ alignItems: "center", width: "100%" }}>
             <Controller
               control={control}
-              name="email"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <View style={{ width: "100%" }}>
-                  <CustomInput
-                    titleInput="E-mail"
-                    placeholder="Insira seu e-mail"
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    value={value}
-                    style={{ width: "100%" }}
-                  />
-                  {errors.email && (
-                    <Text style={{ color: "red" }}>{errors.email.message}</Text>
-                  )}
-                </View>
-              )}
-            />
-          </View>
-          
-          <View style={{ alignItems: "center", width: "100%" }}>
-            <Controller
-              control={control}
-              name="phone"
+              name="telefone"
               render={({ field: { onChange, onBlur, value } }) => (
                 <View style={{ width: "100%" }}>
                   <CustomInput
@@ -158,8 +143,8 @@ export default function PersonalData() {
                     value={formatPhoneNumber(value)}
                     style={{ width: "100%" }}
                   />
-                  {errors.phone && (
-                    <Text style={{ color: "red" }}>{errors.phone.message}</Text>
+                  {errors.telefone && (
+                    <Text style={{ color: "red" }}>{errors.telefone.message}</Text>
                   )}
                 </View>
               )}
@@ -169,20 +154,20 @@ export default function PersonalData() {
           <View style={{ alignItems: "center", width: "100%" }}>
             <Controller
               control={control}
-              name="birthDate"
+              name="dataNascimento"
               render={({ field: { onChange, onBlur, value } }) => (
                 <View style={{ width: "100%" }}>
                   <CustomInput
                     titleInput="Data de Nascimento"
                     placeholder="dd/mm/aaaa"
-                    onChangeText={text => onChange(formatBirthDate(text))}
+                    onChangeText={(text) => onChange(formatBirthDateDisplay(text))}
                     onBlur={onBlur}
-                    value={formatBirthDate(value)}
+                    value={formatBirthDateDisplay(value)}
                     style={{ width: "100%" }}
-                    editable={!userData.birthDate}
+                    editable={!initialData.dataNascimento} 
                   />
-                  {errors.birthDate && (
-                    <Text style={{ color: "red" }}>{errors.birthDate.message}</Text>
+                  {errors.dataNascimento && (
+                    <Text style={{ color: "red" }}>{errors.dataNascimento.message}</Text>
                   )}
                 </View>
               )}
@@ -202,7 +187,7 @@ export default function PersonalData() {
                     onBlur={onBlur}
                     value={formatCPF(value)}
                     style={{ width: "100%" }}
-                    editable={!userData.cpf}
+                    editable={!initialData.cpf}
                   />
                   {errors.cpf && (
                     <Text style={{ color: "red" }}>{errors.cpf.message}</Text>

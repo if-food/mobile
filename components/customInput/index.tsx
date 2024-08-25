@@ -18,8 +18,17 @@ const CustomInput = ({ placeholder = '', titleInput = '', subtitleInput = '', se
     <View className="pb-2">
       {titleInput ? <Text className="text-[16px] font-bold text-[#fff] pb-2">{titleInput}</Text> : null}
       {subtitleInput ? <Text className="text-[12px] font-thin text-[#fff] pb-2">{subtitleInput}</Text> : null}
-      <View style={{ position: 'relative' }}>
-        <Input secureTextEntry={secureTextEntry} placeholder={placeholder} className="w-[320px] h-[48px] bg-[#E3E3E3] text-[#16161d]" onChangeText={onChangeText} onBlur={onBlur} value={value} style={[style, { paddingRight: 40 }]} editable={editable} />
+      <View style={{ position: 'relative', opacity: editable ? 1 : 0.4 }}>
+        <Input 
+          secureTextEntry={secureTextEntry} 
+          placeholder={placeholder} 
+          className="w-[320px] h-[48px] bg-[#E3E3E3] text-[#16161d]" 
+          onChangeText={onChangeText} 
+          onBlur={onBlur} 
+          value={value} 
+          style={[style, { paddingRight: 40 }]} 
+          editable={editable} 
+        />
       </View>
     </View>
   );
