@@ -10,6 +10,7 @@ import {
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { Provider } from "./Provider";
+import { CartProvider } from "context/CartContext";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -49,6 +50,7 @@ function RootLayoutNav() {
 
   return (
     <Provider>
+      <CartProvider>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <Stack>
           <Stack.Screen
@@ -253,7 +255,7 @@ function RootLayoutNav() {
           />
 
           <Stack.Screen
-            name="orderRestaurant/[index]"
+            name="orderRestaurant"
             options={{
               headerShown: true,
               headerTitle: "Rabanete",
@@ -266,6 +268,7 @@ function RootLayoutNav() {
           />
         </Stack>
       </ThemeProvider>
+      </CartProvider>
     </Provider>
   );
 }

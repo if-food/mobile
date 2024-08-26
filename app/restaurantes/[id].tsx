@@ -5,6 +5,7 @@ import CardRestaurantPage from './cardRestaurantPage';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import ListagemCardapio from './listFood';
 
 interface Restaurant {
   id: string;
@@ -31,12 +32,12 @@ export default function Restaurantes() {
     fetchRestaurant();
   }, [id]);
 
-  const navigateToDetails = (id: string) => {
-    router.push(`../restaurantes/${id}`);
-  };
+  // const navigateToDetails = (id: string) => {
+  //   router.push(`../restaurantes/${id}`);
+  // };
 
-  const order = (id: string) => {
-    router.push(`../orderRestaurant/${id}`);
+  const order = () => {
+    router.push(`../orderRestaurant`);
   };
 
   return (
@@ -68,15 +69,14 @@ export default function Restaurantes() {
                   source={require('../../assets/images/restaurante/card.png')}
                   title={restaurant.nomeFantasia}
                   categoria={restaurant.categoriasEnum}
-                  onPress={() => navigateToDetails(restaurant.id)}
+                  onPress={order}
                 />
               )}
             </View>
           </ScrollView>
           <Text className="text-[32px] text-[#fff] font-bold pb-4 pt-6 pl-2">Nossos pratos</Text>
-          {/* Uncomment and update ListagemCardapio with real data */}
-          {/* <ListagemCardapio title="Salada de frutas" description="Maça, uva, pêra e salada mista" price={formatPrice(32)} source={require('../../assets/images/restaurante/cardOne.png')} />
-          <ListagemCardapio title="Chá de hortelã" description="Chá quente ou frio" price={formatPrice(12)} source={require('../../assets/images/restaurante/cardTwo.png')} /> */}
+          <ListagemCardapio title="Salada de frutas" description="Maça, uva e pêra" price={"32"} source={require('../../assets/images/restaurante/cardOne.png')} onPress={order}/>
+          <ListagemCardapio title="Chá de hortelã" description="Chá quente ou frio" price={"12"} source={require('../../assets/images/restaurante/cardTwo.png')} />
         </View>
       </ScrollView>
       <Footer />

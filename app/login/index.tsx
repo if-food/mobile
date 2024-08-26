@@ -50,14 +50,11 @@ export default function Login() {
         throw new Error('Token is missing');
       }
 
-      // Armazenar o token
       await AsyncStorage.setItem('userToken', token);
 
-      // Log do conteúdo do AsyncStorage
       const storedToken = await AsyncStorage.getItem('userToken');
       console.log('Stored Token:', storedToken);
 
-      // Navegar para a página inicial
       home();
     } catch (error) {
       console.error('Error during login:', error.response?.data || error.message);

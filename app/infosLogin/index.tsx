@@ -54,7 +54,6 @@ export default function InfosLogin() {
         <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 24, textAlign: 'center' }}>{texts[currentTextIndex]}</Text>
       </TouchableOpacity>
 
-      {/* Botão para pular as imagens */}
       <View className="pb-10">
         <ButtonCustom onPress={skipToLastImage} texto="Pular" />
       </View>

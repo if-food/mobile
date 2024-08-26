@@ -6,6 +6,7 @@ interface CardRestaurantPageProps {
   title?: string;
   description?: string;
   price?: string;
+  onPress?: () => void;
 }
 
 const formatPrice = (price: number) => {
@@ -15,11 +16,11 @@ const formatPrice = (price: number) => {
   });
 };
 
-export default function ListagemCardapio({ source, title, description, price = '0' }: CardRestaurantPageProps) {
+export default function ListagemCardapio({ source, title, description, price = '0', onPress }: CardRestaurantPageProps) {
   const numericPrice = parseFloat(price);
 
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={onPress}>
       <View className="flex-row mb-6 px-6">
         <View className="flex-row justify-between w-full">
           <View className="justify-center">

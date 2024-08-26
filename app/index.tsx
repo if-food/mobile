@@ -10,6 +10,8 @@ import Login from './login';
 import Address from './addresses/address';
 import OrderRestaurant from '../orderRestaurant';
 import Cadastro from './cadastro';
+import Checkout from './checkout';
+import { CartProvider } from 'context/CartContext';
 
 const tamaguiConfig = createTamagui(config);
 
@@ -30,7 +32,9 @@ export default () => {
 
   return (
     <TamaguiProvider config={tamaguiConfig}>
-      <PersonalData />
+      <CartProvider>
+      <Home />
+      </CartProvider>
     </TamaguiProvider>
   );
 };

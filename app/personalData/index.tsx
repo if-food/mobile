@@ -49,7 +49,7 @@ export default function PersonalData() {
           });
 
           setValue("nome", data.nome || "");
-          setValue("telefone", data.telefone || "");
+          setValue("phone", data.telefone || "");
           setValue("dataNascimento", formatBirthDateDisplay(data.dataNascimento) || "");
           setValue("cpf", data.cpf || "");
         }
@@ -132,7 +132,7 @@ export default function PersonalData() {
           <View style={{ alignItems: "center", width: "100%" }}>
             <Controller
               control={control}
-              name="telefone"
+              name="phone"
               render={({ field: { onChange, onBlur, value } }) => (
                 <View style={{ width: "100%" }}>
                   <CustomInput
@@ -143,8 +143,8 @@ export default function PersonalData() {
                     value={formatPhoneNumber(value)}
                     style={{ width: "100%" }}
                   />
-                  {errors.telefone && (
-                    <Text style={{ color: "red" }}>{errors.telefone.message}</Text>
+                  {errors.phone && (
+                    <Text style={{ color: "red" }}>{errors.phone.message}</Text>
                   )}
                 </View>
               )}
