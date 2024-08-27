@@ -7,6 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import registerSchema from '../../schemas/Register';
 import { Pressable, View, Text } from 'react-native';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Cadastro() {
   const router = useRouter();
@@ -26,7 +27,6 @@ export default function Cadastro() {
 
   const onSubmit = async (data) => {
     try {
-      console.log(data);
       const response = await axios.post("https://api-1-drn7.onrender.com/api/cliente", {
         nome: data.name,
         email: data.email,
@@ -36,6 +36,12 @@ export default function Cadastro() {
       if (response.data) {
         console.log('Usuário criado com sucesso');
         console.log(response.data);
+
+        const clienteId = response.data.id;
+        console.log(clienteId);
+
+        await AsyncStorage.setItem('clienteId', clienteId.toString());
+
         handleLogin();
       }
     } catch (error) {
@@ -48,7 +54,6 @@ export default function Cadastro() {
       }
     }
   };
-
 
   return (
     <View className="flex-1 justify-between items-center bg-[#2c2d33] pt-[32px]">

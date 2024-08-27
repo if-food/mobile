@@ -24,12 +24,7 @@ interface Restaurant {
 export default function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
-
   const router = useRouter();
-
-  const restaurant = () => {
-    router.push('../restaurantes');
-  };
 
   useEffect(() => {
     const fetchRestaurants = async () => {
@@ -99,7 +94,10 @@ export default function Home() {
             {restaurants.map((restaurant) => (
               <ListRestaurant
                 key={restaurant.id}
-                onPress={restaurant.open ? () => router.push(`../restaurantes/${restaurant.nomeFantasia}`) : null}
+                onPress={restaurant.open ? () => router.push({
+                  pathname: `../restaurantes/${restaurant.id}`,
+                  params: { nomeFantasia: restaurant.nomeFantasia }
+                }) : null}
                 source={require('../../assets/images/home/rouned_two.png')}
                 titleRestaurant={restaurant.nomeFantasia}
                 categoriasEnum={restaurant.categoriasEnum}
