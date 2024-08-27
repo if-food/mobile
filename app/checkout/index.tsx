@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useRoute } from "@react-navigation/native";
-import { useCart } from "context/CartContext"; 
+import { useCart } from "context/CartContext";
 import ButtonCustom from "components/ButtonCustom";
-import CustomInput from "components/customInput"; 
+import CustomInput from "components/customInput";
 import Footer from "components/Footer";
 import { ScrollView, Text, View, Image, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group';
+
 
 export default function Checkout() {
   const { updateQuantity, removeItem } = useCart();
   const route = useRoute();
-  const { productName, productImage, productPrice, quantity } =
+  const { productName, productImage, productPrice, quantity }: any =
     route.params || {};
   const [localQuantity, setLocalQuantity] = useState(Number(quantity) || 1);
   const [displayProductPrice, setDisplayProductPrice] = useState(
@@ -44,11 +46,51 @@ export default function Checkout() {
 
   const handleDecreaseQuantity = () => {
     if (localQuantity === 1) {
-      removeItem(productName); 
+      removeItem(productName);
     } else {
       updateLocalQuantity(localQuantity - 1);
     }
   };
+
+  // radio-button 
+  const radioButtons: RadioButtonProps[] = useMemo(() => ([
+    {
+      id: '1',
+      label: 'Cartão',
+      value: 'Cartão',
+      color: "#24a645",
+      borderColor: "#fff",
+      labelStyle: {
+        color: "#fff"
+      },
+      descriptionStyle: {
+        color: "#fff"
+      }
+    },
+    {
+      id: '2',
+      label: 'PIX',
+      value: 'PIX',
+      color: "#24a645",
+      borderColor: "#fff",
+      disabled: true,
+      labelStyle: {
+        color: "#fff"
+      }
+    },
+    {
+      id: '3',
+      label: 'Pagamento na entrega',
+      value: 'Pagamento na entrega',
+      color: "#24a645",
+      borderColor: "#fff",
+      labelStyle: {
+        color: "#fff"
+      }
+    }
+  ]), []);
+
+  const [selectedId, setSelectedId] = useState<string | undefined>();
 
   return (
     <View className="flex-1 bg-[#2c2d33]">
@@ -127,6 +169,21 @@ export default function Checkout() {
             </View>
           </View>
 
+          <View className="h-[104px]">
+            <Text className="text-[22px] font-bold text-[#fff] pb-4">Forma de pagamento</Text>
+            <RadioGroup
+              layout="row"
+              radioButtons={radioButtons}
+              onPress={setSelectedId}
+              selectedId={selectedId}
+            />
+          </View>
+
+          <View>
+            <Text className="text-[22px] font-bold text-[#fff] pb-4">Endereço de entrega</Text>
+            <Text>adicionar aqui</Text>
+          </View>
+
           <View className="justify-between flex-1 pb-[50px]">
             <View className="gap-2">
               <Text className="text-[22px] font-bold text-[#fff]">
@@ -152,7 +209,7 @@ export default function Checkout() {
               </View>
               <View className="items-center py-4">
                 <ButtonCustom texto="Continuar" />
-                </View>
+              </View>
             </View>
           </View>
         </View>
