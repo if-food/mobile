@@ -8,7 +8,8 @@ const personalDataSchema = object({
     .typeError("Data inválida"),
   phone: string(),
   cpf: string()
-    .notRequired()
+    .notRequired(),
+  photo: string().nullable(),
 });
 
 export default personalDataSchema;

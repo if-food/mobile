@@ -82,6 +82,7 @@ function RootLayoutNav() {
                 backgroundColor: "#24A645",
               },
               headerTintColor: "#fff",
+              headerBackVisible: false,
             }}
           />
 
@@ -222,7 +223,7 @@ function RootLayoutNav() {
             name="addresses/address"
             options={{
               headerShown: true,
-              headerTitle: "Novo Enderço",
+              headerTitle: "Novo Endereço",
               animation: "slide_from_right",
               headerStyle: {
                 backgroundColor: "#24A645",

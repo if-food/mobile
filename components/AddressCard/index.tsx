@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 interface AddressCardProps {
@@ -79,7 +79,12 @@ const AddressCard = ({
           }}
           onPress={onEditPress}
         />
-        <Icon name="delete" size={24} color="red" onPress={onDeletePress} />
+        <Icon
+          name="delete"
+          size={24}
+          color="red"
+          onPress={onDeletePress}
+        />
       </View>
     </View>
   );
