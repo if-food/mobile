@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
-import { useCart } from "context/CartContext"; // Ajuste o caminho conforme necessário
+import { useCart } from "context/CartContext"; 
 import ButtonCustom from "components/ButtonCustom";
-import CustomInput from "components/customInput"; // Removido para simplificação
+import CustomInput from "components/customInput";
 import Footer from "components/Footer";
 import { ScrollView, Text, View, Image, TouchableOpacity } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome"; // Importe o ícone de lixeira
+import Icon from "react-native-vector-icons/FontAwesome"; 
 
 export default function Checkout() {
   const { updateQuantity, removeItem } = useCart();
