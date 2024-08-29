@@ -67,11 +67,7 @@ export default function Home() {
           />
           <View className="flex-row justify-center mt-2">
             {images.map((_, index) => (
-              <View
-                key={index}
-                className={`w-2.5 h-2.5 rounded-full mx-1 ${index === currentIndex ? 'bg-[#24A645]' : 'bg-[#1C4F2A]'
-                  }`}
-              />
+              <View key={index} className={`w-2.5 h-2.5 rounded-full mx-1 ${index === currentIndex ? 'bg-[#24A645]' : 'bg-[#1C4F2A]'}`} />
             ))}
           </View>
 
@@ -81,6 +77,12 @@ export default function Home() {
                 {restaurants.slice(0, 8).map((restaurant) => (
                   <CardRecintosFamosos
                     key={restaurant.id}
+                    onPress={() =>
+                      router.push({
+                        pathname: `../restaurantes/${restaurant.id}`,
+                        params: { nomeFantasia: restaurant.nomeFantasia },
+                      })
+                    }
                     titleRestaurant={restaurant.nomeFantasia}
                     source={require('../../assets/images/home/card_one.png')}
                   />
@@ -94,10 +96,12 @@ export default function Home() {
             {restaurants.map((restaurant) => (
               <ListRestaurant
                 key={restaurant.id}
-                onPress={restaurant.open ? () => router.push({
-                  pathname: `../restaurantes/${restaurant.id}`,
-                  params: { nomeFantasia: restaurant.nomeFantasia }
-                }) : null}
+                onPress={() =>
+                  router.push({
+                    pathname: `../restaurantes/${restaurant.id}`,
+                    params: { nomeFantasia: restaurant.nomeFantasia },
+                  })
+                }
                 source={require('../../assets/images/home/rouned_two.png')}
                 titleRestaurant={restaurant.nomeFantasia}
                 categoriasEnum={restaurant.categoriasEnum}

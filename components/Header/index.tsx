@@ -3,18 +3,18 @@ import { View } from 'react-native';
 import Bag from '../../assets/images/header_component/bag.png';
 import { TouchableOpacity } from 'react-native';
 import { useState } from 'react';
+import { useRouter } from 'expo-router';
 
 interface HeaderProps {
   title: string;
 }
 
 export default function Header({ title }: HeaderProps) {
-  // Adiciona um estado para armazenar o valor do contador
   const [count, setCount] = useState(0);
+  const router = useRouter();
 
-  // Função que incrementa o valor do contador
   const handlePress = () => {
-    setCount(count + 1);
+    router.push('../registroPedidos');
   };
 
   if (count > 10) setCount(0);
