@@ -12,6 +12,7 @@ import OrderRestaurant from '../orderRestaurant';
 import Cadastro from './cadastro';
 import Checkout from './checkout';
 import { CartProvider } from 'context/CartContext';
+import { LucideHome } from 'lucide-react-native';
 
 const tamaguiConfig = createTamagui(config);
 

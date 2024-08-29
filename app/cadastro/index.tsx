@@ -8,9 +8,11 @@ import registerSchema from '../../schemas/Register';
 import { Pressable, View, Text } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useState } from 'react';
 
 export default function Cadastro() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = () => {
     router.push('../login');
@@ -26,6 +28,10 @@ export default function Cadastro() {
   });
 
   const onSubmit = async (data) => {
+    if (loading) return;
+
+    setLoading(true);
+
     try {
       const response = await axios.post("https://api-1-drn7.onrender.com/api/cliente", {
         nome: data.name,
@@ -52,6 +58,8 @@ export default function Cadastro() {
         console.error('Erro desconhecido:', error.message);
         alert('Erro desconhecido. Tente novamente.');
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -82,7 +90,11 @@ export default function Cadastro() {
             </Pressable>
           </View>
           <ButtonCustom texto="Continuar com o Google" />
-          <ButtonCustom onPress={handleSubmit(onSubmit)} texto="Continuar" />
+          <ButtonCustom 
+            onPress={handleSubmit(onSubmit)} 
+            texto="Continuar" 
+            loading={loading}
+          />
         </View>
       </Form>
     </View>

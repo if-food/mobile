@@ -82,6 +82,7 @@ function RootLayoutNav() {
                 backgroundColor: "#24A645",
               },
               headerTintColor: "#fff",
+              headerBackVisible: false,
             }}
           />
 
@@ -222,7 +223,7 @@ function RootLayoutNav() {
             name="addresses/address"
             options={{
               headerShown: true,
-              headerTitle: "Novo Enderço",
+              headerTitle: "Novo Endereço",
               animation: "slide_from_right",
               headerStyle: {
                 backgroundColor: "#24A645",
@@ -255,16 +256,16 @@ function RootLayoutNav() {
           />
 
           <Stack.Screen
-            name="orderRestaurant"
-            options={{
+            name="orderRestaurant/[id]"
+            options={({route}) => ({
               headerShown: true,
-              headerTitle: "Rabanete",
+              headerTitle: (route.params as {productName?: string})?.productName || "Carregando...",
               animation: "slide_from_right",
               headerStyle: {
                 backgroundColor: "#24A645",
               },
               headerTintColor: "#fff",
-            }}
+            })}
           />
         </Stack>
       </ThemeProvider>
