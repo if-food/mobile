@@ -11,6 +11,7 @@ import { formatBirthDateDisplay, convertToAPIBirthDate, formatCPF, formatPhoneNu
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImagePickerComponent from 'components/Image';
+import * as FileSystem from 'expo-file-system';
 
 export default function PersonalData() {
   const [isModified, setIsModified] = useState(false);
@@ -19,7 +20,7 @@ export default function PersonalData() {
     telefone: '',
     dataNascimento: '',
     cpf: '',
-    photo: null as string | null, // URI da imagem
+    photo: null as string | null,
   });
 
   const {
@@ -47,7 +48,7 @@ export default function PersonalData() {
             telefone: data.telefone || '',
             dataNascimento: formatBirthDateDisplay(data.dataNascimento) || '',
             cpf: data.cpf || '',
-            photo: data.photo || null, // URI da imagem
+            photo: data.photo || null, 
           });
 
           setValue('nome', data.nome || '');
@@ -73,54 +74,29 @@ export default function PersonalData() {
     setIsModified(hasChanges);
   }, [formValues, initialData]);
 
-  // Função para converter URI em Blob
-  const uriToBlob = async (uri: string): Promise<Blob> => {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    return blob;
-  };
-
-  // Manipula a seleção da imagem
   const handleImagePick = async (image: { uri: string }) => {
     setInitialData({
       ...initialData,
-      photo: image.uri, // Armazena a URI da imagem
+      photo: image.uri, 
     });
     setValue('photo', image.uri);
-    console.log('Image URI:', image.uri); // Debugging: Verifique a URI
+    console.log('Image URI:', image.uri); 
   };
 
-  const onSubmit = async (data) => {
+  const updateUserData = async (data) => {
     try {
       const clienteIdString = await AsyncStorage.getItem('clienteId');
       if (clienteIdString) {
         const id = clienteIdString;
-  
-        // Criação do FormData
-        const formData = new FormData();
-        formData.append('nome', data.nome);
-        formData.append('telefone', data.phone);
-        formData.append('dataNascimento', convertToAPIBirthDate(data.dataNascimento));
-        formData.append('cpf', data.cpf);
-  
-        if (data.photo) {
-          const imageBlob = await uriToBlob(data.photo);
-          formData.append('photo', imageBlob, 'photo.jpg');
-        }
-  
-        // Depuração do FormData sem usar entries()
-        formData.forEach((value, key) => {
-          console.log(`${key}:`, value);
+
+        await axios.put(`https://if-delivery-api.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/clientes/${id}`, {
+          nome: data.nome,
+          telefone: data.phone,
+          dataNascimento: convertToAPIBirthDate(data.dataNascimento),
+          cpf: data.cpf,
         });
-  
-        // Chamada da solicitação
-        const response = await axios.put(`https://api-1-drn7.onrender.com/clientes/${id}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-  
-        console.log('Salvo com sucesso');
+
+        console.log('Dados atualizados com sucesso');
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -139,9 +115,47 @@ export default function PersonalData() {
       }
     }
   };
+
+  const updateImage = async (imageUri: string) => {
+    try {
+      const clienteIdString = await AsyncStorage.getItem('clienteId');
+      if (clienteIdString) {
+        const id = clienteIdString;
+        const formData = new FormData();
+                const imageBlob = {
+          uri: imageUri,
+          type: 'image/png',
+          name: 'photo.png', 
+        };
+        formData.append('imageFile', imageBlob as any);
   
+        const response = await fetch(`https://if-delivery-api.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/cliente/imagem/?clienteId=${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          body: formData,
+        });
   
+        if (!response.ok) {
+          const responseBody = await response.text();
+          throw new Error(`HTTP error! Status: ${response.status}. Response: ${responseBody}`);
+        }
   
+        console.log('Imagem atualizada com sucesso');
+      }
+    } catch (error) {
+      console.error('Error updating image:', error);
+    }
+  };
+
+  const onSubmit = async (data) => {
+    await updateUserData(data);
+
+    if (data.photo) {
+      await updateImage(data.photo);
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -158,7 +172,10 @@ export default function PersonalData() {
         keyboardShouldPersistTaps='handled'
       >
         <View style={{ alignItems: 'center', marginBottom: 8 }}>
-          <ImagePickerComponent onImagePicked={handleImagePick} />
+          <ImagePickerComponent 
+            onImagePicked={handleImagePick} 
+            initialImage={initialData.photo}
+          />
         </View>
 
         <Form
@@ -255,11 +272,12 @@ export default function PersonalData() {
           </View>
 
           <ButtonCustom
-            texto='Salvar'
+            texto='Alterar'
             onPress={handleSubmit(onSubmit)}
+            disabled={!isModified}
+            style={{ marginVertical: 16 }}
           />
         </Form>
-
         <Footer />
       </ScrollView>
     </KeyboardAvoidingView>

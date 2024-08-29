@@ -1,22 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Image, Alert, TouchableOpacity } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface ImageType {
   uri: string;
-  byteArray?: Uint8Array; // Adicionando a propriedade byteArray
+  byteArray?: Uint8Array;
 }
 
-const ImagePickerComponent = ({ onImagePicked }: { onImagePicked?: (image: ImageType) => void }) => {
-  const [image, setImage] = useState<ImageType | null>(null);
+interface ImagePickerComponentProps {
+  onImagePicked?: (image: ImageType) => void;
+  initialImage?: string | null;
+}
 
+const ImagePickerComponent: React.FC<ImagePickerComponentProps> = ({ onImagePicked, initialImage }) => {
+  const [image, setImage] = useState<ImageType | null>(null);
+  const [imageUri, setImageUri] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (initialImage) {
+      // Se você tiver um URI inicial, atualiza o estado
+      setImage({ uri: initialImage });
+      setImageUri(initialImage);
+    }
+  }, [initialImage]);
+
+  // Função para converter Uint8Array para um URL de Blob
+  const uint8ArrayToBlobUrl = (byteArray: Uint8Array) => {
+    const blob = new Blob([byteArray], { type: 'image/png' });
+    return URL.createObjectURL(blob);
+  };
+
+  // Função para obter o array de bytes da imagem
   const getByteArray = async (uri: string) => {
     const response = await fetch(uri);
     const arrayBuffer = await response.arrayBuffer();
     return new Uint8Array(arrayBuffer);
   };
 
+  // Função para selecionar uma imagem da galeria
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -29,6 +51,7 @@ const ImagePickerComponent = ({ onImagePicked }: { onImagePicked?: (image: Image
       const byteArray = await getByteArray(result.assets[0].uri);
       const source: ImageType = { uri: result.assets[0].uri, byteArray };
       setImage(source);
+      setImageUri(result.assets[0].uri); // Atualiza o URI da imagem
       if (onImagePicked) {
         onImagePicked(source);
       }
@@ -38,7 +61,7 @@ const ImagePickerComponent = ({ onImagePicked }: { onImagePicked?: (image: Image
   };
 
   return (
-    <View style={{ alignItems: "center", justifyContent: "center"}}>
+    <View style={{ alignItems: "center", justifyContent: "center" }}>
       <TouchableOpacity
         style={{
           width: 100,
@@ -51,9 +74,9 @@ const ImagePickerComponent = ({ onImagePicked }: { onImagePicked?: (image: Image
         }}
         onPress={pickImage}
       >
-        {image ? (
+        {imageUri ? (
           <Image
-            source={{ uri: image.uri }}
+            source={{ uri: imageUri }}
             style={{
               width: "100%",
               height: "100%",

@@ -29,7 +29,7 @@ export default function Home() {
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
-        const response = await axios.get<Restaurant[]>('https://api-1-drn7.onrender.com/api/restaurante');
+        const response = await axios.get<Restaurant[]>('https://if-delivery-api.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/restaurantes');
         setRestaurants(response.data);
       } catch (error) {
         console.error('Failed to fetch restaurants:', error);
