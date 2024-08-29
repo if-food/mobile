@@ -37,7 +37,7 @@ export default function Login() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post('https://api-1-drn7.onrender.com/api/auth', {
+      const response = await axios.post('https://if-delivery-api.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/auth', {
         username: data.email,
         password: data.password,
       });
