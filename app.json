@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "if-food",
-    "slug": "if-food",
+    "name": "iffood",
+    "slug": "iffood",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -23,7 +23,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.thiagoapk.iffood"
+      "package": "com.thiagoapk.ifffoood"
     },
     "web": {
       "bundler": "metro",
@@ -42,7 +42,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "065a61b6-72e1-4455-8ab0-337cef10f159"
+        "projectId": "88b371c5-9d99-4670-a57f-8aef0129689b"
       }
     }
   }

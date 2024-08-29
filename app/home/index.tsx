@@ -101,6 +101,12 @@ export default function Home() {
                 {restaurants.slice(0, 8).map((restaurant) => (
                   <CardRecintosFamosos
                     key={restaurant.id}
+                    onPress={() =>
+                      router.push({
+                        pathname: `../restaurantes/${restaurant.id}`,
+                        params: { nomeFantasia: restaurant.nomeFantasia },
+                      })
+                    }
                     titleRestaurant={restaurant.nomeFantasia}
                     source={require("../../assets/images/home/card_one.png")}
                   />

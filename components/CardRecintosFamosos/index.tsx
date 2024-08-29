@@ -10,7 +10,7 @@ interface Card {
 
 export default function CardRecintosFamosos({ source, titleRestaurant, onPress }: Card) {
   return (
-    <View className="items-center px-2">
+    <View className="items-center px-1">
       <TouchableOpacity className="items-center" onPress={onPress}>
         <Image className="w-16 h-15 mb-2" source={source} />
         <Text className="text-[16px] text-[#fff] font-bold">{titleRestaurant}</Text>

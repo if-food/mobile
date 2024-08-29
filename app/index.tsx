@@ -34,7 +34,7 @@ export default () => {
   return (
     <TamaguiProvider config={tamaguiConfig}>
       <CartProvider>
-      <Home />
+      <InfosLogin />
       </CartProvider>
     </TamaguiProvider>
   );
