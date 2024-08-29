@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, KeyboardAvoidingView, Platform, ScrollView, Image } from 'react-native';
+import { View, Text, KeyboardAvoidingView, Platform, ScrollView, Image, ActivityIndicator } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import personalDataSchema from '../../schemas/PersonalData';
@@ -11,16 +11,23 @@ import { formatBirthDateDisplay, convertToAPIBirthDate, formatCPF, formatPhoneNu
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImagePickerComponent from 'components/Image';
-import * as FileSystem from 'expo-file-system';
 
 export default function PersonalData() {
   const [isModified, setIsModified] = useState(false);
-  const [initialData, setInitialData] = useState({
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [initialData, setInitialData] = useState<{
+    nome: string;
+    telefone: string;
+    dataNascimento: string;
+    cpf: string;
+    photo: string | null;
+  }>({
     nome: '',
     telefone: '',
     dataNascimento: '',
     cpf: '',
-    photo: null as string | null,
+    photo: null,
   });
 
   const {
@@ -48,7 +55,7 @@ export default function PersonalData() {
             telefone: data.telefone || '',
             dataNascimento: formatBirthDateDisplay(data.dataNascimento) || '',
             cpf: data.cpf || '',
-            photo: data.photo || null, 
+            photo: data.photo || null,
           });
 
           setValue('nome', data.nome || '');
@@ -59,6 +66,8 @@ export default function PersonalData() {
         }
       } catch (error) {
         console.error('Error loading user data:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -77,10 +86,9 @@ export default function PersonalData() {
   const handleImagePick = async (image: { uri: string }) => {
     setInitialData({
       ...initialData,
-      photo: image.uri, 
+      photo: image.uri,
     });
     setValue('photo', image.uri);
-    console.log('Image URI:', image.uri); 
   };
 
   const updateUserData = async (data) => {
@@ -99,20 +107,7 @@ export default function PersonalData() {
         console.log('Dados atualizados com sucesso');
       }
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error('Error updating user data:', error.message);
-        if (error.response) {
-          console.error('Response data:', error.response.data);
-          console.error('Response status:', error.response.status);
-          console.error('Response headers:', error.response.headers);
-        } else if (error.request) {
-          console.error('Request data:', error.request);
-        } else {
-          console.error('Error message:', error.message);
-        }
-      } else {
-        console.error('Unexpected error:', error);
-      }
+      console.error('Error updating user data:', error);
     }
   };
 
@@ -122,13 +117,13 @@ export default function PersonalData() {
       if (clienteIdString) {
         const id = clienteIdString;
         const formData = new FormData();
-                const imageBlob = {
+        const imageBlob = {
           uri: imageUri,
           type: 'image/png',
-          name: 'photo.png', 
+          name: 'photo.png',
         };
         formData.append('imageFile', imageBlob as any);
-  
+
         const response = await fetch(`https://if-delivery-api.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/cliente/imagem/?clienteId=${id}`, {
           method: 'PUT',
           headers: {
@@ -136,12 +131,12 @@ export default function PersonalData() {
           },
           body: formData,
         });
-  
+
         if (!response.ok) {
           const responseBody = await response.text();
           throw new Error(`HTTP error! Status: ${response.status}. Response: ${responseBody}`);
         }
-  
+
         console.log('Imagem atualizada com sucesso');
       }
     } catch (error) {
@@ -150,12 +145,27 @@ export default function PersonalData() {
   };
 
   const onSubmit = async (data) => {
-    await updateUserData(data);
+    setIsSubmitting(true);
+    try {
+      await updateUserData(data);
 
-    if (data.photo) {
-      await updateImage(data.photo);
+      if (data.photo) {
+        await updateImage(data.photo);
+      }
+    } catch (error) {
+      console.error('Error during submission:', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#2c2d33' }}>
+        <ActivityIndicator size="large" color="#ffffff" />
+      </View>
+    );
+  }
 
   return (
     <KeyboardAvoidingView
@@ -272,12 +282,18 @@ export default function PersonalData() {
           </View>
 
           <ButtonCustom
-            texto='Alterar'
+            texto='Salvar alterações'
             onPress={handleSubmit(onSubmit)}
-            disabled={!isModified}
-            style={{ marginVertical: 16 }}
+            disabled={!isModified || isSubmitting}
           />
+
+          {isSubmitting && (
+            <View style={{ marginTop: 16 }}>
+              <ActivityIndicator size="small" color="#ffffff" />
+            </View>
+          )}
         </Form>
+
         <Footer />
       </ScrollView>
     </KeyboardAvoidingView>

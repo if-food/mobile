@@ -11,7 +11,7 @@ import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group';
 export default function Checkout() {
   const { updateQuantity, removeItem } = useCart();
   const route = useRoute();
-  const { productName, productImage, productPrice, quantity }: any =
+  const { productName, productImage, productDescription, productPrice, quantity, restaurantName }: any =
     route.params || {};
   const [localQuantity, setLocalQuantity] = useState(Number(quantity) || 1);
   const [displayProductPrice, setDisplayProductPrice] = useState(
@@ -103,7 +103,7 @@ export default function Checkout() {
                 }
               />
               <Text className="text-[24px] font-bold text-[#fff]">
-                Rabanette
+                {restaurantName}
               </Text>
             </View>
           </TouchableOpacity>
@@ -125,10 +125,10 @@ export default function Checkout() {
                 <View className="justify-between mx-2 flex-1">
                   <View>
                     <Text className="text-[16px] font-bold text-[#fff]">
-                      {productName || "Produto"}
+                      {productName}
                     </Text>
                     <Text className="text-[12px] text-[#fff]">
-                      Embalagem 67g
+                      {productDescription}
                     </Text>
                   </View>
                   <Text className="text-[12px] text-[#24A645]">
@@ -179,7 +179,7 @@ export default function Checkout() {
 
           <View>
             <Text className="text-[22px] font-bold text-[#fff] pb-4">Endereço de entrega</Text>
-            <Text>adicionar aqui</Text>
+            <Text></Text>
           </View>
 
           <View className="justify-between flex-1 pb-[50px]">
@@ -199,11 +199,11 @@ export default function Checkout() {
               </View>
               <View className="flex-row justify-between">
                 <Text className="font-bold text-[#fff]">Taxa de entrega</Text>
-                <Text className="font-bold text-[#24A645]">Grátis</Text>
+                <Text className="font-bold text-[#fff]">Grátis</Text>
               </View>
               <View className="flex-row justify-between">
                 <Text className="font-bold text-[#fff]">Total</Text>
-                <Text className="font-bold text-[#fff]">R$ {totalPrice}</Text>
+                <Text className="font-bold text-[#24A645]">R$ {totalPrice}</Text>
               </View>
               <View className="items-center py-4">
                 <ButtonCustom texto="Continuar" />

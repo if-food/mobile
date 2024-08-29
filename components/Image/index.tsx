@@ -19,26 +19,22 @@ const ImagePickerComponent: React.FC<ImagePickerComponentProps> = ({ onImagePick
 
   useEffect(() => {
     if (initialImage) {
-      // Se você tiver um URI inicial, atualiza o estado
       setImage({ uri: initialImage });
       setImageUri(initialImage);
     }
   }, [initialImage]);
 
-  // Função para converter Uint8Array para um URL de Blob
   const uint8ArrayToBlobUrl = (byteArray: Uint8Array) => {
     const blob = new Blob([byteArray], { type: 'image/png' });
     return URL.createObjectURL(blob);
   };
 
-  // Função para obter o array de bytes da imagem
   const getByteArray = async (uri: string) => {
     const response = await fetch(uri);
     const arrayBuffer = await response.arrayBuffer();
     return new Uint8Array(arrayBuffer);
   };
 
-  // Função para selecionar uma imagem da galeria
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -51,7 +47,7 @@ const ImagePickerComponent: React.FC<ImagePickerComponentProps> = ({ onImagePick
       const byteArray = await getByteArray(result.assets[0].uri);
       const source: ImageType = { uri: result.assets[0].uri, byteArray };
       setImage(source);
-      setImageUri(result.assets[0].uri); // Atualiza o URI da imagem
+      setImageUri(result.assets[0].uri);
       if (onImagePicked) {
         onImagePicked(source);
       }

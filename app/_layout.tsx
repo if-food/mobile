@@ -256,16 +256,16 @@ function RootLayoutNav() {
           />
 
           <Stack.Screen
-            name="orderRestaurant"
-            options={{
+            name="orderRestaurant/[id]"
+            options={({route}) => ({
               headerShown: true,
-              headerTitle: "Rabanete",
+              headerTitle: (route.params as {productName?: string})?.productName || "Carregando...",
               animation: "slide_from_right",
               headerStyle: {
                 backgroundColor: "#24A645",
               },
               headerTintColor: "#fff",
-            }}
+            })}
           />
         </Stack>
       </ThemeProvider>

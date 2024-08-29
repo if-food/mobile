@@ -1,6 +1,6 @@
 import Footer from 'components/Footer';
 import { Image } from 'tamagui';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import CardRestaurantPage from './cardRestaurantPage';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -30,41 +30,64 @@ interface ProductsByCategory {
 export default function Restaurantes() {
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [productsByCategory, setProductsByCategory] = useState<ProductsByCategory>({});
+  const [loading, setLoading] = useState(true); // Added loading state
   const { id } = useLocalSearchParams();
   const router = useRouter();
 
   useEffect(() => {
     const fetchRestaurant = async () => {
       try {
-        const response = await axios.get<Restaurant>(`https://api-1-drn7.onrender.com/restaurantes/${id}`);
+        const response = await axios.get<Restaurant>(`https://if-delivery-api.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/restaurante/?restauranteId=${id}`);
         setRestaurant(response.data);
       } catch (error) {
         console.error('Failed to fetch restaurant data:', error);
       }
     };
-    fetchRestaurant();
-  }, [id]);
 
-  useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get<Record<string, Product[]>>(`https://api-1-drn7.onrender.com/api/produto/cardapio/253`);
-        console.log('Fetched products:', response.data);
-
+        const response = await axios.get<Record<string, Product[]>>(`https://if-delivery-api.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/produto/cardapio/${id}`);
         setProductsByCategory(response.data);
       } catch (error) {
         console.error('Failed to fetch products data:', error);
       }
     };
-    fetchProducts();
+
+    const fetchData = async () => {
+      setLoading(true);
+      await Promise.all([fetchRestaurant(), fetchProducts()]);
+      setLoading(false);
+    };
+
+    fetchData();
   }, [id]);
 
-  const order = () => {
-    router.push(`../orderRestaurant`);
+  const handleProductPress = (product: Product) => {
+    router.push({
+      pathname: `../orderRestaurant/${product.id}`,
+      params: {
+        productName: product.titulo,
+        productImage: product.imagem || '',
+        productDescription: product.descricao,
+        productPrice: product.valorUnitario.toFixed(2),
+        quantity: '1',
+        totalPrice: product.valorUnitario.toFixed(2),
+        restaurantName: restaurant ? restaurant.nomeFantasia : '',
+      },
+    });
   };
 
+  if (loading) {
+    return (
+      <View className="flex-1 bg-[#2c2d33] justify-center items-center">
+        <ActivityIndicator size="large" color="#24A645" />
+        <Text className="text-white mt-4">Carregando...</Text>
+      </View>
+    );
+  }
+
   return (
-    <View className="flex-1 bg-[#2c2d33] pt-[40px]">
+    <View className="flex-1 bg-[#2c2d33]">
       <ScrollView className="mb-14">
         <Image source={require('../../assets/images/restaurante/banner.png')} />
         <View className="px-6 pt-6 flex-row justify-between items-center">
@@ -92,7 +115,7 @@ export default function Restaurantes() {
                   source={product.imagem ? { uri: product.imagem } : require('../../assets/images/restaurante/card.png')}
                   titulo={product.titulo}
                   valorUnitario={`R$ ${product.valorUnitario.toFixed(2)}`}
-                  onPress={order}
+                  onPress={() => handleProductPress(product)}
                 />
               ))}
             </View>
@@ -107,8 +130,8 @@ export default function Restaurantes() {
                 description: product.descricao,
                 price: `R$ ${product.valorUnitario.toFixed(2)}`,
                 source: product.imagem ? { uri: product.imagem } : require('../../assets/images/restaurante/card.png'),
+                onPress: () => handleProductPress(product)
               }))}
-              onPress={order}
             />
           ))}
         </View>

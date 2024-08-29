@@ -31,7 +31,7 @@ export default function Addresses() {
       const clienteIdString = await AsyncStorage.getItem("clienteId");
       if (clienteIdString) {
         const id = clienteIdString;
-        const response = await axios.get(`https://api-1-drn7.onrender.com/api/cliente/${id}`);
+        const response = await axios.get(`https://if-delivery-api.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/cliente/${id}`);
         const data = response.data.enderecos || [];
         setAddresses(data);
       } else {
@@ -49,7 +49,7 @@ export default function Addresses() {
     try {
       const clienteIdString = await AsyncStorage.getItem("clienteId");
       if (clienteIdString) {
-        await axios.delete(`https://api-1-drn7.onrender.com/api/cliente/endereco/${id}`);
+        await axios.delete(`https://if-delivery-api.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/cliente/endereco/${id}`);
         setAddresses((prevAddresses) => prevAddresses.filter((address) => address.id !== id));
         Alert.alert("Sucesso", "Endereço excluído com sucesso!");
       } else {

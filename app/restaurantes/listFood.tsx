@@ -10,7 +10,7 @@ interface ProductCard {
 interface ListagemCardapioProps {
   category: string;
   products: ProductCard[];
-  onPress: () => void;
+  onPress?: () => void;
 }
 
 const ListagemCardapio = ({ category, products, onPress }: ListagemCardapioProps) => {
