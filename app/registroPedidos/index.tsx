@@ -10,20 +10,19 @@ export default function RegistroPedidos() {
         <View className="items-start px-6 my-4">
           <Text className="text-[24px] font-bold text-[#fff]">Hoje</Text>
           <View>
-            <OrdersCard
-              source={require('../../assets/images/ordersCard/cardOne.png')}
-              name="Rabanete"
-              description="Rabanetes frescos"
-              price={2.5}
-              status="Entregue"
-            />
-            <OrdersCard
-              source={require('../../assets/images/ordersCard/cardOne.png')}
-              name="Rabanete"
-              description="Rabanetes frescos"
-              price={2.5}
-              status="Enviado"
-            />
+            <OrdersCard source={require('../../assets/images/ordersCard/cardOne.png')} name="Rabanete" description="Rabanetes frescos" price={2.5} status="Entregue" />
+            <OrdersCard source={require('../../assets/images/ordersCard/cardOne.png')} name="Rabanete" description="Rabanetes frescos" price={2.5} status="Enviado" />
+          </View>
+          <Text className="text-[24px] font-bold text-[#fff] my-4">Pedidos Antigos</Text>
+          <View className='mb-20'>
+            <OrdersCard source={require('../../assets/images/ordersCard/cardOne.png')} name="Rabanete" description="Rabanetes frescos" price={2.5} status="Entregue" />
+            <OrdersCard source={require('../../assets/images/ordersCard/cardOne.png')} name="Rabanete" description="Rabanetes frescos" price={2.5} status="Entregue" />
+            <OrdersCard source={require('../../assets/images/ordersCard/cardOne.png')} name="Rabanete" description="Rabanetes frescos" price={2.5} status="Entregue" />
+            <OrdersCard source={require('../../assets/images/ordersCard/cardOne.png')} name="Rabanete" description="Rabanetes frescos" price={2.5} status="Entregue" />
+            <OrdersCard source={require('../../assets/images/ordersCard/cardOne.png')} name="Rabanete" description="Rabanetes frescos" price={2.5} status="Entregue" />
+            <OrdersCard source={require('../../assets/images/ordersCard/cardOne.png')} name="Rabanete" description="Rabanetes frescos" price={2.5} status="Entregue" />
+            <OrdersCard source={require('../../assets/images/ordersCard/cardOne.png')} name="Rabanete" description="Rabanetes frescos" price={2.5} status="Entregue" />
+            <OrdersCard source={require('../../assets/images/ordersCard/cardOne.png')} name="Rabanete" description="Rabanetes frescos" price={2.5} status="Cancelado" />
           </View>
         </View>
       </ScrollView>
