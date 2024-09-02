@@ -13,13 +13,14 @@ import Cadastro from './cadastro';
 import Checkout from './checkout';
 import { CartProvider } from 'context/CartContext';
 import { LucideHome } from 'lucide-react-native';
+import OrderReview from './orderReview';
 
 const tamaguiConfig = createTamagui(config);
 
 type Conf = typeof tamaguiConfig;
 
 declare module '@tamagui/core' {
-  interface TamaguiCustomConfig extends Conf { }
+  interface TamaguiCustomConfig extends Conf {}
 }
 export default () => {
   const [loaded] = useFonts({
@@ -34,7 +35,7 @@ export default () => {
   return (
     <TamaguiProvider config={tamaguiConfig}>
       <CartProvider>
-      <InfosLogin />
+        <OrderReview />
       </CartProvider>
     </TamaguiProvider>
   );
