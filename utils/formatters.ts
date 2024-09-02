@@ -41,3 +41,30 @@ export const formatPhoneNumber = (value) => {
   return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`;
 };
 
+export const getIconForType = (type?: string) => {
+  switch (type) {
+    case 'Casa':
+      return 'home';
+    case 'Apartamento':
+      return 'apartment';
+    default:
+      return 'map'; 
+  }
+}; 
+
+export const fetchAddressByCep = async (cep) => {
+  try {
+    const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching address data:", error);
+    return null;
+  }
+};
+
+export const formatCep = (cep) => {
+  cep = cep.replace(/\D/g, '');
+  if (cep.length <= 5) return cep;
+  return `${cep.slice(0, 5)}-${cep.slice(5, 8)}`;
+};

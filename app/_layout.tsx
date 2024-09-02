@@ -6,7 +6,7 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { Provider } from './Provider';
-import { CartProvider } from 'context/CartContext';
+import { CartProvider } from 'context/Provider';
 
 export {
   // Catch any errors thrown by the Layout component.

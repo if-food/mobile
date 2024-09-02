@@ -27,8 +27,7 @@ export default function Profile() {
 
   const handleLogout = async () => {
     try {
-      await AsyncStorage.removeItem('token');
-      await AsyncStorage.removeItem('userData');
+      await AsyncStorage.clear();
 
       const token = await AsyncStorage.getItem('token');
       const userData = await AsyncStorage.getItem('userData');

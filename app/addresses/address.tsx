@@ -13,30 +13,13 @@ import { Form } from "tamagui";
 import Footer from "components/Footer";
 import addressSchema from "schemas/Address";
 import CustomInput from "components/customInput";
-import { router, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group';
-
-const fetchAddressByCep = async (cep) => {
-  try {
-    const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching address data:", error);
-    return null;
-  }
-};
-
-const formatCep = (cep) => {
-  cep = cep.replace(/\D/g, '');
-  if (cep.length <= 5) return cep;
-  return `${cep.slice(0, 5)}-${cep.slice(5, 8)}`;
-};
+import { fetchAddressByCep, formatCep } from "utils/formatters";
 
 export default function Address() {
   const { id } = useLocalSearchParams();
-  const router = useRouter();
 
   const radioButtons: RadioButtonProps[] = useMemo(() => ([
     {
@@ -173,12 +156,12 @@ export default function Address() {
         <Form onSubmit={handleSubmit(onSubmit)} style={{ marginBottom: 24 }}>
           <View>
             <View style={{marginBottom: 16}}>
-          <RadioGroup
-              radioButtons={radioButtons}
-              onPress={setSelectedId}
-              containerStyle={{ flexDirection: 'row', flexWrap: 'wrap' }}
-              selectedId={selectedId}
-            /> 
+              <RadioGroup
+                radioButtons={radioButtons}
+                onPress={setSelectedId}
+                containerStyle={{ flexDirection: 'row', flexWrap: 'wrap' }}
+                selectedId={selectedId}
+              /> 
             </View>
             <Controller
               control={control}
@@ -342,22 +325,15 @@ export default function Address() {
               )}
             />
           </View>
-        </Form>
-        <View
-          style={{
-            width: "100%",
-            alignItems: "center",
-            paddingBottom: 72,
-          }}
-        >
+
           <ButtonCustom
-              style={{ width: 320, marginBottom: 16 }}
-              texto={buttonText}
-              onPress={handleSubmit(onSubmit)}
-            />
-        </View>
+            style={{ width: 320, marginBottom: 16 }}
+            texto={buttonText}
+            onPress={handleSubmit(onSubmit)}
+          />
+        </Form>
       </ScrollView>
-      <Footer/>
+      <Footer />
     </KeyboardAvoidingView>
   );
 }
