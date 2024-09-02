@@ -7,6 +7,8 @@ import Footer from "components/Footer";
 import { ScrollView, Text, View, Image, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group';
+import { useRouter } from "expo-router";
+import OrderReview from "app/orderReview";
 
 export default function Checkout() {
   const { updateQuantity, removeItem } = useCart();
@@ -20,6 +22,12 @@ export default function Checkout() {
   const [totalPrice, setTotalPrice] = useState(
     (displayProductPrice * Number(quantity) || 1).toFixed(2)
   );
+
+  const router = useRouter();
+
+  const review = () => {
+    router.push("../orderReview");
+  };
 
   useEffect(() => {
     const newTotalPrice = (displayProductPrice * localQuantity).toFixed(2);
@@ -206,7 +214,7 @@ export default function Checkout() {
                 <Text className="font-bold text-[#24A645]">R$ {totalPrice}</Text>
               </View>
               <View className="items-center py-4">
-                <ButtonCustom texto="Continuar" />
+                <ButtonCustom onPress={review} texto="Continuar" />
               </View>
             </View>
           </View>
