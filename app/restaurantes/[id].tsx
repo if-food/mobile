@@ -30,7 +30,7 @@ interface ProductsByCategory {
 export default function Restaurantes() {
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [productsByCategory, setProductsByCategory] = useState<ProductsByCategory>({});
-  const [loading, setLoading] = useState(true); // Added loading state
+  const [loading, setLoading] = useState(true);
   const { id } = useLocalSearchParams();
   const router = useRouter();
 

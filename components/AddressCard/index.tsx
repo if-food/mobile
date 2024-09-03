@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 interface AddressCardProps {
@@ -7,8 +7,10 @@ interface AddressCardProps {
   title: string;
   address: string;
   complement: string;
+  isFavorited: boolean;  // Propriedade adicionada
   onEditPress?: () => void;
   onDeletePress?: () => void;
+  onFavoritePress?: () => void;  // Propriedade adicionada para lidar com o favoritar
 }
 
 const AddressCard = ({
@@ -16,8 +18,10 @@ const AddressCard = ({
   title,
   address,
   complement,
+  isFavorited,
   onEditPress,
   onDeletePress,
+  onFavoritePress,
 }: AddressCardProps) => {
   return (
     <View
@@ -70,21 +74,33 @@ const AddressCard = ({
           alignItems: "center",
         }}
       >
-        <Icon
-          name="edit"
-          size={24}
-          color="#24A645"
-          style={{
-            marginBottom: 8,
-          }}
-          onPress={onEditPress}
-        />
-        <Icon
-          name="delete"
-          size={24}
-          color="red"
-          onPress={onDeletePress}
-        />
+        <TouchableOpacity onPress={onEditPress}>
+          <Icon
+            name="edit"
+            size={24}
+            color="#24A645"
+            style={{
+              marginBottom: 8,
+            }}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onDeletePress}>
+          <Icon
+            name="delete"
+            size={24}
+            color="red"
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onFavoritePress}>
+          <Icon
+            name={isFavorited ? "star" : "star-border"}
+            size={24}
+            color={isFavorited ? "#FFD700" : "#000"}
+            style={{
+              marginTop: 8,
+            }}
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );

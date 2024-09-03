@@ -4,9 +4,11 @@ import { useCart } from "context/CartContext";
 import ButtonCustom from "components/ButtonCustom";
 import CustomInput from "components/customInput";
 import Footer from "components/Footer";
-import { ScrollView, Text, View, Image, TouchableOpacity } from "react-native";
+import AddressCard from "components/AddressCard";
+import { ScrollView, Text, View, Image, TouchableOpacity, Alert } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Checkout() {
   const { updateQuantity, removeItem } = useCart();
@@ -14,12 +16,32 @@ export default function Checkout() {
   const { productName, productImage, productDescription, productPrice, quantity, restaurantName }: any =
     route.params || {};
   const [localQuantity, setLocalQuantity] = useState(Number(quantity) || 1);
-  const [displayProductPrice, setDisplayProductPrice] = useState(
-    parseFloat(productPrice) || 0
-  );
-  const [totalPrice, setTotalPrice] = useState(
-    (displayProductPrice * Number(quantity) || 1).toFixed(2)
-  );
+  const [displayProductPrice, setDisplayProductPrice] = useState(parseFloat(productPrice) || 0);
+  const [totalPrice, setTotalPrice] = useState((displayProductPrice * Number(quantity) || 1).toFixed(2));
+  const [savedAddress, setSavedAddress] = useState<any>(null); // Para armazenar o endereço salvo
+
+  const logAllStoredItems = async () => {
+    try {
+      const keys = await AsyncStorage.getAllKeys();
+      if (keys.length === 0) {
+        console.log("Nenhum item encontrado no AsyncStorage.");
+      } else {
+        console.log("Itens no AsyncStorage:");
+        for (const key of keys) {
+          const value = await AsyncStorage.getItem(key);
+          console.log(`Chave: ${key}, Valor: ${value}`);
+        }
+      }
+    } catch (error) {
+      console.error("Erro ao listar itens do AsyncStorage:", error);
+    }
+  };
+
+ 
+  useEffect(() => {
+    logAllStoredItems();
+  }, []);
+  
 
   useEffect(() => {
     const newTotalPrice = (displayProductPrice * localQuantity).toFixed(2);
@@ -89,6 +111,18 @@ export default function Checkout() {
   ]), []);
 
   const [selectedId, setSelectedId] = useState<string | undefined>();
+
+  const handleChangeAddress = () => {
+    // Navegar para a tela de seleção de endereço ou edição
+    Alert.alert(
+      "Trocar Endereço",
+      "Você deseja trocar o endereço de entrega?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        { text: "Trocar", onPress: () => {/* Navegar para a tela de seleção de endereço */} },
+      ]
+    );
+  };
 
   return (
     <View className="flex-1 bg-[#2c2d33]">
@@ -177,9 +211,20 @@ export default function Checkout() {
             />
           </View>
 
-          <View>
+          <View className="my-4">
             <Text className="text-[22px] font-bold text-[#fff] pb-4">Endereço de entrega</Text>
-            <Text></Text>
+            {savedAddress ? (
+              <AddressCard
+                icon="home" // ou outro ícone apropriado
+                title={savedAddress.tipo || "Endereço"}
+                address={`${savedAddress.rua}, ${savedAddress.numero}, ${savedAddress.bairro}, ${savedAddress.cidade} - ${savedAddress.estado}`}
+                complement={savedAddress.complemento || "Complemento não especificado"}
+                onEditPress={handleChangeAddress}
+                isFavorited={true} // Assumindo que o endereço salvo é sempre favoritado
+              />
+            ) : (
+              <Text className="text-[#fff]">Nenhum endereço salvo.</Text>
+            )}
           </View>
 
           <View className="justify-between flex-1 pb-[50px]">
@@ -198,17 +243,15 @@ export default function Checkout() {
                 <Text className="font-bold text-[#fff]">R$ 0,00</Text>
               </View>
               <View className="flex-row justify-between">
-                <Text className="font-bold text-[#fff]">Taxa de entrega</Text>
-                <Text className="font-bold text-[#fff]">Grátis</Text>
+                <Text className="font-bold text-[#fff]">Frete</Text>
+                <Text className="font-bold text-[#fff]">R$ 0,00</Text>
               </View>
               <View className="flex-row justify-between">
                 <Text className="font-bold text-[#fff]">Total</Text>
-                <Text className="font-bold text-[#24A645]">R$ {totalPrice}</Text>
-              </View>
-              <View className="items-center py-4">
-                <ButtonCustom texto="Continuar" />
+                <Text className="font-bold text-[#fff]">R$ {totalPrice}</Text>
               </View>
             </View>
+            <ButtonCustom texto="Finalizar pedido" />
           </View>
         </View>
       </ScrollView>

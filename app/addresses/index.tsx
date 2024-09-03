@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { View, Text, ScrollView, ActivityIndicator, Alert } from "react-native";
 import { useRouter } from 'expo-router';
 import ButtonCustom from "components/ButtonCustom";
@@ -23,6 +23,7 @@ export default function Addresses() {
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [favoriteAddress, setFavoriteAddress] = useState<Address | null>(null);
 
   const router = useRouter();
 
@@ -34,6 +35,7 @@ export default function Addresses() {
         const response = await axios.get(`https://if-delivery-api.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/cliente/${id}`);
         const data = response.data.enderecos || [];
         setAddresses(data);
+        await loadFavoriteAddress(id);
       } else {
         setError("Cliente ID não encontrado.");
       }
@@ -45,12 +47,58 @@ export default function Addresses() {
     }
   };
 
+  const loadFavoriteAddress = async (clienteId: string) => {
+    try {
+      const storedFavorite = await AsyncStorage.getItem(`favoriteAddress_${clienteId}`);
+      if (storedFavorite) {
+        setFavoriteAddress(JSON.parse(storedFavorite));
+      }
+    } catch (error) {
+      console.error('Erro ao carregar o endereço favoritado:', error);
+    }
+  };
+
+  const toggleFavoriteAddress = async (address: Address) => {
+    try {
+      const clienteIdString = await AsyncStorage.getItem("clienteId");
+      if (clienteIdString) {
+        const addressKey = `favoriteAddress_${clienteIdString}`;
+        
+        // Se o endereço já está favoritado
+        if (favoriteAddress?.id === address.id) {
+          // Remover o endereço favorito
+          setFavoriteAddress(null);
+          await AsyncStorage.removeItem(addressKey);
+          console.log('Removed favorite address from AsyncStorage');
+        } else {
+          // Remover o endereço favorito atual (se existir)
+          if (favoriteAddress) {
+            await AsyncStorage.removeItem(addressKey);
+          }
+          // Adicionar o novo endereço favorito
+          setFavoriteAddress(address);
+          await AsyncStorage.setItem(addressKey, JSON.stringify(address));
+          console.log('Saved favorite address to AsyncStorage:', address);
+        }
+      } else {
+        setError("Cliente ID não encontrado.");
+      }
+    } catch (error) {
+      setError("Erro ao atualizar o endereço favoritado.");
+      console.error('Error saving favorite address:', error);
+    }
+  };
+
   const deleteAddress = async (id: number) => {
     try {
       const clienteIdString = await AsyncStorage.getItem("clienteId");
       if (clienteIdString) {
         await axios.delete(`https://if-delivery-api.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/cliente/endereco/${id}`);
         setAddresses((prevAddresses) => prevAddresses.filter((address) => address.id !== id));
+        if (favoriteAddress?.id === id) {
+          setFavoriteAddress(null);
+          await AsyncStorage.removeItem(`favoriteAddress_${clienteIdString}`);
+        }
         Alert.alert("Sucesso", "Endereço excluído com sucesso!");
       } else {
         setError("Cliente ID não encontrado.");
@@ -87,6 +135,13 @@ export default function Addresses() {
     fetchAddresses();
   }, []);
 
+  useEffect(() => {
+    if (addresses.length === 1 && addresses[0]) {
+      const singleAddress = addresses[0];
+      toggleFavoriteAddress(singleAddress);
+    }
+  }, [addresses]);
+
   return (
     <View
       style={{
@@ -111,6 +166,7 @@ export default function Addresses() {
                     title={address.tipo || "Endereço"}
                     address={`${address.rua}, ${address.numero}, ${address.bairro}, ${address.cidade} - ${address.estado}`}
                     complement={address.complemento || "Complemento não especificado"}
+                    isFavorited={favoriteAddress?.id === address.id} 
                     onEditPress={() => handleEditAddress(address.id)}
                     onDeletePress={() => {
                       Alert.alert(
@@ -122,6 +178,7 @@ export default function Addresses() {
                         ]
                       );
                     }}
+                    onFavoritePress={() => toggleFavoriteAddress(address)} 
                   />
                 ))}
               </ScrollView>
