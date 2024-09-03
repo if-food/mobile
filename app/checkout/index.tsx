@@ -8,6 +8,8 @@ import AddressCard from "components/AddressCard";
 import { ScrollView, Text, View, Image, TouchableOpacity, Alert } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group';
+import { useRouter } from "expo-router";
+import OrderReview from "app/orderReview";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Checkout() {
@@ -16,32 +18,18 @@ export default function Checkout() {
   const { productName, productImage, productDescription, productPrice, quantity, restaurantName }: any =
     route.params || {};
   const [localQuantity, setLocalQuantity] = useState(Number(quantity) || 1);
-  const [displayProductPrice, setDisplayProductPrice] = useState(parseFloat(productPrice) || 0);
-  const [totalPrice, setTotalPrice] = useState((displayProductPrice * Number(quantity) || 1).toFixed(2));
-  const [savedAddress, setSavedAddress] = useState<any>(null); // Para armazenar o endereço salvo
+  const [displayProductPrice, setDisplayProductPrice] = useState(
+    parseFloat(productPrice) || 0
+  );
+  const [totalPrice, setTotalPrice] = useState(
+    (displayProductPrice * Number(quantity) || 1).toFixed(2)
+  );
 
-  const logAllStoredItems = async () => {
-    try {
-      const keys = await AsyncStorage.getAllKeys();
-      if (keys.length === 0) {
-        console.log("Nenhum item encontrado no AsyncStorage.");
-      } else {
-        console.log("Itens no AsyncStorage:");
-        for (const key of keys) {
-          const value = await AsyncStorage.getItem(key);
-          console.log(`Chave: ${key}, Valor: ${value}`);
-        }
-      }
-    } catch (error) {
-      console.error("Erro ao listar itens do AsyncStorage:", error);
-    }
+  const router = useRouter();
+
+  const review = () => {
+    router.push("../orderReview");
   };
-
- 
-  useEffect(() => {
-    logAllStoredItems();
-  }, []);
-  
 
   useEffect(() => {
     const newTotalPrice = (displayProductPrice * localQuantity).toFixed(2);
@@ -248,7 +236,10 @@ export default function Checkout() {
               </View>
               <View className="flex-row justify-between">
                 <Text className="font-bold text-[#fff]">Total</Text>
-                <Text className="font-bold text-[#fff]">R$ {totalPrice}</Text>
+                <Text className="font-bold text-[#24A645]">R$ {totalPrice}</Text>
+              </View>
+              <View className="items-center py-4">
+                <ButtonCustom onPress={review} texto="Continuar" />
               </View>
             </View>
             <ButtonCustom texto="Finalizar pedido" />
