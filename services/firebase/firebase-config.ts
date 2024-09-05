@@ -1,17 +1,16 @@
-// firebaseConfig.ts
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 import { getAnalytics } from "firebase/analytics";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAshldbul1BimmP-7m7rrxrOoaJErkcmMU",
-  authDomain: "if-food-7a61e.firebaseapp.com",
-  projectId: "if-food-7a61e",
-  storageBucket: "if-food-7a61e.appspot.com",
-  messagingSenderId: "135506502423",
-  appId: "1:135506502423:web:638597193ea268ec5a0d52",
-  measurementId: "G-J0ZM5TNQ4Q"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
