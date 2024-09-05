@@ -1,43 +1,27 @@
-import React, { useState, useEffect } from "react";
-import { View, Image, Alert, TouchableOpacity } from "react-native";
-import * as ImagePicker from "expo-image-picker";
+import React, { useState } from 'react';
+import { View, Image, TouchableOpacity, Alert, ViewStyle, ImageStyle } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import axios from 'axios';
+import { storage } from 'services/firebase/firebase-config';
 
-interface ImageType {
-  uri: string;
-  byteArray?: Uint8Array;
+interface ImagePickerProps {
+  style?: ViewStyle; 
+  imageStyle?: ImageStyle; 
+  onImagePicked?: (url: string) => void;
 }
 
-interface ImagePickerComponentProps {
-  onImagePicked?: (image: ImageType) => void;
-  initialImage?: string | null;
-}
-
-const ImagePickerComponent: React.FC<ImagePickerComponentProps> = ({ onImagePicked, initialImage }) => {
-  const [image, setImage] = useState<ImageType | null>(null);
+const ImagePickerComponent: React.FC<ImagePickerProps> = ({ style, imageStyle, onImagePicked }) => {
   const [imageUri, setImageUri] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (initialImage) {
-      setImage({ uri: initialImage });
-      setImageUri(initialImage);
+  const handleSelectImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permissão de acesso à galeria é necessária!');
+      return;
     }
-  }, [initialImage]);
 
-  const uint8ArrayToBlobUrl = (byteArray: Uint8Array) => {
-    const blob = new Blob([byteArray], { type: 'image/jpeg' });
-    return URL.createObjectURL(blob);
-  };
-
-  const getByteArray = async (uri: string) => {
-    const response = await fetch(uri);
-    const arrayBuffer = await response.arrayBuffer();
-    return new Uint8Array(arrayBuffer);
-  };
-
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
@@ -45,44 +29,48 @@ const ImagePickerComponent: React.FC<ImagePickerComponentProps> = ({ onImagePick
     });
 
     if (!result.canceled) {
-      const byteArray = await getByteArray(result.assets[0].uri);
-      const source: ImageType = { uri: uint8ArrayToBlobUrl(byteArray), byteArray };
-      setImage(source);
-      setImageUri(source.uri);
-      if (onImagePicked) {
-        onImagePicked(source);
+      const uri = result.assets[0]?.uri;
+      if (uri) {
+        await uploadImage(uri);
+      } else {
+        Alert.alert('URI da imagem é indefinido');
       }
     } else {
-      Alert.alert("No image selected");
+      Alert.alert('Nenhuma imagem selecionada');
+    }
+  };
+
+  const uploadImage = async (uri: string) => {
+    try {
+      const response = await fetch(uri);
+      const blob = await response.blob();
+      const storageRef = ref(storage, `profile_pictures/${Date.now()}`);
+      await uploadBytes(storageRef, blob);
+      const downloadURL = await getDownloadURL(storageRef);
+      setImageUri(downloadURL);
+      if (onImagePicked) {
+        onImagePicked(downloadURL);
+      }
+    } catch (error) {
+      console.error('Erro ao fazer upload da imagem: ', error);
     }
   };
 
   return (
-    <View style={{ alignItems: "center", justifyContent: "center" }}>
-      <TouchableOpacity
-        style={{
-          width: 100,
-          height: 100,
-          borderRadius: 50,
-          backgroundColor: "#f0f0f0",
-          justifyContent: "center",
-          alignItems: "center",
-          overflow: "hidden",
-        }}
-        onPress={pickImage}
-      >
-        {imageUri ? (
-          <Image
-            source={{ uri: imageUri }}
-            style={{
-              width: "100%",
-              height: "100%",
-              resizeMode: "cover",
-            }}
-          />
-        ) : (
-          <Icon name="account-circle" size={100} color="#ccc" />
-        )}
+    <View style={[{ alignItems: 'center', justifyContent: 'center', margin: 10 }, style]}>
+      <TouchableOpacity onPress={handleSelectImage}>
+        <View
+          style={[{ width: 100, height: 100, borderRadius: 50, justifyContent: 'center' }, style]}
+        >
+          {imageUri ? (
+            <Image
+              source={{ uri: imageUri }}
+              style={[{ width: '100%', height: '100%' }, imageStyle]}
+            />
+          ) : (
+            <Icon name="account-circle" size={100} color="#ccc" />
+          )}
+        </View>
       </TouchableOpacity>
     </View>
   );

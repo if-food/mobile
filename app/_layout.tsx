@@ -275,7 +275,7 @@ function RootLayoutNav() {
               }}
             />
             <Stack.Screen
-              name="personalData/photo"
+              name="photo/index"
               options={{
                 headerTitle: 'Foto',
                 headerShown: true,
