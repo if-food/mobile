@@ -2,14 +2,14 @@ import { View, Text, ScrollView, Image, TextInput } from 'react-native';
 import OrderPreparo from '../../assets/images/orderReview/emPreparo.png';
 import ButtonCustom from 'components/ButtonCustom';
 import ReviwCard from 'components/ReviewCard';
-import { useRouter } from "expo-router";
-
+import { useRouter } from 'expo-router';
+import Footer from 'components/Footer';
 
 export default function OrderReview() {
   const router = useRouter();
 
   const home = () => {
-    router.push("../home");
+    router.push('../home');
   };
 
   return (
@@ -31,17 +31,17 @@ export default function OrderReview() {
           <ReviwCard source={require('../../assets/images/ordersCard/cardOne.png')} name="Rabanete" description="Rabanetes frescos" price={2.5} />
           <ReviwCard source={require('../../assets/images/ordersCard/cardOne.png')} name="Rabanete" description="Rabanetes frescos" price={2.5} />
           <ReviwCard source={require('../../assets/images/ordersCard/cardOne.png')} name="Rabanete" description="Rabanetes frescos" price={2.5} />
-
         </View>
       </ScrollView>
 
-      <View className="px-6">
+      <View className="px-6 pb-12">
         <Text className="text-[16px] font-bold text-[#fff] py-2">Deseja deixar algum comentário?</Text>
         <View className="h-[200px] items-center justify-between">
           <TextInput className="bg-[#fff] px-4 py-2 rounded-[8px] h-[100px] text-[12px] w-full" multiline={true} textAlignVertical="top" placeholder="Adicione um comentário à entrega e ao produto!" placeholderTextColor="#1F2026" />
           <ButtonCustom onPress={home} texto="Enviar" />
         </View>
       </View>
+      <Footer />
     </View>
   );
 }

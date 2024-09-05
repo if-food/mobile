@@ -32,6 +32,10 @@ export default () => {
     return null;
   }
 
+  LogBox.ignoreLogs([
+    '[Reanimated] Reduced motion setting is enabled on this device.',
+  ]);
+
   return (
     <TamaguiProvider config={tamaguiConfig}>
       <CartProvider>
