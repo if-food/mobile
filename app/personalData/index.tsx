@@ -42,16 +42,18 @@ export default function PersonalData() {
         const clienteIdString = await AsyncStorage.getItem('clienteId');
         if (clienteIdString) {
           const id = clienteIdString;
-          const response = await axios.get(`https://if-delivery-api.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/clientes/5`);
+          const response = await axios.get(`https://api-1-drn7.onrender.com/api/cliente/1`);
           const data = response.data;
 
           setInitialData({
             nome: data.nome || '',
             telefone: data.telefone || '',
-            dataNascimento: formatBirthDateDisplay(data.dataNascimento) || '',
+            dataNascimento: data.dataNascimento || '',
             cpf: data.cpf || '',
             photo: data.photo || null,
           });
+
+          setImageUri(data.photo || null); 
 
           setValue('nome', data.nome || '');
           setValue('phone', data.telefone || '');
@@ -94,7 +96,7 @@ export default function PersonalData() {
 
         console.log('Dados que serão enviados:', updatedData);
 
-        const response = await fetch(`http://if-delivery-api.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/clientes/${id}`, {
+        const response = await fetch(`https://api-1-drn7.onrender.com/api/cliente/1`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -153,6 +155,7 @@ export default function PersonalData() {
         <View style={{ alignItems: 'center', marginBottom: 8 }}>
           <ImagePickerComponent
             imageStyle={{ borderRadius: 50 }}
+            imageUri={imageUri} 
             onImagePicked={(url) => setImageUri(url)}
           />
         </View>

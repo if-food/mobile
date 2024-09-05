@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Image, TouchableOpacity, Alert, ViewStyle, ImageStyle } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -8,11 +8,18 @@ import { storage } from 'services/firebase/firebase-config';
 interface ImagePickerProps {
   style?: ViewStyle; 
   imageStyle?: ImageStyle; 
+  imageUri?: string | null; // Adicionado
   onImagePicked?: (url: string) => void;
 }
 
-const ImagePickerComponent: React.FC<ImagePickerProps> = ({ style, imageStyle, onImagePicked }) => {
-  const [imageUri, setImageUri] = useState<string | null>(null);
+const ImagePickerComponent: React.FC<ImagePickerProps> = ({ style, imageStyle, imageUri, onImagePicked }) => {
+  const [localImageUri, setLocalImageUri] = useState<string | null>(imageUri || null);
+
+  useEffect(() => {
+    if (imageUri) {
+      setLocalImageUri(imageUri);
+    }
+  }, [imageUri]);
 
   const handleSelectImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -47,7 +54,7 @@ const ImagePickerComponent: React.FC<ImagePickerProps> = ({ style, imageStyle, o
       const storageRef = ref(storage, `profile_pictures/${Date.now()}`);
       await uploadBytes(storageRef, blob);
       const downloadURL = await getDownloadURL(storageRef);
-      setImageUri(downloadURL);
+      setLocalImageUri(downloadURL);
       if (onImagePicked) {
         onImagePicked(downloadURL);
       }
@@ -62,9 +69,9 @@ const ImagePickerComponent: React.FC<ImagePickerProps> = ({ style, imageStyle, o
         <View
           style={[{ width: 100, height: 100, borderRadius: 50, justifyContent: 'center' }, style]}
         >
-          {imageUri ? (
+          {localImageUri ? (
             <Image
-              source={{ uri: imageUri }}
+              source={{ uri: localImageUri }}
               style={[{ width: '100%', height: '100%' }, imageStyle]}
             />
           ) : (

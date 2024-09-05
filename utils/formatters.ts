@@ -13,9 +13,9 @@ export const formatBirthDateDisplay = (value) => {
 
 export const convertToAPIBirthDate = (value) => {
   if (!value) return '';
-  const [day, month, year] = value.split('/');
+  const [year, month, day] = value.split('-');
   if (day && month && year) {
-    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    return `${day}/${month}/${year}`;
   }
   return '';
 };

@@ -38,6 +38,7 @@
     "expo-web-browser": "~13.0.3",
     "firebase": "^10.13.1",
     "if-food": "file:",
+    "iffood": "file:",
     "json-server": "^1.0.0-beta.1",
     "lottie-react-native": "6.7.0",
     "lucide-react-native": "^0.416.0",
