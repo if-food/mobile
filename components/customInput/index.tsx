@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Text, Input } from 'tamagui';
 import { View, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons'; // Certifique-se de instalar e linkar a biblioteca
+import Icon from 'react-native-vector-icons/MaterialIcons'; 
 
 interface InputCustom {
   placeholder?: string;

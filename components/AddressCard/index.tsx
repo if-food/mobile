@@ -1,4 +1,3 @@
-import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
@@ -7,10 +6,10 @@ interface AddressCardProps {
   title: string;
   address: string;
   complement: string;
-  isFavorited: boolean;  // Propriedade adicionada
+  isFavorited?: boolean;
   onEditPress?: () => void;
   onDeletePress?: () => void;
-  onFavoritePress?: () => void;  // Propriedade adicionada para lidar com o favoritar
+  onFavoritePress?: () => Promise<void>;
 }
 
 const AddressCard = ({
@@ -55,7 +54,10 @@ const AddressCard = ({
         <Text
           style={{
             textAlign: "left",
+            fontSize: 16,
           }}
+          numberOfLines={2}
+          ellipsizeMode="tail"
         >
           {address}
         </Text>
@@ -74,33 +76,39 @@ const AddressCard = ({
           alignItems: "center",
         }}
       >
-        <TouchableOpacity onPress={onEditPress}>
-          <Icon
-            name="edit"
-            size={24}
-            color="#24A645"
-            style={{
-              marginBottom: 8,
-            }}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={onDeletePress}>
-          <Icon
-            name="delete"
-            size={24}
-            color="red"
-          />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={onFavoritePress}>
-          <Icon
-            name={isFavorited ? "star" : "star-border"}
-            size={24}
-            color={isFavorited ? "#FFD700" : "#000"}
-            style={{
-              marginTop: 8,
-            }}
-          />
-        </TouchableOpacity>
+        {onEditPress && (
+          <TouchableOpacity onPress={onEditPress}>
+            <Icon
+              name="edit"
+              size={24}
+              color="#24A645"
+              style={{
+                marginBottom: 8,
+              }}
+            />
+          </TouchableOpacity>
+        )}
+        {onDeletePress && (
+          <TouchableOpacity onPress={onDeletePress}>
+            <Icon
+              name="delete"
+              size={24}
+              color="red"
+            />
+          </TouchableOpacity>
+        )}
+        {onFavoritePress && (
+          <TouchableOpacity onPress={onFavoritePress}>
+            <Icon
+              name={isFavorited ? "star" : "star-border"}
+              size={24}
+              color={isFavorited ? "gold" : "gray"}
+              style={{
+                marginTop: 8,
+              }}
+            />
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );

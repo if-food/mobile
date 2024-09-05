@@ -14,7 +14,7 @@ export default function Header({ title }: HeaderProps) {
   const router = useRouter();
 
   const handlePress = () => {
-    router.push('../registroPedidos');
+    router.push('../checkout');
   };
 
   if (count > 10) setCount(0);

@@ -1,4 +1,4 @@
-import { View, Text, Pressable, ActivityIndicator } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { Form } from "tamagui";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -10,33 +10,11 @@ import ButtonCustom from "components/ButtonCustom";
 import CustomInput from "components/customInput";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function Login() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-
-  const logAllStoredItems = async () => {
-    try {
-      const keys = await AsyncStorage.getAllKeys();
-      if (keys.length === 0) {
-        console.log("Nenhum item encontrado no AsyncStorage.");
-      } else {
-        console.log("Itens no AsyncStorage:");
-        for (const key of keys) {
-          const value = await AsyncStorage.getItem(key);
-          console.log(`Chave: ${key}, Valor: ${value}`);
-        }
-      }
-    } catch (error) {
-      console.error("Erro ao listar itens do AsyncStorage:", error);
-    }
-  };
-
- 
-  useEffect(() => {
-    logAllStoredItems();
-  }, []);
 
   const handleForgotPassword = () => {
     router.push("../forgotMyPassword");
@@ -60,7 +38,7 @@ export default function Login() {
   };
 
   const onSubmit = async (data) => {
-    setLoading(true); // Ativa o loading quando o submit começa
+    setLoading(true); 
     try {
       const response = await axios.post('https://if-delivery-api.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/auth', {
         username: data.email,
@@ -84,7 +62,7 @@ export default function Login() {
     } catch (error) {
       console.error('Error during login:', error.response?.data || error.message);
     } finally {
-      setLoading(false); // Desativa o loading quando a resposta for recebida ou em caso de erro
+      setLoading(false);
     }
   };
 
@@ -160,7 +138,7 @@ export default function Login() {
           </Pressable>
         </View>
         <ButtonCustom texto="Continuar com o Google" />
-          <ButtonCustom 
+        <ButtonCustom 
             onPress={handleSubmit(onSubmit)} 
             texto="Login" 
             loading={loading}

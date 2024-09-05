@@ -6,18 +6,7 @@ import Footer from "components/Footer";
 import AddressCard from "components/AddressCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-
-interface Address {
-  id: number;
-  cep: string;
-  estado: string;
-  cidade: string;
-  bairro: string;
-  rua: string;
-  numero: string;
-  complemento?: string;
-  tipo?: string;
-}
+import { getIconForType } from "utils/formatters";
 
 export default function Addresses() {
   const [addresses, setAddresses] = useState<Address[]>([]);
@@ -64,28 +53,28 @@ export default function Addresses() {
       if (clienteIdString) {
         const addressKey = `favoriteAddress_${clienteIdString}`;
         
-        // Se o endereço já está favoritado
+        if (addresses.length === 1) {
+          setFavoriteAddress(address);
+          await AsyncStorage.setItem(addressKey, JSON.stringify(address));
+          return;
+        }
+
         if (favoriteAddress?.id === address.id) {
-          // Remover o endereço favorito
           setFavoriteAddress(null);
           await AsyncStorage.removeItem(addressKey);
-          console.log('Removed favorite address from AsyncStorage');
         } else {
-          // Remover o endereço favorito atual (se existir)
           if (favoriteAddress) {
             await AsyncStorage.removeItem(addressKey);
           }
-          // Adicionar o novo endereço favorito
           setFavoriteAddress(address);
           await AsyncStorage.setItem(addressKey, JSON.stringify(address));
-          console.log('Saved favorite address to AsyncStorage:', address);
         }
       } else {
         setError("Cliente ID não encontrado.");
       }
     } catch (error) {
       setError("Erro ao atualizar o endereço favoritado.");
-      console.error('Error saving favorite address:', error);
+      console.error(error);
     }
   };
 
@@ -118,17 +107,6 @@ export default function Addresses() {
       pathname: './address',
       params: { id }
     });
-  };
-
-  const getIconForType = (type?: string) => {
-    switch (type) {
-      case 'Casa':
-        return 'home';
-      case 'Apartamento':
-        return 'apartment';
-      default:
-        return 'map'; 
-    }
   };
 
   useEffect(() => {
@@ -166,7 +144,7 @@ export default function Addresses() {
                     title={address.tipo || "Endereço"}
                     address={`${address.rua}, ${address.numero}, ${address.bairro}, ${address.cidade} - ${address.estado}`}
                     complement={address.complemento || "Complemento não especificado"}
-                    isFavorited={favoriteAddress?.id === address.id} 
+                    isFavorited={favoriteAddress?.id === address.id}
                     onEditPress={() => handleEditAddress(address.id)}
                     onDeletePress={() => {
                       Alert.alert(
@@ -178,7 +156,7 @@ export default function Addresses() {
                         ]
                       );
                     }}
-                    onFavoritePress={() => toggleFavoriteAddress(address)} 
+                    onFavoritePress={() => toggleFavoriteAddress(address)}
                   />
                 ))}
               </ScrollView>

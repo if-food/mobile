@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Image, Alert, TouchableOpacity } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import axios from 'axios';
 
 interface ImageType {
   uri: string;
@@ -25,7 +26,7 @@ const ImagePickerComponent: React.FC<ImagePickerComponentProps> = ({ onImagePick
   }, [initialImage]);
 
   const uint8ArrayToBlobUrl = (byteArray: Uint8Array) => {
-    const blob = new Blob([byteArray], { type: 'image/png' });
+    const blob = new Blob([byteArray], { type: 'image/jpeg' });
     return URL.createObjectURL(blob);
   };
 
@@ -45,9 +46,9 @@ const ImagePickerComponent: React.FC<ImagePickerComponentProps> = ({ onImagePick
 
     if (!result.canceled) {
       const byteArray = await getByteArray(result.assets[0].uri);
-      const source: ImageType = { uri: result.assets[0].uri, byteArray };
+      const source: ImageType = { uri: uint8ArrayToBlobUrl(byteArray), byteArray };
       setImage(source);
-      setImageUri(result.assets[0].uri);
+      setImageUri(source.uri);
       if (onImagePicked) {
         onImagePicked(source);
       }
