@@ -10,9 +10,11 @@ import ButtonCustom from "components/ButtonCustom";
 import CustomInput from "components/customInput";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { useState } from "react";
 
 export default function Login() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const handleForgotPassword = () => {
     router.push("../forgotMyPassword");
@@ -36,6 +38,7 @@ export default function Login() {
   };
 
   const onSubmit = async (data) => {
+    setLoading(true); 
     try {
       const response = await axios.post('https://if-delivery-api.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/auth', {
         username: data.email,
@@ -49,7 +52,7 @@ export default function Login() {
       if (!token) {
         throw new Error('Token is missing');
       }
-      
+
       await AsyncStorage.setItem('userToken', token);
 
       const storedToken = await AsyncStorage.getItem('userToken');
@@ -58,6 +61,8 @@ export default function Login() {
       home();
     } catch (error) {
       console.error('Error during login:', error.response?.data || error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -133,7 +138,11 @@ export default function Login() {
           </Pressable>
         </View>
         <ButtonCustom texto="Continuar com o Google" />
-        <ButtonCustom onPress={handleSubmit(onSubmit)} texto="Login" />
+        <ButtonCustom 
+            onPress={handleSubmit(onSubmit)} 
+            texto="Login" 
+            loading={loading}
+          />
       </View>
     </View>
   );

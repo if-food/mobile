@@ -15,7 +15,7 @@ interface Restaurant {
 }
 
 interface Product {
-  id: number;
+  id: string;
   codigo: string;
   titulo: string;
   descricao: string;
@@ -30,14 +30,14 @@ interface ProductsByCategory {
 export default function Restaurantes() {
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [productsByCategory, setProductsByCategory] = useState<ProductsByCategory>({});
-  const [loading, setLoading] = useState(true); // Added loading state
+  const [loading, setLoading] = useState(true);
   const { id } = useLocalSearchParams();
   const router = useRouter();
 
   useEffect(() => {
     const fetchRestaurant = async () => {
       try {
-        const response = await axios.get<Restaurant>(`https://if-delivery-api.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/restaurante/?restauranteId=${id}`);
+        const response = await axios.get<Restaurant>(`https://api-1-drn7.onrender.com/api/restaurante/?restauranteId=${id}`);
         setRestaurant(response.data);
       } catch (error) {
         console.error('Failed to fetch restaurant data:', error);
@@ -46,7 +46,7 @@ export default function Restaurantes() {
 
     const fetchProducts = async () => {
       try {
-        const response = await axios.get<Record<string, Product[]>>(`https://if-delivery-api.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/produto/cardapio/${id}`);
+        const response = await axios.get<Record<string, Product[]>>(`https://api-1-drn7.onrender.com/api/produto/cardapio/${id}`);
         setProductsByCategory(response.data);
       } catch (error) {
         console.error('Failed to fetch products data:', error);
@@ -66,6 +66,7 @@ export default function Restaurantes() {
     router.push({
       pathname: `../orderRestaurant/${product.id}`,
       params: {
+        productId: product.id,
         productName: product.titulo,
         productImage: product.imagem || '',
         productDescription: product.descricao,
@@ -73,6 +74,7 @@ export default function Restaurantes() {
         quantity: '1',
         totalPrice: product.valorUnitario.toFixed(2),
         restaurantName: restaurant ? restaurant.nomeFantasia : '',
+        restaurantId: id
       },
     });
   };
@@ -109,30 +111,39 @@ export default function Restaurantes() {
           <Text className="text-[32px] text-[#fff] font-bold pb-4 pl-2">Os mais pedidos</Text>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             <View className="flex-row">
-              {Object.values(productsByCategory).flat().map((product) => (
-                <CardRestaurantPage
-                  key={product.id}
-                  source={product.imagem ? { uri: product.imagem } : require('../../assets/images/restaurante/card.png')}
-                  titulo={product.titulo}
-                  valorUnitario={`R$ ${product.valorUnitario.toFixed(2)}`}
-                  onPress={() => handleProductPress(product)}
-                />
-              ))}
+            {Object.values(productsByCategory).flat().map((product) => (
+  <CardRestaurantPage
+    key={product.id}
+    source={
+      product.imagem 
+        ? { uri: product.imagem } 
+        : require('../../assets/images/restaurante/card.png')
+    }
+    titulo={product.titulo}
+    valorUnitario={`R$ ${product.valorUnitario.toFixed(2)}`}
+    onPress={() => handleProductPress(product)}
+  />
+))}
+
             </View>
           </ScrollView>
           <Text className="text-[32px] text-[#fff] font-bold pb-4 pt-6 pl-2">Nossos pratos</Text>
           {Object.entries(productsByCategory).map(([category, products]) => (
             <ListagemCardapio
-              key={category}
-              category={category}
-              products={products.map(product => ({
-                title: product.titulo,
-                description: product.descricao,
-                price: `R$ ${product.valorUnitario.toFixed(2)}`,
-                source: product.imagem ? { uri: product.imagem } : require('../../assets/images/restaurante/card.png'),
-                onPress: () => handleProductPress(product)
-              }))}
-            />
+            key={category}
+            category={category}
+            products={products.map(product => ({
+              title: product.titulo,
+              description: product.descricao,
+              price: `R$ ${product.valorUnitario.toFixed(2)}`,
+              source: 
+                product.imagem 
+                  ? { uri: product.imagem } 
+                  : require('../../assets/images/restaurante/card.png'),
+              onPress: () => handleProductPress(product)
+            }))}
+          />
+          
           ))}
         </View>
       </ScrollView>

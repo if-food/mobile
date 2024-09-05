@@ -11,10 +11,9 @@ import Address from './addresses/address';
 import OrderRestaurant from '../orderRestaurant';
 import Cadastro from './cadastro';
 import Checkout from './checkout';
-import { CartProvider } from 'context/CartContext';
 import { LucideHome } from 'lucide-react-native';
 import OrderReview from './orderReview';
-import { LogBox } from 'react-native';
+import CartProvider from 'context/CartContext';
 
 const tamaguiConfig = createTamagui(config);
 
@@ -40,7 +39,7 @@ export default () => {
   return (
     <TamaguiProvider config={tamaguiConfig}>
       <CartProvider>
-        <Checkout />
+        <PersonalData />
       </CartProvider>
     </TamaguiProvider>
   );

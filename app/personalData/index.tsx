@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, KeyboardAvoidingView, Platform, ScrollView, Image, ActivityIndicator } from 'react-native';
+import { View, Text, KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import personalDataSchema from '../../schemas/PersonalData';
@@ -16,19 +16,14 @@ export default function PersonalData() {
   const [isModified, setIsModified] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [initialData, setInitialData] = useState<{
-    nome: string;
-    telefone: string;
-    dataNascimento: string;
-    cpf: string;
-    photo: string | null;
-  }>({
+  const [initialData, setInitialData] = useState({
     nome: '',
     telefone: '',
     dataNascimento: '',
     cpf: '',
     photo: null,
   });
+  const [imageUri, setImageUri] = useState<string | null>(null);
 
   const {
     control,
@@ -47,16 +42,18 @@ export default function PersonalData() {
         const clienteIdString = await AsyncStorage.getItem('clienteId');
         if (clienteIdString) {
           const id = clienteIdString;
-          const response = await axios.get(`https://api-1-drn7.onrender.com/clientes/${id}`);
+          const response = await axios.get(`https://api-1-drn7.onrender.com/api/cliente/1`);
           const data = response.data;
 
           setInitialData({
             nome: data.nome || '',
             telefone: data.telefone || '',
-            dataNascimento: formatBirthDateDisplay(data.dataNascimento) || '',
+            dataNascimento: data.dataNascimento || '',
             cpf: data.cpf || '',
             photo: data.photo || null,
           });
+
+          setImageUri(data.photo || null); 
 
           setValue('nome', data.nome || '');
           setValue('phone', data.telefone || '');
@@ -83,64 +80,42 @@ export default function PersonalData() {
     setIsModified(hasChanges);
   }, [formValues, initialData]);
 
-  const handleImagePick = async (image: { uri: string }) => {
-    setInitialData({
-      ...initialData,
-      photo: image.uri,
-    });
-    setValue('photo', image.uri);
-  };
-
   const updateUserData = async (data) => {
     try {
       const clienteIdString = await AsyncStorage.getItem('clienteId');
       if (clienteIdString) {
         const id = clienteIdString;
 
-        await axios.put(`https://if-delivery-api.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/clientes/${id}`, {
+        const updatedData = {
           nome: data.nome,
           telefone: data.phone,
           dataNascimento: convertToAPIBirthDate(data.dataNascimento),
           cpf: data.cpf,
+          photo: imageUri, 
+        };
+
+        console.log('Dados que serão enviados:', updatedData);
+
+        const response = await fetch(`https://api-1-drn7.onrender.com/api/cliente/1`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updatedData),
         });
+
+        console.log('Status da resposta:', response.status);
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Erro ao atualizar os dados do cliente:', errorData);
+          throw new Error(`Error updating user data: ${errorData.message}`);
+        }
 
         console.log('Dados atualizados com sucesso');
       }
     } catch (error) {
-      console.error('Error updating user data:', error);
-    }
-  };
-
-  const updateImage = async (imageUri: string) => {
-    try {
-      const clienteIdString = await AsyncStorage.getItem('clienteId');
-      if (clienteIdString) {
-        const id = clienteIdString;
-        const formData = new FormData();
-        const imageBlob = {
-          uri: imageUri,
-          type: 'image/png',
-          name: 'photo.png',
-        };
-        formData.append('imageFile', imageBlob as any);
-
-        const response = await fetch(`https://if-delivery-api.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/cliente/imagem/?clienteId=${id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-          body: formData,
-        });
-
-        if (!response.ok) {
-          const responseBody = await response.text();
-          throw new Error(`HTTP error! Status: ${response.status}. Response: ${responseBody}`);
-        }
-
-        console.log('Imagem atualizada com sucesso');
-      }
-    } catch (error) {
-      console.error('Error updating image:', error);
+      console.error('Erro ao atualizar os dados do cliente:', error.message);
     }
   };
 
@@ -148,12 +123,8 @@ export default function PersonalData() {
     setIsSubmitting(true);
     try {
       await updateUserData(data);
-
-      if (data.photo) {
-        await updateImage(data.photo);
-      }
     } catch (error) {
-      console.error('Error during submission:', error);
+      console.error('Erro durante a submissão:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -182,9 +153,10 @@ export default function PersonalData() {
         keyboardShouldPersistTaps='handled'
       >
         <View style={{ alignItems: 'center', marginBottom: 8 }}>
-          <ImagePickerComponent 
-            onImagePicked={handleImagePick} 
-            initialImage={initialData.photo}
+          <ImagePickerComponent
+            imageStyle={{ borderRadius: 50 }}
+            imageUri={imageUri} 
+            onImagePicked={(url) => setImageUri(url)}
           />
         </View>
 

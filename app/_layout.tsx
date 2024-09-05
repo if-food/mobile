@@ -6,7 +6,7 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { Provider } from './Provider';
-import { CartProvider } from 'context/CartContext';
+import { CartProvider } from 'context/Provider';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -266,6 +266,18 @@ function RootLayoutNav() {
               name="orderReview/index"
               options={{
                 headerTitle: 'Review',
+                headerShown: true,
+                animation: 'slide_from_right',
+                headerStyle: {
+                  backgroundColor: '#24A645',
+                },
+                headerTintColor: '#fff',
+              }}
+            />
+            <Stack.Screen
+              name="photo/index"
+              options={{
+                headerTitle: 'Foto',
                 headerShown: true,
                 animation: 'slide_from_right',
                 headerStyle: {

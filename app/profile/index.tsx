@@ -47,17 +47,14 @@ export default function Profile() {
 
   const handleLogout = async () => {
     try {
-      await AsyncStorage.removeItem('token');
-      await AsyncStorage.removeItem('userData');
+      await AsyncStorage.clear();
 
-      const token = await AsyncStorage.getItem('token');
-      const userData = await AsyncStorage.getItem('userData');
-      console.log('Token após logout:', token);
-      console.log('UserData após logout:', userData);
+      const keys = await AsyncStorage.getAllKeys();
+      console.log('Chaves após logout:', keys);
 
       router.push('../login');
     } catch (error) {
-      console.error('Error during logout:', error);
+      console.error('Erro ao deslogar:', error);
     }
   };
 

@@ -1,226 +1,416 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
-import { useCart } from "context/CartContext";
-import ButtonCustom from "components/ButtonCustom";
-import CustomInput from "components/customInput";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  ScrollView,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  Alert,
+} from "react-native";
+import ProductItem from "components/ProductItem";
 import Footer from "components/Footer";
-import { ScrollView, Text, View, Image, TouchableOpacity } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
-import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group';
 import { useRouter } from "expo-router";
-import OrderReview from "app/orderReview";
+import { CartContext } from "context/CartContext";
+import ButtonCustom from "components/ButtonCustom";
+import AddressCard from "components/AddressCard";
+import { getIconForType } from "utils/formatters";
+import { RadioGroup } from "react-native-radio-buttons-group";
+import CustomInput from "components/customInput";
+import { ActivityIndicator } from "react-native";
+
+interface CartItem {
+  id: string;
+  name: string;
+  image: string;
+  description: string;
+  price: number;
+  quantity: number;
+}
 
 export default function Checkout() {
-  const { updateQuantity, removeItem } = useCart();
+  const { updateQuantity, removeItem } = useContext(CartContext) || {};
   const route = useRoute();
-  const { productName, productImage, productDescription, productPrice, quantity, restaurantName }: any =
-    route.params || {};
-  const [localQuantity, setLocalQuantity] = useState(Number(quantity) || 1);
-  const [displayProductPrice, setDisplayProductPrice] = useState(
-    parseFloat(productPrice) || 0
-  );
-  const [totalPrice, setTotalPrice] = useState(
-    (displayProductPrice * Number(quantity) || 1).toFixed(2)
-  );
-
   const router = useRouter();
+  const {
+    productId,
+    productName,
+    productImage,
+    productDescription,
+    productPrice,
+    quantity,
+    restaurantName,
+    restaurantId,
+  }: any = route.params || {};
+
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [selectedId, setSelectedId] = useState<string>();
+  const [savedAddress, setSavedAddress] = useState<any>(null);
+  const [savedRestaurant, setSavedRestaurant] = useState<any>(null);
+  const [restaurantTitle, setRestaurantTitle] = useState<string>(
+    restaurantName || ""
+  );
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadCartFromStorage = async () => {
+      try {
+        const savedCartString = await AsyncStorage.getItem("cart");
+        console.log("Loaded Cart from AsyncStorage:", savedCartString);
+        if (savedCartString) {
+          setCart(JSON.parse(savedCartString));
+        }
+      } catch (error) {
+        console.error("Error loading cart from AsyncStorage:", error);
+      }
+    };
+
+    const loadRestaurantFromStorage = async () => {
+      try {
+        const savedRestaurantString = await AsyncStorage.getItem(
+          "savedRestaurant"
+        );
+        console.log(
+          "Loaded Restaurant from AsyncStorage:",
+          savedRestaurantString
+        );
+        if (savedRestaurantString) {
+          const restaurant = JSON.parse(savedRestaurantString);
+          setSavedRestaurant(restaurant);
+          setRestaurantTitle(restaurant.name); // Atualiza o nome do restaurante
+        }
+      } catch (error) {
+        console.error("Error loading restaurant from AsyncStorage:", error);
+      }
+    };
+
+    loadCartFromStorage();
+    loadRestaurantFromStorage();
+  }, []);
+
+  useEffect(() => {
+    const updateCart = async () => {
+      setLoading(true); // Começa o carregamento
+      try {
+        const savedCartString = await AsyncStorage.getItem("cart");
+        const savedCart = savedCartString ? JSON.parse(savedCartString) : [];
+        console.log("Current Cart from AsyncStorage:", savedCart);
+  
+        const savedRestaurantString = await AsyncStorage.getItem("savedRestaurant");
+        const savedRestaurant = savedRestaurantString ? JSON.parse(savedRestaurantString) : null;
+        setSavedRestaurant(savedRestaurant);
+        console.log("Saved Restaurant:", savedRestaurant);
+  
+        if (productId && productName && productPrice) {
+          const newProduct: CartItem = {
+            id: productId,
+            name: productName,
+            image: productImage || "",
+            description: productDescription || "",
+            price: parseFloat(productPrice) || 0,
+            quantity: parseInt(quantity, 10) || 1,
+          };
+  
+          console.log("New Product:", newProduct);
+  
+          const updatedRestaurant = { id: restaurantId, name: restaurantName };
+          console.log("Updated Restaurant:", updatedRestaurant);
+  
+          if (savedCart.length === 0) {
+            const newCart = [newProduct];
+            console.log("Replacing Empty Cart with New Product:", newCart);
+            await AsyncStorage.setItem("cart", JSON.stringify(newCart));
+            await AsyncStorage.setItem("savedRestaurant", JSON.stringify(updatedRestaurant));
+            setCart(newCart);
+            setSavedRestaurant(updatedRestaurant);
+            setRestaurantTitle(updatedRestaurant.name); // Atualiza o nome do restaurante
+          } else {
+            const isDifferentRestaurant = savedRestaurant && savedRestaurant.id !== restaurantId;
+            console.log("Is Different Restaurant:", isDifferentRestaurant);
+  
+            if (isDifferentRestaurant) {
+              Alert.alert(
+                "Substituir carrinho?",
+                "O carrinho atual pertence a um restaurante diferente. Deseja substituir o carrinho atual pelos itens deste novo restaurante?",
+                [
+                  {
+                    text: "Cancelar",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel",
+                  },
+                  {
+                    text: "Sim",
+                    onPress: async () => {
+                      const newCart = [newProduct];
+                      console.log("Replacing Cart with New Product:", newCart);
+                      await AsyncStorage.setItem("cart", JSON.stringify(newCart));
+                      await AsyncStorage.setItem("savedRestaurant", JSON.stringify(updatedRestaurant));
+                      setCart(newCart);
+                      setSavedRestaurant(updatedRestaurant);
+                      setRestaurantTitle(updatedRestaurant.name); // Atualiza o nome do restaurante
+                    },
+                  },
+                ]
+              );
+            } else {
+              const existingProductIndex = savedCart.findIndex(
+                (item) => item.id === newProduct.id
+              );
+              console.log("Existing Product Index:", existingProductIndex);
+  
+              if (existingProductIndex !== -1) {
+                const updatedCart = savedCart.map((item, index) =>
+                  index === existingProductIndex
+                    ? { ...item, quantity: item.quantity + newProduct.quantity }
+                    : item
+                );
+                console.log("Updated Cart:", updatedCart);
+                await AsyncStorage.setItem("cart", JSON.stringify(updatedCart));
+                setCart(updatedCart);
+              } else {
+                const newCart = [...savedCart, newProduct];
+                console.log("Adding New Product to Cart:", newCart);
+                await AsyncStorage.setItem("cart", JSON.stringify(newCart));
+                setCart(newCart);
+              }
+  
+              await AsyncStorage.setItem("savedRestaurant", JSON.stringify(updatedRestaurant));
+              setSavedRestaurant(updatedRestaurant);
+              setRestaurantTitle(updatedRestaurant.name); // Atualiza o nome do restaurante
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Erro ao atualizar o carrinho:", error);
+      } finally {
+        setLoading(false); // Termina o carregamento
+      }
+    };
+  
+    updateCart();
+  }, [
+    productId,
+    productName,
+    productImage,
+    productDescription,
+    productPrice,
+    quantity,
+    restaurantId,
+  ]);
+  
+  
+
+  const handleIncrease = (productId: string) => {
+    setCart((prevCart) => {
+      const updatedCart = prevCart.map((item) =>
+        item.id === productId ? { ...item, quantity: item.quantity + 1 } : item
+      );
+      updateQuantity &&
+        updateQuantity(
+          productId,
+          updatedCart.find((item) => item.id === productId)?.quantity || 1
+        );
+      return updatedCart;
+    });
+  };
+
+  const handleDecrease = (productId: string) => {
+    setCart((prevCart) => {
+      const updatedCart = prevCart.map((item) =>
+        item.id === productId && item.quantity > 1
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+      );
+      updateQuantity &&
+        updateQuantity(
+          productId,
+          updatedCart.find((item) => item.id === productId)?.quantity || 1
+        );
+      return updatedCart;
+    });
+  };
+
+  const handleRemove = async (productId: string) => {
+    try {
+      setCart((prevCart) => {
+        const updatedCart = prevCart.filter((item) => item.id !== productId);
+        removeItem && removeItem(productId);
+        return updatedCart;
+      });
+
+      await AsyncStorage.setItem(
+        "cart",
+        JSON.stringify(cart.filter((item) => item.id !== productId))
+      );
+    } catch (error) {
+      console.error("Erro ao remover o item do AsyncStorage:", error);
+    }
+  };
+
+  const radioButtons = [
+    {
+      id: "1",
+      label: "Cartão",
+      value: "Cartão",
+      color: "#24a645",
+      borderColor: "#fff",
+      labelStyle: { color: "#fff" },
+    },
+    {
+      id: "2",
+      label: "PIX",
+      value: "PIX",
+      color: "#24a645",
+      borderColor: "#fff",
+      disabled: false,
+      labelStyle: { color: "#fff" },
+    },
+    {
+      id: "3",
+      label: "Pagar na entrega",
+      value: "Pagar na entrega",
+      color: "#24a645",
+      borderColor: "#fff",
+      labelStyle: { color: "#fff" },
+    },
+  ];
 
   const review = () => {
     router.push("../orderReview");
   };
 
-  useEffect(() => {
-    const newTotalPrice = (displayProductPrice * localQuantity).toFixed(2);
-    setTotalPrice(newTotalPrice);
-  }, [localQuantity, displayProductPrice]);
-
-  const updateLocalQuantity = (newQuantity: number) => {
-    const validQuantity = Math.max(1, newQuantity);
-
-    setLocalQuantity((prevQuantity) => {
-      if (prevQuantity === validQuantity) {
-        return prevQuantity;
-      }
-      return validQuantity;
-    });
-
-    updateQuantity(productName, validQuantity);
-  };
-
-  const handleIncreaseQuantity = () => {
-    updateLocalQuantity(localQuantity + 1);
-  };
-
-  const handleDecreaseQuantity = () => {
-    if (localQuantity === 1) {
-      removeItem(productName);
-    } else {
-      updateLocalQuantity(localQuantity - 1);
-    }
-  };
-
-  const radioButtons: RadioButtonProps[] = useMemo(() => ([
-    {
-      id: '1',
-      label: 'Cartão',
-      value: 'Cartão',
-      color: "#24a645",
-      borderColor: "#fff",
-      labelStyle: {
-        color: "#fff"
-      },
-      descriptionStyle: {
-        color: "#fff"
-      }
-    },
-    {
-      id: '2',
-      label: 'PIX',
-      value: 'PIX',
-      color: "#24a645",
-      borderColor: "#fff",
-      disabled: true,
-      labelStyle: {
-        color: "#fff"
-      }
-    },
-    {
-      id: '3',
-      label: 'Pagamento na entrega',
-      value: 'Pagamento na entrega',
-      color: "#24a645",
-      borderColor: "#fff",
-      labelStyle: {
-        color: "#fff"
-      }
-    }
-  ]), []);
-
-  const [selectedId, setSelectedId] = useState<string | undefined>();
+  const cartTotalPrice = cart.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
 
   return (
     <View className="flex-1 bg-[#2c2d33]">
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View className="py-6 px-4 flex-1">
-          <TouchableOpacity>
-            <View className="flex-row items-center gap-4">
-              <Image
-                className="w-[64px] h-[64px]"
-                source={
-                  require("../../assets/images/restaurante/checkoutImg.png")
-                }
-              />
-              <Text className="text-[24px] font-bold text-[#fff]">
-                {restaurantName}
-              </Text>
-            </View>
-          </TouchableOpacity>
-
-          <View className="my-4">
-            <Text className="text-[16px] font-bold text-[#fff]">
-              Itens adicionados
-            </Text>
-            <View className="flex-row justify-between py-4">
-              <View className="flex-row justify-between flex-1">
-                <Image
-                  source={
-                    productImage
-                      ? { uri: productImage }
-                      : require("../../assets/images/restaurante/checkoutImg.png")
-                  }
-                  style={{ width: 64, height: 64 }}
-                />
-                <View className="justify-between mx-2 flex-1">
-                  <View>
-                    <Text className="text-[16px] font-bold text-[#fff]">
-                      {productName}
-                    </Text>
-                    <Text className="text-[12px] text-[#fff]">
-                      {productDescription}
-                    </Text>
-                  </View>
-                  <Text className="text-[12px] text-[#24A645]">
-                    R$ {displayProductPrice.toFixed(2)}
+        {loading ? (
+          <View className="flex-1 justify-center items-center">
+            <ActivityIndicator size="large" color="#24a645" />
+          </View>
+        ) : cart.length === 0 ? (
+          <View className="flex-1 justify-center items-center">
+            <Text className="text-[#fff] text-lg">Seu carrinho está vazio :(</Text>
+          </View>
+        ) : (
+          <>
+            <View className="py-6 px-4 flex-1">
+              <TouchableOpacity>
+                <View className="flex-row items-center gap-4">
+                  <Image
+                    className="w-[64px] h-[64px]"
+                    source={require("../../assets/images/restaurante/checkoutImg.png")}
+                  />
+                  <Text className="text-[24px] font-bold text-[#fff]">
+                    {restaurantTitle}
                   </Text>
+                </View>
+              </TouchableOpacity>
+
+              <View className="my-4">
+                <Text className="text-[16px] font-bold text-[#fff]">
+                  Itens adicionados
+                </Text>
+                {cart.length > 0 ? (
+                  cart.map((product) => (
+                    <ProductItem
+                      key={product.id}
+                      product={product}
+                      onIncrease={() => handleIncrease(product.id)}
+                      onDecrease={() => handleDecrease(product.id)}
+                      onRemove={() => handleRemove(product.id)}
+                    />
+                  ))
+                ) : (
+                  <Text className="text-[#fff]">Nenhum item no carrinho.</Text>
+                )}
+              </View>
+
+              <View className="items-center py-4">
+                <CustomInput
+                  titleInput="Cupom"
+                  placeholder="Insira um cupom promocional"
+                />
+                <ButtonCustom texto="Inserir cupom" />
+              </View>
+
+              <View className="h-[104px]">
+                <Text className="text-[22px] font-bold text-[#fff] pb-4">
+                  Forma de pagamento
+                </Text>
+                <View className="items-center">
+                  <RadioGroup
+                    layout="row"
+                    radioButtons={radioButtons}
+                    onPress={setSelectedId}
+                    selectedId={selectedId}
+                  />
                 </View>
               </View>
 
-              <View className="flex-row gap-2 items-center">
-                <TouchableOpacity onPress={handleDecreaseQuantity}>
-                  {localQuantity > 1 ? (
-                    <View className="bg-[#24A645] w-[32px] h-[32px] rounded-full justify-center items-center">
-                      <Text className="text-[#1C4F2A] text-[24px]">-</Text>
-                    </View>
-                  ) : (
-                    <View className="bg-[#24A645] w-[32px] h-[32px] rounded-full justify-center items-center">
-                      <Icon name="trash" size={20} color="#1C4F2A" />
-                    </View>
-                  )}
-                </TouchableOpacity>
-                <Text className="text-[#fff]">{localQuantity}</Text>
-                <TouchableOpacity onPress={handleIncreaseQuantity}>
-                  <View className="bg-[#24A645] w-[32px] h-[32px] rounded-full justify-center items-center">
-                    <Text className="text-[#1C4F2A] text-[24px]">+</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            <View className="items-center py-4">
-              <CustomInput
-                titleInput="Cupom"
-                placeholder="Insira um cupom promocional"
-              />
-              <ButtonCustom texto="Inserir cupom" />
-            </View>
-          </View>
-
-          <View className="h-[104px]">
-            <Text className="text-[22px] font-bold text-[#fff] pb-4">Forma de pagamento</Text>
-            <RadioGroup
-              layout="row"
-              radioButtons={radioButtons}
-              onPress={setSelectedId}
-              selectedId={selectedId}
-            />
-          </View>
-
-          <View>
-            <Text className="text-[22px] font-bold text-[#fff] pb-4">Endereço de entrega</Text>
-            <Text></Text>
-          </View>
-
-          <View className="justify-between flex-1 pb-[50px]">
-            <View className="gap-2">
-              <Text className="text-[22px] font-bold text-[#fff]">
-                Resumo de pedido
-              </Text>
-              <View className="flex-row justify-between">
-                <Text className="font-bold text-[#fff]">Subtotal</Text>
-                <Text className="font-bold text-[#fff]">
-                  R$ {displayProductPrice.toFixed(2)}
+              <View className="my-4">
+                <Text className="text-[22px] font-bold text-[#fff] pb-4">
+                  Endereço de entrega
                 </Text>
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  {savedAddress ? (
+                    <AddressCard
+                      icon={getIconForType(savedAddress.tipo)}
+                      title={savedAddress.tipo || "Endereço"}
+                      address={`${savedAddress.rua}, ${savedAddress.numero}, ${savedAddress.bairro}, ${savedAddress.cidade} - ${savedAddress.estado}`}
+                      complement={
+                        savedAddress.complemento || "Complemento não especificado"
+                      }
+                    />
+                  ) : (
+                    <Text className="text-[#fff]">Nenhum endereço salvo.</Text>
+                  )}
+                </View>
               </View>
-              <View className="flex-row justify-between">
-                <Text className="font-bold text-[#fff]">Cupom</Text>
-                <Text className="font-bold text-[#fff]">R$ 0,00</Text>
-              </View>
-              <View className="flex-row justify-between">
-                <Text className="font-bold text-[#fff]">Taxa de entrega</Text>
-                <Text className="font-bold text-[#fff]">Grátis</Text>
-              </View>
-              <View className="flex-row justify-between">
-                <Text className="font-bold text-[#fff]">Total</Text>
-                <Text className="font-bold text-[#24A645]">R$ {totalPrice}</Text>
-              </View>
-              <View className="items-center py-4">
-                <ButtonCustom onPress={review} texto="Continuar" />
+
+              <View className="justify-between flex-1 pb-[50px]">
+                <View className="gap-2">
+                  <Text className="text-[22px] font-bold text-[#fff]">
+                    Resumo de pedido
+                  </Text>
+                  <View className="flex-row justify-between">
+                    <Text className="font-bold text-[#fff]">Subtotal</Text>
+                    <Text className="font-bold text-[#fff]">
+                      R$ {cartTotalPrice.toFixed(2)}
+                    </Text>
+                  </View>
+                  <View className="flex-row justify-between">
+                    <Text className="font-bold text-[#fff]">Taxas</Text>
+                    <Text className="font-bold text-[#fff]">R$ 0,00</Text>
+                  </View>
+                  <View className="flex-row justify-between">
+                    <Text className="text-[22px] font-bold text-[#24A645]">
+                      Total
+                    </Text>
+                    <Text className="text-[22px] font-bold text-[#24A645]">
+                      R$ {cartTotalPrice.toFixed(2)}
+                    </Text>
+                  </View>
+                </View>
+                <View className="items-center my-6">
+                  <ButtonCustom texto="Finalizar pedido" onPress={review} />
+                </View>
               </View>
             </View>
-          </View>
-        </View>
+          </>
+        )}
       </ScrollView>
       <Footer />
     </View>
   );
-}
+};

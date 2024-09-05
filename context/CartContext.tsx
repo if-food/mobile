@@ -1,105 +1,98 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// Defina a interface para o item do carrinho
 interface CartItem {
   productName: string;
-  productImage: string;
-  productPrice: number;
   quantity: number;
 }
 
+// Defina a interface para o contexto do carrinho
 interface CartContextType {
-  cartItems: CartItem[];
-  updateQuantity: (productName: string, quantity: number) => void;
+  cart: CartItem[];
+  addItem: (item: CartItem) => void;
   removeItem: (productName: string) => void;
-  applyCoupon: (couponCode: string) => number;
+  updateQuantity: (productName: string, quantity: number) => void;
 }
 
-const CartContext = createContext<CartContextType | undefined>(undefined);
+// Crie o contexto do carrinho com um valor padrão de undefined
+export const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [discount, setDiscount] = useState<number>(0);
+const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [cart, setCart] = useState<CartItem[]>([]);
 
-  useEffect(() => {
-    const loadCartItems = async () => {
-      try {
-        const storedItems = await AsyncStorage.getItem('cartItems');
-        if (storedItems) {
-          setCartItems(JSON.parse(storedItems));
-        }
-      } catch (error) {
-        console.error('Failed to load cart items from AsyncStorage', error);
+  // Função para salvar o carrinho no AsyncStorage
+  const saveCartToAsyncStorage = async (cart: CartItem[]) => {
+    try {
+      await AsyncStorage.setItem('cart', JSON.stringify(cart));
+    } catch (error) {
+      console.error('Erro ao salvar o carrinho:', error);
+    }
+  };
+
+  // Função para carregar o carrinho do AsyncStorage
+  const loadCartFromAsyncStorage = async () => {
+    try {
+      const cartData = await AsyncStorage.getItem('cart');
+      if (cartData) {
+        return JSON.parse(cartData) as CartItem[];
       }
+      return [];
+    } catch (error) {
+      console.error('Erro ao carregar o carrinho:', error);
+      return [];
+    }
+  };
+
+  // Carrega o carrinho quando o componente for montado
+  useEffect(() => {
+    const loadCart = async () => {
+      const savedCart = await loadCartFromAsyncStorage();
+      setCart(savedCart);
     };
 
-    loadCartItems();
+    loadCart();
   }, []);
 
-  useEffect(() => {
-    const saveCartItems = async () => {
-      try {
-        await AsyncStorage.setItem('cartItems', JSON.stringify(cartItems));
-      } catch (error) {
-        console.error('Failed to save cart items to AsyncStorage', error);
-      }
-    };
-
-    saveCartItems();
-  }, [cartItems]);
-
-  const updateQuantity = (productName: string, quantity: number) => {
-    setCartItems(prevItems => {
-      const itemIndex = prevItems.findIndex(item => item.productName === productName);
-
-      if (itemIndex > -1) {
-        const updatedItems = [...prevItems];
-        if (quantity <= 1) {
-          updatedItems.splice(itemIndex, 1);
-        } else {
-          updatedItems[itemIndex] = {
-            ...updatedItems[itemIndex],
-            quantity: quantity,
-          };
-        }
-        return updatedItems;
-      } else {
-        return [...prevItems, {
-          productName,
-          productImage: '', 
-          productPrice: 0, 
-          quantity: 1,
-        }];
-      }
-    });
+  // Função para atualizar o carrinho e o AsyncStorage
+  const saveCart = async (newCart: CartItem[]) => {
+    setCart(newCart);
+    await saveCartToAsyncStorage(newCart);
   };
 
-  const removeItem = (productName: string) => {
-    setCartItems(prevItems => prevItems.filter(item => item.productName !== productName));
-  };
+  // Função para adicionar um item ao carrinho
+  const addItem = (item: CartItem) => {
+    const updatedCart = [...cart];
+    const existingItem = updatedCart.find((i) => i.productName === item.productName);
 
-  const applyCoupon = (couponCode: string): number => {
-    let discountAmount = 0;
-    if (couponCode === 'PROMO10') {
-      discountAmount = 10; 
+    if (existingItem) {
+      existingItem.quantity += item.quantity;
     } else {
-      discountAmount = 0;
+      updatedCart.push(item);
     }
-    setDiscount(discountAmount);
-    return discountAmount;
+
+    saveCart(updatedCart);
+  };
+
+  // Função para remover um item do carrinho
+  const removeItem = (productName: string) => {
+    const updatedCart = cart.filter((item) => item.productName !== productName);
+    saveCart(updatedCart);
+  };
+
+  // Função para atualizar a quantidade de um item no carrinho
+  const updateQuantity = (productName: string, quantity: number) => {
+    const updatedCart = cart.map((item) =>
+      item.productName === productName ? { ...item, quantity } : item
+    );
+    saveCart(updatedCart);
   };
 
   return (
-    <CartContext.Provider value={{ cartItems, updateQuantity, removeItem, applyCoupon }}>
+    <CartContext.Provider value={{ cart, addItem, removeItem, updateQuantity }}>
       {children}
     </CartContext.Provider>
   );
 };
 
-export const useCart = () => {
-  const context = React.useContext(CartContext);
-  if (context === undefined) {
-    throw new Error('useCart must be used within a CartProvider');
-  }
-  return context;
-};
+export default CartProvider;

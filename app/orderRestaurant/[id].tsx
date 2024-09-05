@@ -5,8 +5,8 @@ import Footer from 'components/Footer';
 
 export default function OrderRestaurant() {
   const router = useRouter();
-  const { productName, productImage, productDescription, productPrice, quantity: initialQuantity, restaurantName } = useLocalSearchParams();
-
+  const { productId } = useLocalSearchParams();
+  const { productName, productImage, productDescription, productPrice, quantity: initialQuantity, restaurantName, restaurantId } = useLocalSearchParams();
   const [quantity, setQuantity] = useState(parseInt(initialQuantity as string, 10) || 1);
   const productPriceNum = parseFloat(productPrice as string) || 0;
   const totalPrice = productPriceNum * quantity;
@@ -15,17 +15,19 @@ export default function OrderRestaurant() {
     const productImagePath = Array.isArray(productImage) ? productImage[0] : productImage;
     const productPriceStr = productPriceNum.toFixed(2);
     const totalPriceStr = totalPrice.toFixed(2);
-
+  
     const queryParams = new URLSearchParams({
+      productId: productId as string,
       productName: productName as string,
       productImage: productImagePath || '',
-      productDescription: productDescription as string,
+      productDescription: productDescription as string || '',
       productPrice: productPriceStr,
       quantity: quantity.toString(),
       totalPrice: totalPriceStr,
       restaurantName: restaurantName as string,
+      restaurantId: restaurantId as string
     }).toString();
-
+  
     router.push(`../checkout?${queryParams}`);
   };
 
