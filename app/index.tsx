@@ -14,6 +14,7 @@ import Checkout from './checkout';
 import { LucideHome } from 'lucide-react-native';
 import OrderReview from './orderReview';
 import CartProvider from 'context/CartContext';
+import { LogBox } from 'react-native';
 
 const tamaguiConfig = createTamagui(config);
 
@@ -31,10 +32,6 @@ export default () => {
   if (!loaded) {
     return null;
   }
-
-  LogBox.ignoreLogs([
-    '[Reanimated] Reduced motion setting is enabled on this device.',
-  ]);
 
   return (
     <TamaguiProvider config={tamaguiConfig}>

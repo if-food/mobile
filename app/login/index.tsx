@@ -53,6 +53,8 @@ export default function Login() {
         throw new Error('Token is missing');
       }
 
+      const response = await axios.get('http://localhost:8080/api/cliente/?usuarioId=3')
+
       await AsyncStorage.setItem('userToken', token);
 
       const storedToken = await AsyncStorage.getItem('userToken');

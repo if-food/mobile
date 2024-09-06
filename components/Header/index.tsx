@@ -1,9 +1,10 @@
 import { Image, Text } from 'tamagui';
-import { View } from 'react-native';
+import { View, Pressable } from 'react-native';
 import Bag from '../../assets/images/header_component/bag.png';
 import { TouchableOpacity } from 'react-native';
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
+
 
 interface HeaderProps {
   title: string;
@@ -17,6 +18,10 @@ export default function Header({ title }: HeaderProps) {
     router.push('../checkout');
   };
 
+  const handleAddresses = () => {
+    router.push('../addresses');
+  };
+
   if (count > 10) setCount(0);
 
   return (
@@ -26,8 +31,10 @@ export default function Header({ title }: HeaderProps) {
       </View>
 
       <View className="flex-row items-center">
-        <Text className="text-white">{title} </Text>
-        <Image className="w-[9px] h-[13px]" source={require('../../assets/images/header_component/map_pin.png')}></Image>
+        <Pressable onPress={handleAddresses}>
+          <Text className="text-white">{title} </Text>
+          <Image className="w-[9px] h-[13px]" source={require('../../assets/images/header_component/map_pin.png')}></Image>
+        </Pressable>
       </View>
 
       <View className="px-7">
