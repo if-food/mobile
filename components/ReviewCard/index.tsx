@@ -1,16 +1,23 @@
-import { View, ScrollView, Text, Image } from 'react-native';
+import { View, Text, Image, ImageSourcePropType } from "react-native";
 
-export default function ReviewCard({ source, name, description, price }) {
+interface ReviewCardProps {
+  source: ImageSourcePropType;
+  name: string;
+  description: string;
+  price: string;
+}
+
+export default function ReviewCard({ source, name, description, price }: ReviewCardProps) {
   const formattedPrice = parseFloat(price).toFixed(2);
+  
   return (
-    <View className="flex-row justify-between bg-[#2b2e32] mb-4">
-      <Image source={source} />
-      <View className="flex-1 pl-4">
-        <Text className="text-[16px] font-bold text-[#fff]">{name}</Text>
-        <Text className="text-[12px] text-[#fff]">{description}</Text>
-        <Text className="text-[12px] text-[#24A645]">R$ {formattedPrice}</Text>
+    <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: '#2b2e32', marginBottom: 16, padding: 8 }}>
+      <Image source={source} style={{ width: 80, height: 80 }} />
+      <View style={{ flex: 1, paddingLeft: 16 }}>
+        <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#fff' }}>{name}</Text>
+        <Text style={{ fontSize: 12, color: '#fff' }}>{description}</Text>
+        <Text style={{ fontSize: 12, color: '#24A645' }}>R$ {formattedPrice}</Text>
       </View>
-      <Text className="text-[12px] text-[#fff]">3x</Text>
     </View>
   );
 }

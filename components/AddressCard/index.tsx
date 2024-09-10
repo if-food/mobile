@@ -32,7 +32,7 @@ const AddressCard = ({
         borderRadius: 8,
         padding: 16,
         width: "90%",
-        marginBottom: 32,
+        marginBottom: 24,
       }}
     >
       <Icon name={icon} size={40} color="#24A645" />

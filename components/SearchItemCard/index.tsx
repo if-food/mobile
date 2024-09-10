@@ -2,11 +2,11 @@ import { Text, Image, View } from "tamagui";
 import { TouchableOpacity } from "react-native";
 
 interface SearchItemCardProps {
-  logo?: any;
+  logo?: string;
   restaurantName?: string;
   title?: string;
   description?: string;
-  orderImage?: any;
+  orderImage?: string;
   price?: string;
   onPress?: () => void;
 }
@@ -31,7 +31,7 @@ export default function SearchItemCard({
           }}
         >
           <Image
-            source={logo}
+            source={{uri: logo}}
             style={{
               width: 30,
               height: 30,
@@ -83,7 +83,7 @@ export default function SearchItemCard({
           </View>
           {orderImage && (
             <Image
-              source={orderImage}
+            source={{uri: orderImage}}
               style={{
                 width: 150,
                 height: 100,

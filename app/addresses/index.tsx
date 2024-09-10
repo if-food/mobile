@@ -13,15 +13,18 @@ export default function Addresses() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [favoriteAddress, setFavoriteAddress] = useState<Address | null>(null);
+  const [clienteId, setClienteId] = useState<string | null>(null);
 
   const router = useRouter();
 
   const fetchAddresses = async () => {
     try {
-      const clienteIdString = await AsyncStorage.getItem("clienteId");
-      if (clienteIdString) {
-        const id = clienteIdString;
-        const response = await axios.get(`https://api-1-drn7.onrender.com/api/cliente/1`);
+      const storedData = await AsyncStorage.getItem('userData');
+      if (storedData) {
+        const userData = JSON.parse(storedData);
+        const id = userData.id;
+        setClienteId(id);
+        const response = await axios.get(`https://api-1-drn7.onrender.com/api/cliente/?clienteId=${id}`);
         const data = response.data.enderecos || [];
         setAddresses(data);
         await loadFavoriteAddress(id);
@@ -48,29 +51,29 @@ export default function Addresses() {
   };
 
   const toggleFavoriteAddress = async (address: Address) => {
-    try {
-      const clienteIdString = await AsyncStorage.getItem("clienteId");
-      if (clienteIdString) {
-        const addressKey = `favoriteAddress_${clienteIdString}`;
-        
-        if (addresses.length === 1) {
-          setFavoriteAddress(address);
-          await AsyncStorage.setItem(addressKey, JSON.stringify(address));
-          return;
-        }
+    if (!clienteId) {
+      setError("Cliente ID não encontrado.");
+      return;
+    }
 
-        if (favoriteAddress?.id === address.id) {
-          setFavoriteAddress(null);
-          await AsyncStorage.removeItem(addressKey);
-        } else {
-          if (favoriteAddress) {
-            await AsyncStorage.removeItem(addressKey);
-          }
-          setFavoriteAddress(address);
-          await AsyncStorage.setItem(addressKey, JSON.stringify(address));
-        }
+    try {
+      const addressKey = `favoriteAddress_${clienteId}`;
+      
+      if (addresses.length === 1) {
+        setFavoriteAddress(address);
+        await AsyncStorage.setItem(addressKey, JSON.stringify(address));
+        return;
+      }
+
+      if (favoriteAddress?.id === address.id) {
+        setFavoriteAddress(null);
+        await AsyncStorage.removeItem(addressKey);
       } else {
-        setError("Cliente ID não encontrado.");
+        if (favoriteAddress) {
+          await AsyncStorage.removeItem(addressKey);
+        }
+        setFavoriteAddress(address);
+        await AsyncStorage.setItem(addressKey, JSON.stringify(address));
       }
     } catch (error) {
       setError("Erro ao atualizar o endereço favoritado.");
@@ -79,19 +82,19 @@ export default function Addresses() {
   };
 
   const deleteAddress = async (id: number) => {
+    if (!clienteId) {
+      setError("Cliente ID não encontrado.");
+      return;
+    }
+
     try {
-      const clienteIdString = await AsyncStorage.getItem("clienteId");
-      if (clienteIdString) {
-        await axios.delete(`https://api-1-drn7.onrender.com/api/cliente/endereco/${id}`);
-        setAddresses((prevAddresses) => prevAddresses.filter((address) => address.id !== id));
-        if (favoriteAddress?.id === id) {
-          setFavoriteAddress(null);
-          await AsyncStorage.removeItem(`favoriteAddress_${clienteIdString}`);
-        }
-        Alert.alert("Sucesso", "Endereço excluído com sucesso!");
-      } else {
-        setError("Cliente ID não encontrado.");
+      await axios.delete(`https://api-1-drn7.onrender.com/api/cliente/endereco/${id}`);
+      setAddresses((prevAddresses) => prevAddresses.filter((address) => address.id !== id));
+      if (favoriteAddress?.id === id) {
+        setFavoriteAddress(null);
+        await AsyncStorage.removeItem(`favoriteAddress_${clienteId}`);
       }
+      Alert.alert("Sucesso", "Endereço excluído com sucesso!");
     } catch (err) {
       setError("Erro ao excluir o endereço.");
       console.error(err);

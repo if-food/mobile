@@ -33,7 +33,7 @@ export default function Cadastro() {
     setLoading(true);
 
     try {
-      const response = await axios.post("https://if-delivery-api.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/cliente", {
+      const response = await axios.post("https://api-1-drn7.onrender.com/api/cliente", {
         nome: data.name,
         email: data.email,
         password: data.password
@@ -45,8 +45,6 @@ export default function Cadastro() {
 
         const clienteId = response.data.id;
         console.log(clienteId);
-
-        await AsyncStorage.setItem('clienteId', clienteId.toString());
 
         handleLogin();
       }

@@ -1,25 +1,76 @@
-import { Image, Text } from 'tamagui';
-import { View } from 'react-native';
-import { TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ImageStyle,
+  ViewStyle,
+  TextStyle,
+} from "react-native";
+import SimpleImagePicker from "components/Image";
 
-interface ListRestaurant {
-  source?: any;
+interface ListRestaurantProps {
+  photoLogo?: string;
   titleRestaurant?: string;
-  onPress?: any;
-  rating?: string;
+  onPress?: () => void;
   categoriasEnum?: string;
 }
 
-export default function ListRestaurant({ source, titleRestaurant = 'titulo', onPress, categoriasEnum }: ListRestaurant) {
+const defaultImage = require("../../assets/images/icon.png");
+
+export default function ListRestaurant({
+  photoLogo,
+  titleRestaurant = "Título",
+  onPress,
+  categoriasEnum,
+}: ListRestaurantProps) {
+  const imageUri = photoLogo || defaultImage;
+
   return (
-    <TouchableOpacity className="flex-row items-center h-[70px] mb-10" onPress={onPress}>
+    <TouchableOpacity
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        height: 70,
+        marginBottom: 24,
+      }}
+      onPress={onPress}
+    >
       <View>
-        <Image className="w-[64px] h-[64px] rounded-full" source={source} />
+        {photoLogo ? (
+          <SimpleImagePicker
+            imageUri={imageUri}
+            imageStyle={{ borderRadius: 32, width: 64, height: 64 }}
+          />
+        ) : (
+          <Image
+            source={imageUri}
+            style={{ width: 64, height: 64, borderRadius: 32 } as ImageStyle}
+          />
+        )}
       </View>
-      <View className="pl-4 h-full justify-center">
-        <Text className="text-[#fff] text-[20px] font-bold">{titleRestaurant}</Text>
-        <View className="flex-row items-center">
-          <Text className="text-[#fff] text-[12px]">{categoriasEnum}</Text>
+      <View
+        style={
+          {
+            paddingLeft: 16,
+            height: "100%",
+            justifyContent: "center",
+          } as ViewStyle
+        }
+      >
+        <Text
+          style={
+            { color: "#fff", fontSize: 20, fontWeight: "bold" } as TextStyle
+          }
+        >
+          {titleRestaurant}
+        </Text>
+        <View
+          style={{ flexDirection: "row", alignItems: "center" } as ViewStyle}
+        >
+          <Text style={{ color: "#fff", fontSize: 12 } as TextStyle}>
+            {categoriasEnum}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>
