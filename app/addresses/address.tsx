@@ -347,10 +347,11 @@ export default function Address() {
             texto={buttonText} 
             onPress={handleSubmit(onSubmit)}
             disabled={isLoading}
+            style={{marginTop: 24}}
           />
         </Form>
-        <Footer />
       </ScrollView>
+        <Footer />
     </KeyboardAvoidingView>
   );
 }

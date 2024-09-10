@@ -9,16 +9,13 @@ import { Provider } from './Provider';
 import { CartProvider } from 'context/Provider';
 
 export {
-  // Catch any errors thrown by the Layout component.
   ErrorBoundary,
 } from 'expo-router';
 
 export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
   initialRouteName: 'index',
 };
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -29,7 +26,6 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (interLoaded || interError) {
-      // Hide the splash screen after the fonts have loaded (or an error was returned) and the UI is ready.
       SplashScreen.hideAsync();
     }
   }, [interLoaded, interError]);
@@ -266,19 +262,6 @@ function RootLayoutNav() {
               name="orderReview/index"
               options={{
                 headerTitle: 'Review',
-                headerShown: true,
-                animation: 'slide_from_right',
-                headerStyle: {
-                  backgroundColor: '#24A645',
-                },
-                headerTintColor: '#fff',
-              }}
-            />
-            <Stack.Screen
-              name="photo/index"
-              options={{
-                headerTitle: 'Foto',
-                headerShown: true,
                 animation: 'slide_from_right',
                 headerStyle: {
                   backgroundColor: '#24A645',

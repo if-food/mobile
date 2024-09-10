@@ -31,5 +31,5 @@ export const loadSavedAddress = async (setSavedAddress: React.Dispatch<React.Set
 export const abbreviateAddress = (address: string | null): string => {
     if (!address) return '';
   
-    return address.length > 15 ? `${address.substring(0, 15)}...` : address;
+    return address.length > 25 ? `${address.substring(0, 25)}...` : address;
   };

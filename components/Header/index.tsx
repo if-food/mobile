@@ -3,8 +3,8 @@ import { View, Pressable, TouchableOpacity } from 'react-native';
 import Bag from '../../assets/images/header_component/bag.png';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
-import { loadSavedAddress } from 'utils/addressUtils';
-import { abbreviateAddress } from 'utils/addressUtils'; 
+import { loadSavedAddress, abbreviateAddress } from 'utils/addressUtils'; 
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 export default function Header() {
   const [count, setCount] = useState(0);
@@ -28,17 +28,23 @@ export default function Header() {
   return (
     <View className="h-[60] w-full bg-[#24A645] mt-7 flex-row items-center justify-between rounded-bl-[24px] rounded-br-[24px]">
       <View className="flex-none px-7">
-        <Text className="text-white text-[16px]">{'            '}</Text>
+        <Text className="text-white text-[16px]">{'   '}</Text>
       </View>
 
-      <View className="flex-row items-center">
-        <Pressable onPress={handleAddresses}>
-          <Text className="text-white">
-            {abbreviateAddress(savedAddress)}
-          </Text>
-          <Image className="w-[9px] h-[13px]" source={require('../../assets/images/header_component/map_pin.png')} />
-        </Pressable>
-      </View>
+      <Pressable onPress={handleAddresses}>
+        <View className="flex-row items-center">
+          <MaterialIcons name="location-on" size={24} color="#fff" />
+          {savedAddress ? (  // Exibe o endereço se presente
+            <Text className="text-white p-1">
+              {abbreviateAddress(savedAddress)}
+            </Text>
+          ) : ( // Exibe uma frase de efeito se não houver endereço salvo
+            <Text className="text-white p-1">
+              Explore novos lugares!
+            </Text>
+          )}
+        </View>
+      </Pressable>
 
       <View className="px-7">
         <TouchableOpacity onPress={handlePress}>

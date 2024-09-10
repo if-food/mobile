@@ -21,15 +21,6 @@ import { RadioGroup } from "react-native-radio-buttons-group";
 import CustomInput from "components/customInput";
 import ImagePickerComponent from "components/ProfileImage";
 
-interface CartItem {
-  id: string;
-  name: string;
-  image: string;
-  description: string;
-  price: number;
-  quantity: number;
-}
-
 export default function Checkout() {
   const { updateQuantity, removeItem } = useContext(CartContext) || {};
   const route = useRoute();
@@ -54,7 +45,7 @@ export default function Checkout() {
     restaurantName || ""
   );
   const [restaurantLogo, setRestaurantLogo] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const loadSavedAddress = async () => {
@@ -279,8 +270,8 @@ export default function Checkout() {
   const radioButtons = [
     {
       id: "1",
-      label: "Cartão",
-      value: "Cartão",
+      label: "Cartão de Crédito",
+      value: "CARTAO_CREDITO",
       color: "#24a645",
       borderColor: "#fff",
       labelStyle: { color: "#fff" },
@@ -296,8 +287,8 @@ export default function Checkout() {
     },
     {
       id: "3",
-      label: "Pagar na entrega",
-      value: "Pagar na entrega",
+      label: "Dinheiro",
+      value: "DINHEIRO",
       color: "#24a645",
       borderColor: "#fff",
       labelStyle: { color: "#fff" },
@@ -314,8 +305,16 @@ export default function Checkout() {
   );
 
   const submitOrder = async () => {
+    setLoading(true);
     try {
-      const clientId = savedAddress?.id;
+      const storedData = await AsyncStorage.getItem('userData');
+      if (!storedData) {
+        Alert.alert("Erro", "Informações do usuário não encontradas.");
+        return;
+      }
+  
+      const userData = JSON.parse(storedData);
+      const clientId = userData.id;
       const restaurantId = savedRestaurant?.id;
   
       if (!clientId || !restaurantId) {
@@ -326,7 +325,7 @@ export default function Checkout() {
       const orderData = {
         clienteId: clientId,
         restauranteId: restaurantId,
-        formaPgto: selectedId, 
+        formaPgto: selectedId,
         observacao: "Entregar no horário combinado.",
         itens: cart.map(item => ({
           produtoId: item.id,
@@ -334,7 +333,9 @@ export default function Checkout() {
         })),
       };
   
-      const response = await fetch("https://api-1-drn7.onrender.com/api/pedido", {
+      console.log("Enviando dados do pedido:", orderData);
+  
+      const response = await fetch(`https://api-1-drn7.onrender.com/api/pedido?clienteId=${clientId}&restauranteId=${restaurantId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -342,18 +343,32 @@ export default function Checkout() {
         body: JSON.stringify(orderData),
       });
   
+      console.log("Resposta da API:", response);
+  
       if (response.ok) {
         const result = await response.json();
-        Alert.alert("Sucesso", "Pedido realizado com sucesso!");
-        router.push("../orderReview");
-      } else {
-        Alert.alert("Erro", "Não foi possível realizar o pedido. Tente novamente.");
+        console.log("Resultado do pedido:", result);
+
+        await AsyncStorage.setItem('orderData', JSON.stringify({
+          ...orderData,
+          id: result.id 
+        }));
+  
+        // Passar o resultado da API para a tela de revisão
+        router.push({
+          pathname: "../orderReview",
+        });
+  
+        // Limpar o carrinho
+        setCart([]);
+        await AsyncStorage.setItem("cart", JSON.stringify([]));
       }
     } catch (error) {
       console.error("Erro ao enviar pedido:", error);
-      Alert.alert("Erro", "Não foi possível realizar o pedido. Tente novamente.");
+    } finally {
+      setLoading(false);
     }
-  };
+  };  
 
   const review = () => {
     submitOrder();
@@ -388,8 +403,8 @@ export default function Checkout() {
                 </View>
               </TouchableOpacity>
 
-              <View className="my-4">
-                <Text className="text-[16px] font-bold text-[#fff]">
+              <View className="my-4 pt-4">
+                <Text className="text-[22px] font-bold text-[#fff]">
                   Itens adicionados
                 </Text>
                 {cart.length > 0 ? (
@@ -486,7 +501,7 @@ export default function Checkout() {
                   </View>
                 </View>
                 <View className="items-center my-6">
-                  <ButtonCustom texto="Finalizar pedido" onPress={review} />
+                  <ButtonCustom texto="Finalizar pedido" onPress={review} loading={loading} />
                 </View>
               </View>
             </View>

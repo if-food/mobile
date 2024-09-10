@@ -11,7 +11,7 @@ export default function Footer() {
   const router = useRouter();
 
   const goToOrders = () => {
-    router.push('../registroPedidos');
+    router.push('../orderReview');
   };
 
   const goToHome = () => {
