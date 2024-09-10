@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   View,
   Text,
@@ -13,51 +13,59 @@ import { Form } from "tamagui";
 import Footer from "components/Footer";
 import addressSchema from "schemas/Address";
 import CustomInput from "components/customInput";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group';
+import RadioGroup, { RadioButtonProps } from "react-native-radio-buttons-group";
 import { fetchAddressByCep, formatCep } from "utils/formatters";
 
 export default function Address() {
   const { id } = useLocalSearchParams();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const radioButtons: RadioButtonProps[] = useMemo(() => ([
-    {
-      id: '1',
-      label: 'Casa',
-      value: 'Casa',
-      color: "#24a645",
-      borderColor: "#fff",
-      labelStyle: {
-        color: "#fff"
-      }
-    },
-    {
-      id: '2',
-      label: 'Apartamento',
-      value: 'Apartamento',
-      color: "#24a645",
-      borderColor: "#fff",
-      labelStyle: {
-        color: "#fff"
-      }
-    },
-    {
-      id: '3',
-      label: 'Outro',
-      value: 'Outro',
-      color: "#24a645",
-      borderColor: "#fff",
-      labelStyle: {
-        color: "#fff"
-      }
-    }
-  ]), []);
+  const radioButtons: RadioButtonProps[] = useMemo(
+    () => [
+      {
+        id: "1",
+        label: "Casa",
+        value: "Casa",
+        color: "#24a645",
+        borderColor: "#fff",
+        labelStyle: {
+          color: "#fff",
+        },
+      },
+      {
+        id: "2",
+        label: "Apartamento",
+        value: "Apartamento",
+        color: "#24a645",
+        borderColor: "#fff",
+        labelStyle: {
+          color: "#fff",
+        },
+      },
+      {
+        id: "3",
+        label: "Outro",
+        value: "Outro",
+        color: "#24a645",
+        borderColor: "#fff",
+        labelStyle: {
+          color: "#fff",
+        },
+      },
+    ],
+    []
+  );
+
+  const handleAddress= () => {
+    router.push('../addresses');
+  };
 
   const [selectedId, setSelectedId] = useState<string | undefined>();
   const isEditMode = !!id;
   const buttonText = isEditMode ? "Alterar" : "Salvar";
-  
+
   const {
     control,
     handleSubmit,
@@ -70,21 +78,26 @@ export default function Address() {
   });
 
   const onSubmit = async (data) => {
+    setIsLoading(true);
     try {
       console.log("Submitted Data:", data);
 
-      const clientId = await AsyncStorage.getItem("clienteId");
-      if (!clientId) {
+      const storedData = await AsyncStorage.getItem("userData");
+      if (!storedData) {
         console.error("Client ID not found in AsyncStorage");
         return;
       }
-  
+      const userData = JSON.parse(storedData);
+      const clienteId = userData.id;
+
+      console.log(clienteId);
+
       const url = id
         ? `https://api-1-drn7.onrender.com/api/cliente/endereco/${id}`
-        : `https://api-1-drn7.onrender.com/api/cliente/endereco/1`;
-      
-      const method = id ? 'PUT' : 'POST';
-  
+        : `https://api-1-drn7.onrender.com/api/cliente/endereco/${clienteId}`;
+
+      const method = id ? "PUT" : "POST";
+
       const payload = {
         bairro: data.neighborhood,
         cep: data.cep,
@@ -93,34 +106,38 @@ export default function Address() {
         estado: data.state,
         numero: data.number,
         rua: data.street,
-        tipo: radioButtons.find(button => button.id === selectedId)?.value,
+        tipo: radioButtons.find((button) => button.id === selectedId)?.value,
       };
-  
+
       const response = await fetch(url, {
         method: method,
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload), 
+        body: JSON.stringify(payload),
       });
-  
+
       const result = await response.json();
       console.log(result);
-      alert("Endereço salvo com sucesso :)")
+      alert("Endereço salvo com sucesso :)");
+      handleAddress();
     } catch (error) {
       console.error("Error submitting address data:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleCepChange = async (cep) => {
     const formattedCep = formatCep(cep);
-    console.log("Formatted CEP:", formattedCep);
-    
+
     if (formattedCep.length === 9) {
       try {
-        const addressData = await fetchAddressByCep(formattedCep.replace('-', ''));
+        const addressData = await fetchAddressByCep(
+          formattedCep.replace("-", "")
+        );
         console.log("Address Data:", addressData);
-        
+
         if (addressData && addressData.logradouro) {
           setValue("state", addressData.uf || "");
           setValue("city", addressData.localidade || "");
@@ -136,7 +153,7 @@ export default function Address() {
     }
     setValue("cep", formattedCep);
   };
-  
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -155,13 +172,13 @@ export default function Address() {
       >
         <Form onSubmit={handleSubmit(onSubmit)} style={{ marginBottom: 24 }}>
           <View>
-            <View style={{marginBottom: 16}}>
+            <View style={{ marginBottom: 16 }}>
               <RadioGroup
                 radioButtons={radioButtons}
                 onPress={setSelectedId}
-                containerStyle={{ flexDirection: 'row', flexWrap: 'wrap' }}
+                containerStyle={{ flexDirection: "row", flexWrap: "wrap" }}
                 selectedId={selectedId}
-              /> 
+              />
             </View>
             <Controller
               control={control}
@@ -327,13 +344,13 @@ export default function Address() {
           </View>
 
           <ButtonCustom
-            style={{ width: 320, marginBottom: 16, marginTop: 16 }}
-            texto={buttonText}
+            texto={buttonText} 
             onPress={handleSubmit(onSubmit)}
+            disabled={isLoading}
           />
         </Form>
+        <Footer />
       </ScrollView>
-      <Footer />
     </KeyboardAvoidingView>
   );
 }

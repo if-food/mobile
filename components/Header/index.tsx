@@ -1,17 +1,14 @@
 import { Image, Text } from 'tamagui';
-import { View, Pressable } from 'react-native';
+import { View, Pressable, TouchableOpacity } from 'react-native';
 import Bag from '../../assets/images/header_component/bag.png';
-import { TouchableOpacity } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
+import { loadSavedAddress } from 'utils/addressUtils';
+import { abbreviateAddress } from 'utils/addressUtils'; 
 
-
-interface HeaderProps {
-  title: string;
-}
-
-export default function Header({ title }: HeaderProps) {
+export default function Header() {
   const [count, setCount] = useState(0);
+  const [savedAddress, setSavedAddress] = useState<string | null>(null);
   const router = useRouter();
 
   const handlePress = () => {
@@ -21,6 +18,10 @@ export default function Header({ title }: HeaderProps) {
   const handleAddresses = () => {
     router.push('../addresses');
   };
+
+  useEffect(() => {
+    loadSavedAddress(setSavedAddress);
+  }, []);
 
   if (count > 10) setCount(0);
 
@@ -32,14 +33,16 @@ export default function Header({ title }: HeaderProps) {
 
       <View className="flex-row items-center">
         <Pressable onPress={handleAddresses}>
-          <Text className="text-white">{title} </Text>
-          <Image className="w-[9px] h-[13px]" source={require('../../assets/images/header_component/map_pin.png')}></Image>
+          <Text className="text-white">
+            {abbreviateAddress(savedAddress)}
+          </Text>
+          <Image className="w-[9px] h-[13px]" source={require('../../assets/images/header_component/map_pin.png')} />
         </Pressable>
       </View>
 
       <View className="px-7">
         <TouchableOpacity onPress={handlePress}>
-          <Image className=" relative w-[20px] h-[24px]" source={Bag} />
+          <Image className="relative w-[20px] h-[24px]" source={Bag} />
           {count ? (
             <View className="absolute right-[-8px] top-[-8px] bg-[#027333] rounded-full w-[16px] h-[16px]">
               <View className="items-center justify-center">

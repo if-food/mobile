@@ -38,35 +38,53 @@ export default function Login() {
   };
 
   const onSubmit = async (data) => {
-    setLoading(true); 
+    setLoading(true);
     try {
-      const response = await axios.post('https://if-delivery-api.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/auth', {
+      // Faz a requisição para o endpoint de autenticação
+      const response = await axios.post('https://api-1-drn7.onrender.com/api/auth', {
         username: data.email,
         password: data.password,
       });
-
+  
       console.log('API Response:', response.data);
-
-      const { token } = response.data;
-
-      if (!token) {
-        throw new Error('Token is missing');
+  
+      const { token, id } = response.data;
+  
+      if (!token || !id) {
+        throw new Error('Token or ID is missing');
       }
-
-      const response = await axios.get('http://localhost:8080/api/cliente/?usuarioId=3')
-
+  
+      // Faz a requisição para obter os dados do usuário
+      const clientResponse = await axios.get(`https://api-1-drn7.onrender.com/api/cliente/?usuarioId=${id}`);
+  
+      // Armazena o token e os dados do usuário no AsyncStorage
       await AsyncStorage.setItem('userToken', token);
-
+      await AsyncStorage.setItem('userData', JSON.stringify(clientResponse.data));
+  
+      // Verifica se os dados foram armazenados corretamente
       const storedToken = await AsyncStorage.getItem('userToken');
-      console.log('Stored Token:', storedToken);
-
+      const storedUserData = await AsyncStorage.getItem('userData');
+  
+      if (storedToken) {
+        console.log('Stored Token:', storedToken);
+      } else {
+        console.error('Token not found in AsyncStorage');
+      }
+  
+      if (storedUserData) {
+        console.log('Stored User Data:', JSON.parse(storedUserData));
+      } else {
+        console.error('User data not found in AsyncStorage');
+      }
+  
+      // Navega para a página inicial
       home();
     } catch (error) {
       console.error('Error during login:', error.response?.data || error.message);
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   return (
     <View className="flex-1 items-center justify-between bg-[#2c2d33] pt-6">

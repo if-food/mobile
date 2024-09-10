@@ -1,26 +1,19 @@
-import Footer from 'components/Footer';
-import { Image } from 'tamagui';
-import { View, Text, ScrollView, ActivityIndicator } from 'react-native';
-import CardRestaurantPage from './cardRestaurantPage';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import ListagemCardapio from './listFood';
+import { useEffect, useState } from "react";
+import { View, Text, ScrollView, ActivityIndicator, Image } from "react-native";
+import Footer from "components/Footer";
+import CardRestaurantPage from "./cardRestaurantPage";
+import ListagemCardapio from "./listFood";
+import SimpleImagePicker from "components/Image";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import axios from "axios";
+import { Product } from "interfaces/Product";
 
 interface Restaurant {
   id: string;
   open: boolean;
   categoriasEnum: string;
   nomeFantasia: string;
-}
-
-interface Product {
-  id: string;
-  codigo: string;
-  titulo: string;
-  descricao: string;
-  imagem: string | null;
-  valorUnitario: number;
+  photoLogo?: string;
 }
 
 interface ProductsByCategory {
@@ -37,19 +30,23 @@ export default function Restaurantes() {
   useEffect(() => {
     const fetchRestaurant = async () => {
       try {
-        const response = await axios.get<Restaurant>(`https://api-1-drn7.onrender.com/api/restaurante/?restauranteId=${id}`);
+        const response = await axios.get<Restaurant>(
+          `https://api-1-drn7.onrender.com/api/restaurante/?restauranteId=${id}`
+        );
         setRestaurant(response.data);
       } catch (error) {
-        console.error('Failed to fetch restaurant data:', error);
+        console.error("Failed to fetch restaurant data:", error);
       }
     };
 
     const fetchProducts = async () => {
       try {
-        const response = await axios.get<Record<string, Product[]>>(`https://api-1-drn7.onrender.com/api/produto/cardapio/${id}`);
+        const response = await axios.get<Record<string, Product[]>>(
+          `https://api-1-drn7.onrender.com/api/produto/cardapio/${id}`
+        );
         setProductsByCategory(response.data);
       } catch (error) {
-        console.error('Failed to fetch products data:', error);
+        console.error("Failed to fetch products data:", error);
       }
     };
 
@@ -68,84 +65,123 @@ export default function Restaurantes() {
       params: {
         productId: product.id,
         productName: product.titulo,
-        productImage: product.imagem || '',
+        productImage: product.imagem as string || '',
         productDescription: product.descricao,
         productPrice: product.valorUnitario.toFixed(2),
-        quantity: '1',
+        quantity: "1",
         totalPrice: product.valorUnitario.toFixed(2),
-        restaurantName: restaurant ? restaurant.nomeFantasia : '',
-        restaurantId: id
+        restaurantName: restaurant ? restaurant.nomeFantasia : "",
+        restaurantId: id,
+        restaurantPhoto: restaurant ? restaurant.photoLogo : "",
       },
     });
   };
 
   if (loading) {
     return (
-      <View className="flex-1 bg-[#2c2d33] justify-center items-center">
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "#2c2d33",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <ActivityIndicator size="large" color="#24A645" />
-        <Text className="text-white mt-4">Carregando...</Text>
+        <Text style={{ color: "#fff", marginTop: 16 }}>Carregando...</Text>
       </View>
     );
   }
 
+  const hasProducts = Object.keys(productsByCategory).length > 0;
+
   return (
-    <View className="flex-1 bg-[#2c2d33]">
-      <ScrollView className="mb-14">
-        <Image source={require('../../assets/images/restaurante/banner.png')} />
-        <View className="px-6 pt-6 flex-row justify-between items-center">
+    <View style={{ flex: 1, backgroundColor: "#2c2d33" }}>
+      <ScrollView style={{ marginBottom: 56 }}>
+        <Image
+          source={require("../../assets/images/restaurante/banner.png")}
+          style={{ width: "100%", height: 200 }}
+        />
+        <View
+          style={{
+            paddingHorizontal: 24,
+            paddingTop: 24,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <View>
-            <Text className="text-white font-bold text-[24px]">
-              {restaurant ? restaurant.nomeFantasia : 'Carregando...'}
+            <Text style={{ color: "#fff", fontSize: 24, fontWeight: "bold" }}>
+              {restaurant ? restaurant.nomeFantasia : "Carregando..."}
             </Text>
-            <Text className="text-white font-bold text-[12px]">
-              {restaurant ? restaurant.categoriasEnum : 'Carregando...'}
+            <Text style={{ color: "#fff", fontSize: 12, fontWeight: "bold" }}>
+              {restaurant ? restaurant.categoriasEnum : "Carregando..."}
             </Text>
-            <Text className={`${restaurant ? (restaurant.open ? 'text-[#0f0]' : 'text-[#f00]') : ''}`}>
-              {restaurant ? (restaurant.open ? 'Aberto 🟢' : 'Fechado 🔴') : ''}
+            <Text
+              style={{
+                color: restaurant
+                  ? restaurant.open
+                    ? "#0f0"
+                    : "#f00"
+                  : "#fff",
+              }}
+            >
+              {restaurant ? (restaurant.open ? "Aberto 🟢" : "Fechado 🔴") : ""}
             </Text>
           </View>
-
-          <Image source={require('../../assets/images/restaurante/restaurantProfile.png')} />
+          <SimpleImagePicker
+            imageUri={restaurant?.photoLogo}
+            imageStyle={{ borderRadius: 50, width: 60, height: 60 }}
+          />
         </View>
-        <View className="px-4 pt-6">
-          <Text className="text-[32px] text-[#fff] font-bold pb-4 pl-2">Os mais pedidos</Text>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <View className="flex-row">
-            {Object.values(productsByCategory).flat().map((product) => (
-  <CardRestaurantPage
-    key={product.id}
-    source={
-      product.imagem 
-        ? { uri: product.imagem } 
-        : require('../../assets/images/restaurante/card.png')
-    }
-    titulo={product.titulo}
-    valorUnitario={`R$ ${product.valorUnitario.toFixed(2)}`}
-    onPress={() => handleProductPress(product)}
-  />
-))}
-
-            </View>
-          </ScrollView>
-          <Text className="text-[32px] text-[#fff] font-bold pb-4 pt-6 pl-2">Nossos pratos</Text>
-          {Object.entries(productsByCategory).map(([category, products]) => (
-            <ListagemCardapio
+        <View style={{ paddingHorizontal: 16, paddingTop: 24 }}>
+          <Text
+            style={{
+              fontSize: 32,
+              color: "#fff",
+              fontWeight: "bold",
+              paddingBottom: 16,
+              paddingLeft: 8,
+            }}
+          >
+            Os mais pedidos
+          </Text>
+          {hasProducts ? (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <View style={{ flexDirection: "row" }}>
+                {Object.values(productsByCategory)
+                  .flat()
+                  .map((product) => (
+                    <CardRestaurantPage
+                      key={product.id}
+                      photo={product.imagem}
+                      title={product.titulo}
+                      valorUnitario={`R$ ${product.valorUnitario.toFixed(2)}`}
+                      onPress={() => handleProductPress(product)}
+                    />
+                  ))}
+              </View>
+            </ScrollView>
+          ) : (
+            <Text style={{ color: "#fff", fontSize: 16, marginVertical: 16 }}>
+              Nenhum prato disponível
+            </Text>
+          )}
+        </View>
+        {Object.entries(productsByCategory).map(([category, products]) => (
+          <ListagemCardapio
             key={category}
             category={category}
-            products={products.map(product => ({
+            products={products.map((product) => ({
               title: product.titulo,
               description: product.descricao,
               price: `R$ ${product.valorUnitario.toFixed(2)}`,
-              source: 
-                product.imagem 
-                  ? { uri: product.imagem } 
-                  : require('../../assets/images/restaurante/card.png'),
-              onPress: () => handleProductPress(product)
+              photo: product.imagem,
             }))}
+            onProductPress={handleProductPress}
           />
-          
-          ))}
-        </View>
+        ))}
       </ScrollView>
       <Footer />
     </View>

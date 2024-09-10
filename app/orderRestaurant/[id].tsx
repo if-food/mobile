@@ -1,40 +1,54 @@
 import { useState } from 'react';
 import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter } from 'expo-router';
 import Footer from 'components/Footer';
+import { useRoute } from '@react-navigation/native';
+
+interface Product {
+  id: number;
+  codigo: string;
+  titulo: string | null;
+  descricao: string;
+  imagem: string;
+  valorUnitario: number;
+}
 
 export default function OrderRestaurant() {
+  const route = useRoute();
   const router = useRouter();
-  const { productId } = useLocalSearchParams();
-  const { productName, productImage, productDescription, productPrice, quantity: initialQuantity, restaurantName, restaurantId } = useLocalSearchParams();
-  const [quantity, setQuantity] = useState(parseInt(initialQuantity as string, 10) || 1);
-  const productPriceNum = parseFloat(productPrice as string) || 0;
+  const { productId, productImage, restaurantId, productName, productDescription, productPrice, quantity: initialQuantity, restaurantName, restaurantPhoto }: any = route.params || {};
+
+  const [quantity, setQuantity] = useState(parseInt(initialQuantity, 10) || 1);
+  const productPriceNum = parseFloat(productPrice) || 0;
   const totalPrice = productPriceNum * quantity;
 
   const goToCheckout = () => {
-    const productImagePath = Array.isArray(productImage) ? productImage[0] : productImage;
     const productPriceStr = productPriceNum.toFixed(2);
     const totalPriceStr = totalPrice.toFixed(2);
-  
+
     const queryParams = new URLSearchParams({
-      productId: productId as string,
-      productName: productName as string,
-      productImage: productImagePath || '',
-      productDescription: productDescription as string || '',
+      productId: productId,
+      productName: productName,
+      productImage: productImage || '',
+      productDescription: productDescription || '',
       productPrice: productPriceStr,
       quantity: quantity.toString(),
       totalPrice: totalPriceStr,
-      restaurantName: restaurantName as string,
-      restaurantId: restaurantId as string
+      restaurantName: restaurantName,
+      restaurantId: restaurantId,
+      restaurantPhoto: restaurantPhoto,
     }).toString();
-  
+
     router.push(`../checkout?${queryParams}`);
   };
 
   return (
     <View className="flex-1 bg-[#2c2d33]">
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <Image source={productImage ? { uri: Array.isArray(productImage) ? productImage[0] : productImage } : require('../../assets/images/restaurante/rabanete.png')} />
+        <Image
+          source={{ uri: productImage }}
+          style={{ width: '100%', height: 200 }}
+        />
         <View className="px-4 py-4">
           <View>
             <Text className="text-[40px] font-bold text-[#fff]">{productName}</Text>

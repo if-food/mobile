@@ -16,6 +16,7 @@ const images = [imageOne, imageTwo, imageThree];
 
 interface Restaurant {
   id: string;
+  photoLogo?: string;
   nomeFantasia: string;
   open: boolean;
   categoriasEnum: string;
@@ -98,7 +99,7 @@ export default function Home() {
               showsHorizontalScrollIndicator={false}
             >
               <View className="flex-row justify-between pl-1">
-                {restaurants.slice(0, 8).map((restaurant) => (
+                {restaurants.slice(0, 10).map((restaurant) => (
                   <CardRecintosFamosos
                     key={restaurant.id}
                     onPress={() =>
@@ -108,7 +109,7 @@ export default function Home() {
                       })
                     }
                     titleRestaurant={restaurant.nomeFantasia}
-                    source={require("../../assets/images/home/card_one.png")}
+                    photoLogo={restaurant.photoLogo} 
                   />
                 ))}
               </View>
@@ -125,10 +126,10 @@ export default function Home() {
                 onPress={() =>
                   router.push({
                     pathname: `../restaurantes/${restaurant.id}`,
-                    params: { nomeFantasia: restaurant.nomeFantasia },
+                    params: { nomeFantasia: restaurant.nomeFantasia, photoLogo: restaurant.photoLogo as string },
                   })
                 }
-                source={require("../../assets/images/home/rouned_two.png")}
+                photoLogo={restaurant.photoLogo}
                 titleRestaurant={restaurant.nomeFantasia}
                 categoriasEnum={restaurant.categoriasEnum}
               />

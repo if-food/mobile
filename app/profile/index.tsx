@@ -19,6 +19,7 @@ const profileItems = [
 export default function Profile() {
   const router = useRouter();
   const [greeting, setGreeting] = useState('');
+  const [userName, setUserName] = useState('Usuário');
 
   useEffect(() => {
     const getGreeting = () => {
@@ -27,7 +28,7 @@ export default function Profile() {
         return 'Boa noite 🌕';
       } else if (hours >= 6 && hours < 12) {
         return 'Bom dia ☀️';
-      } else if (hours >= 13 && hours < 18) {
+      } else if (hours >= 12 && hours < 18) {
         return 'Boa tarde 🌇';
       } else {
         return 'Boa tarde 🌇';
@@ -35,6 +36,22 @@ export default function Profile() {
     };
 
     setGreeting(getGreeting());
+  }, []);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userDataString = await AsyncStorage.getItem('userData');
+        if (userDataString) {
+          const userData = JSON.parse(userDataString);
+          setUserName(userData.nome || 'Usuário'); 
+        }
+      } catch (error) {
+        console.error('Erro ao carregar dados do usuário:', error);
+      }
+    };
+
+    fetchUserData();
   }, []);
 
   const navigateTo = (route) => {
@@ -80,29 +97,35 @@ export default function Profile() {
   );
 
   return (
-    <View className="flex-1 bg-[#2c2d33]">
-      <View className="px-4 py-4">
-        <View className="flex-row">
-          <Text className="text-[#fff] text-[24px]">{greeting}</Text>
-          <Text className="text-[#fff] text-[24px] font-bold"> Thiago!</Text>
+    <View style={{ flex: 1, backgroundColor: '#2c2d33' }}>
+      <View style={{ padding: 16 }}>
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={{ color: '#fff', fontSize: 24 }}>{greeting}</Text>
+          <Text style={{ color: '#fff', fontSize: 24, fontWeight: 'bold' }}> {userName}!</Text>
         </View>
-        <Text className="py-4 font-bold text-[16px] text-[#fff]">Últimos pedidos</Text>
+        <Text style={{ paddingVertical: 8, fontSize: 16, color: '#fff', fontWeight: 'bold' }}>Últimos pedidos</Text>
 
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          <View className="flex-row justify-between">
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={{ marginVertical: 8 }}
+        >
+          <View style={{ flexDirection: 'row' }}>
             <CardRestaurantPage source={require('../../assets/images/restaurante/card.png')} titulo="Sopa de Cogumelo" valorUnitario="10,00" />
-
             <CardRestaurantPage source={require('../../assets/images/restaurante/test.png')} titulo="Rabanete" valorUnitario="20,00" />
-
             <CardRestaurantPage source={require('../../assets/images/restaurante/testTwo.jpg')} titulo="Ratatouille" valorUnitario="30,00" />
-
             <CardRestaurantPage source={require('../../assets/images/restaurante/testThree.jpg')} titulo="Suco de uva 1L" valorUnitario="40,00" />
           </View>
         </ScrollView>
       </View>
 
-      <View>
-        <FlatList data={profileItems} renderItem={renderItem} keyExtractor={(item) => item.route} style={{ marginTop: 24 }} />
+      <View style={{ flex: 1 }}>
+        <FlatList
+          data={profileItems}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.route}
+          contentContainerStyle={{ paddingBottom: 80 }}
+        />
       </View>
       <Footer />
     </View>

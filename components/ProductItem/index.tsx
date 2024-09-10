@@ -17,10 +17,10 @@ interface ProductItemProps {
 export default function ProductItem({ product, onIncrease, onDecrease, onRemove }: ProductItemProps) {
   return (
     <View className="flex-row justify-between py-4">
-      <View className="flex-row justify-between flex-1">
+      <View className="flex-row justify-between flex-1 gap-2">
         <Image
           source={product.image ? { uri: product.image } : require("../../assets/images/restaurante/checkoutImg.png")}
-          style={{ width: 64, height: 64 }}
+          style={{ width: 64, height: 64, borderRadius: 8}}
         />
         <View className="justify-between mx-2 flex-1">
           <View>
