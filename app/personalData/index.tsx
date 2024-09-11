@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -16,7 +16,6 @@ import Footer from "components/Footer";
 import CustomInput from "components/customInput";
 import {
   formatBirthDateDisplay,
-  convertToAPIBirthDate,
   formatCPF,
   formatPhoneNumber,
 } from "utils/formatters";
@@ -28,6 +27,7 @@ export default function PersonalData() {
   const [isModified, setIsModified] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isUploading, setIsUploading] = useState(false); // Added state
   const [initialData, setInitialData] = useState({
     nome: "",
     telefone: "",
@@ -62,6 +62,7 @@ export default function PersonalData() {
             `https://api-1-drn7.onrender.com/api/cliente/?clienteId=${id}`
           );
           const data = response.data;
+          console.log("API Response Data:", data);
 
           setInitialData({
             nome: data.nome || "",
@@ -107,7 +108,7 @@ export default function PersonalData() {
         const updatedData = {
           nome: data.nome,
           telefone: data.phone,
-          dataNascimento: convertToAPIBirthDate(data.dataNascimento),
+          dataNascimento: data.dataNascimento,
           cpf: data.cpf,
           photo: imageUri,
         };
@@ -115,7 +116,7 @@ export default function PersonalData() {
         console.log("Dados que serão enviados:", updatedData);
 
         const response = await fetch(
-          `https://api-1-drn7.onrender.com/api/cliente/${userId}`,
+          `https://api-1-drn7.onrender.com/clientes/${userId}`,
           {
             method: "PUT",
             headers: {
@@ -151,7 +152,7 @@ export default function PersonalData() {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || isUploading) {
     return (
       <View
         style={{
@@ -184,7 +185,10 @@ export default function PersonalData() {
           <ImagePickerComponent
             imageStyle={{ borderRadius: 50 }}
             imageUri={imageUri}
-            onImagePicked={(url) => setImageUri(url)}
+            onImagePicked={(url, uploading) => {
+              setImageUri(url);
+              setIsUploading(uploading); // Set uploading status
+            }}
           />
         </View>
 
@@ -243,11 +247,9 @@ export default function PersonalData() {
               render={({ field: { onChange, onBlur, value } }) => (
                 <View style={{ width: "100%" }}>
                   <CustomInput
-                    titleInput="Data de Nascimento"
-                    placeholder="dd/mm/aaaa"
-                    onChangeText={(text) =>
-                      onChange(formatBirthDateDisplay(text))
-                    }
+                    titleInput="Data de nascimento"
+                    placeholder="Insira sua data de nascimento"
+                    onChangeText={(text) => onChange(text)}
                     onBlur={onBlur}
                     value={formatBirthDateDisplay(value)}
                     style={{ width: "100%" }}
@@ -263,9 +265,7 @@ export default function PersonalData() {
             />
           </View>
 
-          <View
-            style={{ marginBottom: 48, alignItems: "center", width: "100%" }}
-          >
+          <View style={{ alignItems: "center", width: "100%" }}>
             <Controller
               control={control}
               name="cpf"
@@ -278,6 +278,7 @@ export default function PersonalData() {
                     onBlur={onBlur}
                     value={formatCPF(value)}
                     style={{ width: "100%" }}
+                    editable={!initialData.cpf}
                   />
                   {errors.cpf && (
                     <Text style={{ color: "red" }}>{errors.cpf.message}</Text>
@@ -288,18 +289,12 @@ export default function PersonalData() {
           </View>
 
           <ButtonCustom
+          style={{marginTop: 24}}
             texto="Salvar alterações"
             onPress={handleSubmit(onSubmit)}
-            disabled={!isModified || isSubmitting}
+            disabled={!isModified || isSubmitting || isUploading}
           />
-
-          {isSubmitting && (
-            <View style={{ marginTop: 16 }}>
-              <ActivityIndicator size="small" color="#ffffff" />
-            </View>
-          )}
         </Form>
-
         <Footer />
       </ScrollView>
     </KeyboardAvoidingView>

@@ -326,11 +326,18 @@ export default function Checkout() {
         clienteId: clientId,
         restauranteId: restaurantId,
         formaPgto: selectedId,
-        observacao: "Entregar no horário combinado.",
         itens: cart.map(item => ({
           produtoId: item.id,
           quantidade: item.quantity,
         })),
+        cep: savedAddress.cep,
+        estado: savedAddress.estado,
+        cidade: savedAddress.cidade,
+        bairro: savedAddress.bairro,
+        rua: savedAddress.rua,
+        numero: savedAddress.numero,
+        complemento: savedAddress.complemento,
+        observacao: "Entregar no horário combinado.",
       };
   
       console.log("Enviando dados do pedido:", orderData);
@@ -348,7 +355,7 @@ export default function Checkout() {
       if (response.ok) {
         const result = await response.json();
         console.log("Resultado do pedido:", result);
-
+  
         await AsyncStorage.setItem('orderData', JSON.stringify({
           ...orderData,
           id: result.id 
@@ -362,13 +369,17 @@ export default function Checkout() {
         // Limpar o carrinho
         setCart([]);
         await AsyncStorage.setItem("cart", JSON.stringify([]));
+      } else {
+        Alert.alert("Erro", "Não foi possível completar o pedido.");
       }
     } catch (error) {
       console.error("Erro ao enviar pedido:", error);
+      Alert.alert("Erro", "Erro ao enviar o pedido. Tente novamente.");
     } finally {
       setLoading(false);
     }
-  };  
+  };
+  
 
   const review = () => {
     submitOrder();

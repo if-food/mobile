@@ -1,6 +1,5 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import SimpleImagePicker from "components/Image";
-import { Product } from "interfaces/Product";
 
 interface ListagemCardapioProps {
   category: string;
@@ -9,14 +8,13 @@ interface ListagemCardapioProps {
     description: string;
     price: string;
     photo: any;
+    onPress: () => void;
   }[];
-  onProductPress: (product: Product) => void;
 }
 
 const ListagemCardapio = ({
   category,
   products,
-  onProductPress,
 }: ListagemCardapioProps) => {
   return (
     <View style={{ marginBottom: 24 }}>
@@ -34,6 +32,7 @@ const ListagemCardapio = ({
       {products.length > 0 ? (
         products.map((product, index) => (
           <TouchableOpacity
+            onPress={product.onPress}
             key={index}
             style={{
               flexDirection: "row",

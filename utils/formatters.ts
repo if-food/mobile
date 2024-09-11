@@ -10,16 +10,6 @@ export const formatBirthDateDisplay = (value) => {
   return `${cleaned.slice(0, 2)}/${cleaned.slice(2, 4)}/${cleaned.slice(4, 8)}`;
 };
 
-
-export const convertToAPIBirthDate = (value) => {
-  if (!value) return '';
-  const [year, month, day] = value.split('-');
-  if (day && month && year) {
-    return `${day}/${month}/${year}`;
-  }
-  return '';
-};
-
 export const formatCPF = (value) => {
   const numbers = (value || "").replace(/\D/g, "");
   if (numbers.length <= 3) return numbers;
