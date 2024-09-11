@@ -25,7 +25,9 @@ export default function useFetchPedidos(limit?: number) {
         }
 
         const result: Pedido[] = await response.json();
-        setPedidos(result.slice(0, limit));
+        const reversedPedidos = result.reverse(); // Inverte a ordem dos pedidos
+
+        setPedidos(reversedPedidos.slice(0, limit));
       } catch (error) {
         setError(error.message);
         Alert.alert('Error', error.message);

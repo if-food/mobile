@@ -7,16 +7,10 @@ interface OrdersCardProps {
   status?: string;
   source?: string;
   price?: number;
+  statusColor?: string;
 }
 
-export default function OrdersCard({ name, description, status, source, price }: OrdersCardProps) {
-  const getStatusColorClass = (status?: string) => {
-    if (status === 'A caminho' || status === 'Entregue') {
-      return 'text-[#24A645]';
-    }
-    return 'text-[#ECB951]';
-  };
-
+export default function OrdersCard({ name, description, status, source, price, statusColor }: OrdersCardProps) {
   const formatPrice = (price?: number) => {
     if (price === undefined) return 'R$ 0,00';
     return price.toLocaleString('pt-BR', {
@@ -40,7 +34,9 @@ export default function OrdersCard({ name, description, status, source, price }:
         </View>
 
         <View>
-          <Text className={`font-thin text-[16px] ${getStatusColorClass(status)}`}>{status || 'Status não disponível'}</Text>
+          <Text className={`font-thin text-[16px]`} style={{ color: statusColor || '#FFFFFF' }}>
+            {status}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>

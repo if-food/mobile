@@ -8,26 +8,18 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Footer from 'components/Footer';
-
-const STATUS_MESSAGES = {
-  PENDENTE: 'Pedido pendente',
-  EM_PREPARO: 'Pedido em preparo',
-  EM_ROTA: 'Pedido em rota',
-  ENTREGUE: 'Pedido entregue',
-  CANCELADO: 'Pedido cancelado',
-};
+import { STATUS_MESSAGES } from 'enums/Status'; 
 
 export default function OrderReview() {
   const router = useRouter();
   const [order, setOrder] = useState<any>(null);
-  const [statusMessage, setStatusMessage] = useState('Pedido em preparo');
+  const [statusMessage, setStatusMessage] = useState<{ message: string, color: string }>({ message: 'Pedido em preparo', color: '#FFFF00' });
   const [loading, setLoading] = useState(true);
   const [showIncentiveMessage, setShowIncentiveMessage] = useState(false);
 
   useEffect(() => {
     const fetchOrderData = async () => {
       try {
-        // Recupera os dados do pedido armazenados no AsyncStorage
         const storedOrder = await AsyncStorage.getItem('orderData');
         if (!storedOrder) {
           setShowIncentiveMessage(true);
@@ -35,14 +27,13 @@ export default function OrderReview() {
         }
 
         const orderData = JSON.parse(storedOrder);
-        const orderId = orderData.id; // Obtém o ID do pedido
+        const orderId = orderData.id;
 
         if (!orderId) {
           setShowIncentiveMessage(true);
           return;
         }
 
-        // Fetch status from API usando o ID do pedido
         const response = await fetch(`https://api-1-drn7.onrender.com/api/pedido/${orderId}`);
         if (!response.ok) {
           throw new Error('Erro na requisição');
@@ -51,12 +42,15 @@ export default function OrderReview() {
         const result = await response.json();
         setOrder(result);
         const status = result.statusEntrega;
-        setStatusMessage(STATUS_MESSAGES[status] || 'Status desconhecido');
+        setStatusMessage(STATUS_MESSAGES[status] || { message: 'Status desconhecido', color: '#FFFFFF' });
 
-        // Remove the order from AsyncStorage if status is ENTREGUE or CANCELADO
         if (status === 'ENTREGUE' || status === 'CANCELADO') {
           await AsyncStorage.removeItem('orderData');
           setShowIncentiveMessage(true);
+          
+          if (status === 'CANCELADO') {
+            Alert.alert('Pedido Cancelado', 'Seu pedido foi cancelado. Por favor, faça um novo pedido.');
+          }
         }
       } catch (error) {
         console.error("Erro ao carregar dados do pedido:", error);
@@ -67,6 +61,8 @@ export default function OrderReview() {
     };
 
     fetchOrderData();
+    const intervalId = setInterval(fetchOrderData, 10000);
+    return () => clearInterval(intervalId);
   }, []);
 
   const handleHomeNavigation = () => {
@@ -96,8 +92,8 @@ export default function OrderReview() {
         <View style={{ flex: 1, justifyContent: 'space-between' }}>
           <View style={{ alignItems: 'center', paddingTop: 20, backgroundColor: '#2b2e32', paddingBottom: 4 }}>
             <Image source={OrderPreparo} />
-            <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#ECB951', paddingTop: 6, paddingBottom: 4 }}>
-              {statusMessage}
+            <Text style={{ fontSize: 24, fontWeight: 'bold', color: statusMessage.color, paddingTop: 6, paddingBottom: 4 }}>
+              {statusMessage.message}
             </Text>
             <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#fff', paddingBottom: 4 }}>
               Avalie seu pedido

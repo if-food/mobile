@@ -126,6 +126,7 @@ export default function Profile() {
               pedido.itens.map(item => (
                 <CardRestaurantPage
                   key={pedido.id} 
+                  title={item.produto.titulo}
                   photo={item.produto.imagem}
                   valorUnitario={`R$ ${item.produto.valorUnitario.toFixed(2)}`}
                 />

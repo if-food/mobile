@@ -1,7 +1,6 @@
 import { TouchableOpacity } from "react-native";
-import { Text, Image } from "tamagui";
+import { Text } from "tamagui";
 import { View } from "react-native";
-import ImagePickerComponent from "components/ProfileImage";
 import SimpleImagePicker from "components/Image";
 
 interface CardRestaurantPageProps {

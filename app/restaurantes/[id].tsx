@@ -22,7 +22,8 @@ interface ProductsByCategory {
 
 export default function Restaurantes() {
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
-  const [productsByCategory, setProductsByCategory] = useState<ProductsByCategory>({});
+  const [productsByCategory, setProductsByCategory] =
+    useState<ProductsByCategory>({});
   const [loading, setLoading] = useState(true);
   const { id } = useLocalSearchParams();
   const router = useRouter();
@@ -65,7 +66,7 @@ export default function Restaurantes() {
       params: {
         productId: product.id,
         productName: product.titulo,
-        productImage: product.imagem as string || '',
+        productImage: (product.imagem as string) || "",
         productDescription: product.descricao,
         productPrice: product.valorUnitario.toFixed(2),
         quantity: "1",
@@ -178,8 +179,8 @@ export default function Restaurantes() {
               description: product.descricao,
               price: `R$ ${product.valorUnitario.toFixed(2)}`,
               photo: product.imagem,
+              onPress: () => handleProductPress(product),
             }))}
-            onProductPress={handleProductPress}
           />
         ))}
       </ScrollView>
