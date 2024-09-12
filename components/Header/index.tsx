@@ -34,11 +34,11 @@ export default function Header() {
       <Pressable onPress={handleAddresses}>
         <View className="flex-row items-center">
           <MaterialIcons name="location-on" size={24} color="#fff" />
-          {savedAddress ? (  // Exibe o endereço se presente
+          {savedAddress ? ( 
             <Text className="text-white p-1">
               {abbreviateAddress(savedAddress)}
             </Text>
-          ) : ( // Exibe uma frase de efeito se não houver endereço salvo
+          ) : ( 
             <Text className="text-white p-1">
               Explore novos lugares!
             </Text>

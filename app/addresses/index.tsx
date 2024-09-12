@@ -24,7 +24,7 @@ export default function Addresses() {
         const userData = JSON.parse(storedData);
         const id = userData.id;
         setClienteId(id);
-        const response = await axios.get(`https://api-1-drn7.onrender.com/api/cliente/?clienteId=${id}`);
+        const response = await axios.get(`https://if-delivery-api-final.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/cliente/?clienteId=${id}`);
         const data = response.data.enderecos || [];
         setAddresses(data);
         await loadFavoriteAddress(id);
@@ -88,7 +88,7 @@ export default function Addresses() {
     }
 
     try {
-      await axios.delete(`https://api-1-drn7.onrender.com/api/cliente/endereco/${id}`);
+      await axios.delete(`https://if-delivery-api-final.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/cliente/endereco/${id}`);
       setAddresses((prevAddresses) => prevAddresses.filter((address) => address.id !== id));
       if (favoriteAddress?.id === id) {
         setFavoriteAddress(null);
@@ -105,10 +105,10 @@ export default function Addresses() {
     router.push('./address'); 
   };
 
-  const handleEditAddress = (id: number) => {
+  const handleEditAddress = (address: Address) => {
     router.push({
       pathname: './address',
-      params: { id }
+      params: { address: JSON.stringify(address) } 
     });
   };
 
@@ -148,7 +148,7 @@ export default function Addresses() {
                     address={`${address.rua}, ${address.numero}, ${address.bairro}, ${address.cidade} - ${address.estado}`}
                     complement={address.complemento || "Complemento não especificado"}
                     isFavorited={favoriteAddress?.id === address.id}
-                    onEditPress={() => handleEditAddress(address.id)}
+                    onEditPress={() => handleEditAddress(address)}
                     onDeletePress={() => {
                       Alert.alert(
                         "Confirmar exclusão",

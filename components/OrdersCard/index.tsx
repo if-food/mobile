@@ -10,7 +10,14 @@ interface OrdersCardProps {
   statusColor?: string;
 }
 
-export default function OrdersCard({ name, description, status, source, price, statusColor }: OrdersCardProps) {
+export default function OrdersCard({
+  name,
+  description,
+  status,
+  source,
+  price,
+  statusColor,
+}: OrdersCardProps) {
   const formatPrice = (price?: number) => {
     if (price === undefined) return 'R$ 0,00';
     return price.toLocaleString('pt-BR', {
@@ -19,15 +26,20 @@ export default function OrdersCard({ name, description, status, source, price, s
     });
   };
 
+  const truncateDescription = (text?: string, maxLength: number = 25) => {
+    if (!text) return '';
+    return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+  };
+
   return (
     <TouchableOpacity>
       <View className="w-full flex-row justify-between mt-4">
         <View className="flex-row">
-          {source && <Image style={{width: 60, height: 60, borderRadius: 8}} source={{ uri: source }} />}
+          {source && <Image style={{ width: 60, height: 60, borderRadius: 8 }} source={{ uri: source }} />}
           <View className="px-4 justify-between">
             <View>
               <Text className="font-bold text-[#fff] text-[16px]">{name}</Text>
-              <Text className="text-[#fff] text-[12px]">{description}</Text>
+              <Text className="text-[#fff] text-[12px]">{truncateDescription(description)}</Text>
             </View>
             <Text className="text-[#24A645]">{formatPrice(price)}</Text>
           </View>

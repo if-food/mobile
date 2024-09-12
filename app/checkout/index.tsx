@@ -46,11 +46,12 @@ export default function Checkout() {
   );
   const [restaurantLogo, setRestaurantLogo] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [observation, setObservation] = useState("");
 
   useEffect(() => {
     const loadSavedAddress = async () => {
       try {
-        const storedData = await AsyncStorage.getItem('userData');
+        const storedData = await AsyncStorage.getItem("userData");
         if (storedData) {
           const userData = JSON.parse(storedData);
           const clienteId = userData.id;
@@ -126,7 +127,11 @@ export default function Checkout() {
             quantity: parseInt(quantity, 10) || 1,
           };
 
-          const updatedRestaurant = { id: restaurantId, name: restaurantName, photo: restaurantPhoto };
+          const updatedRestaurant = {
+            id: restaurantId,
+            name: restaurantName,
+            photo: restaurantPhoto,
+          };
           if (savedCart.length === 0) {
             const newCart = [newProduct];
             await AsyncStorage.setItem("cart", JSON.stringify(newCart));
@@ -197,7 +202,7 @@ export default function Checkout() {
               );
               setSavedRestaurant(updatedRestaurant);
               setRestaurantTitle(updatedRestaurant.name);
-              setRestaurantLogo(updatedRestaurant.photo); 
+              setRestaurantLogo(updatedRestaurant.photo);
             }
           }
         }
@@ -307,6 +312,13 @@ export default function Checkout() {
   const submitOrder = async () => {
     setLoading(true);
     try {
+      // Verifique se já existe um pedido salvo no AsyncStorage
+      const existingOrder = await AsyncStorage.getItem('orderData');
+      if (existingOrder) {
+        Alert.alert("Pedido em andamento", "Já existe um pedido em andamento. Complete o pedido atual antes de fazer um novo.");
+        return; // Não prossegue com o envio do novo pedido
+      }
+  
       const storedData = await AsyncStorage.getItem('userData');
       if (!storedData) {
         Alert.alert("Erro", "Informações do usuário não encontradas.");
@@ -319,6 +331,11 @@ export default function Checkout() {
   
       if (!clientId || !restaurantId) {
         Alert.alert("Erro", "Informações insuficientes para enviar o pedido.");
+        return;
+      }
+
+      if (!selectedId) {
+        Alert.alert("Erro", "Você deve selecionar uma forma de pagamento.");
         return;
       }
   
@@ -337,12 +354,12 @@ export default function Checkout() {
         rua: savedAddress.rua,
         numero: savedAddress.numero,
         complemento: savedAddress.complemento,
-        observacao: "Entregar no horário combinado.",
+        observacao: observation,
       };
   
       console.log("Enviando dados do pedido:", orderData);
   
-      const response = await fetch(`https://api-1-drn7.onrender.com/api/pedido?clienteId=${clientId}&restauranteId=${restaurantId}`, {
+      const response = await fetch(`https://if-delivery-api-final.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/pedido?clienteId=${clientId}&restauranteId=${restaurantId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -361,12 +378,10 @@ export default function Checkout() {
           id: result.id 
         }));
   
-        // Passar o resultado da API para a tela de revisão
         router.push({
           pathname: "../orderReview",
         });
   
-        // Limpar o carrinho
         setCart([]);
         await AsyncStorage.setItem("cart", JSON.stringify([]));
       } else {
@@ -378,11 +393,14 @@ export default function Checkout() {
     } finally {
       setLoading(false);
     }
-  };
-  
+  };  
 
   const review = () => {
     submitOrder();
+  };
+
+  const handleObservationChange = (text: string) => {
+    setObservation(text);
   };
 
   return (
@@ -435,10 +453,11 @@ export default function Checkout() {
 
               <View className="items-center py-4">
                 <CustomInput
-                  titleInput="Cupom"
-                  placeholder="Insira um cupom promocional"
+                  titleInput="Observação"
+                  placeholder="Insira uma observação para o pedido"
+                  value={observation}
+                  onChangeText={handleObservationChange}
                 />
-                <ButtonCustom texto="Inserir cupom" />
               </View>
 
               <View className="h-[104px]">
@@ -512,7 +531,11 @@ export default function Checkout() {
                   </View>
                 </View>
                 <View className="items-center my-6">
-                  <ButtonCustom texto="Finalizar pedido" onPress={review} loading={loading} />
+                  <ButtonCustom
+                    texto="Finalizar pedido"
+                    onPress={review}
+                    loading={loading}
+                  />
                 </View>
               </View>
             </View>

@@ -29,7 +29,7 @@ export default function Pesquisa() {
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
-        const response = await fetch('https://api-1-drn7.onrender.com/api/restaurante');
+        const response = await fetch('https://if-delivery-api-final.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/restaurante');
         const data = await response.json();
         setRestaurants(data);
         setLoading(false);
@@ -44,7 +44,7 @@ export default function Pesquisa() {
   useEffect(() => {
     const fetchMenu = async (restaurant: Restaurant) => {
       try {
-        const response = await fetch(`https://api-1-drn7.onrender.com/api/categoria_produto/cardapio/?restauranteId=${restaurant.id}`);
+        const response = await fetch(`https://if-delivery-api-final.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/categoria_produto/cardapio/?restauranteId=${restaurant.id}`);
         const data = await response.json();
         const products = data.flatMap(category => category.produtos);
         setMenu(prevMenu => ({ ...prevMenu, [restaurant.id]: products }));

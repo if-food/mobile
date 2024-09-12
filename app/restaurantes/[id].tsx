@@ -32,7 +32,7 @@ export default function Restaurantes() {
     const fetchRestaurant = async () => {
       try {
         const response = await axios.get<Restaurant>(
-          `https://api-1-drn7.onrender.com/api/restaurante/?restauranteId=${id}`
+          `https://if-delivery-api-final.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/restaurante/?restauranteId=${id}`
         );
         setRestaurant(response.data);
       } catch (error) {
@@ -43,7 +43,7 @@ export default function Restaurantes() {
     const fetchProducts = async () => {
       try {
         const response = await axios.get<Record<string, Product[]>>(
-          `https://api-1-drn7.onrender.com/api/produto/cardapio/${id}`
+          `https://if-delivery-api-final.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/produto/cardapio/${id}`
         );
         setProductsByCategory(response.data);
       } catch (error) {

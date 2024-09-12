@@ -27,7 +27,7 @@ export default function PersonalData() {
   const [isModified, setIsModified] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [isUploading, setIsUploading] = useState(false); // Added state
+  const [isUploading, setIsUploading] = useState(false);
   const [initialData, setInitialData] = useState({
     nome: "",
     telefone: "",
@@ -59,7 +59,7 @@ export default function PersonalData() {
           setUserId(id);
 
           const response = await axios.get(
-            `https://api-1-drn7.onrender.com/api/cliente/?clienteId=${id}`
+            `https://if-delivery-api-final.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/cliente/?clienteId=${id}`
           );
           const data = response.data;
           console.log("API Response Data:", data);
@@ -116,7 +116,7 @@ export default function PersonalData() {
         console.log("Dados que serão enviados:", updatedData);
 
         const response = await fetch(
-          `https://api-1-drn7.onrender.com/clientes/${userId}`,
+          `https://if-delivery-api-final.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/clientes/${userId}`,
           {
             method: "PUT",
             headers: {
@@ -187,7 +187,7 @@ export default function PersonalData() {
             imageUri={imageUri}
             onImagePicked={(url, uploading) => {
               setImageUri(url);
-              setIsUploading(uploading); // Set uploading status
+              setIsUploading(uploading);
             }}
           />
         </View>
