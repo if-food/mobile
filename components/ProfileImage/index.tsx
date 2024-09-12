@@ -9,7 +9,7 @@ interface ImagePickerProps {
   style?: ViewStyle;
   imageStyle?: ImageStyle;
   imageUri?: string | null;
-  onImagePicked?: (url: string, uploading: boolean) => void; // Updated type
+  onImagePicked?: (url: string, uploading: boolean) => void;
 }
 
 const ImagePickerComponent: React.FC<ImagePickerProps> = ({ style, imageStyle, imageUri, onImagePicked }) => {
@@ -39,7 +39,7 @@ const ImagePickerComponent: React.FC<ImagePickerProps> = ({ style, imageStyle, i
     if (!result.canceled) {
       const uri = result.assets[0]?.uri;
       if (uri) {
-        setIsUploading(true); // Set uploading state to true
+        setIsUploading(true);
         await uploadImage(uri);
       } else {
         Alert.alert('URI da imagem é indefinido');
@@ -58,15 +58,15 @@ const ImagePickerComponent: React.FC<ImagePickerProps> = ({ style, imageStyle, i
       const downloadURL = await getDownloadURL(storageRef);
       setLocalImageUri(downloadURL);
       if (onImagePicked) {
-        onImagePicked(downloadURL, false); // Pass URL and uploading status
+        onImagePicked(downloadURL, false);
       }
     } catch (error) {
       console.error('Erro ao fazer upload da imagem: ', error);
       if (onImagePicked) {
-        onImagePicked('', false); // Pass empty string and uploading status on error
+        onImagePicked('', false);
       }
     } finally {
-      setIsUploading(false); // Set uploading state to false after upload
+      setIsUploading(false);
     }
   };
 

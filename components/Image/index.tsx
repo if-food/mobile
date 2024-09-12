@@ -22,7 +22,6 @@ const SimpleImagePicker: React.FC<SimpleImagePickerProps> = ({
         resizeMode="cover"
         onError={(error) => {
           console.error('Failed to load image:', error.nativeEvent.error);
-          // Optionally set fallback image or state update can be done here
         }}
       />
     </View>
@@ -35,8 +34,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   image: {
-    width: 50, // Adjust based on your requirement
-    height: 50, // Adjust based on your requirement
+    width: 50,
+    height: 50,
   },
 });
 

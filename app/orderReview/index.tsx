@@ -34,7 +34,7 @@ export default function OrderReview() {
           return;
         }
 
-        const response = await fetch(`https://api-1-drn7.onrender.com/api/pedido/${orderId}`);
+        const response = await fetch(`https://if-delivery-api-final.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/pedido/${orderId}`);
         if (!response.ok) {
           throw new Error('Erro na requisição');
         }

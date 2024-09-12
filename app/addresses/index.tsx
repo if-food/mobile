@@ -24,7 +24,7 @@ export default function Addresses() {
         const userData = JSON.parse(storedData);
         const id = userData.id;
         setClienteId(id);
-        const response = await axios.get(`https://api-1-drn7.onrender.com/api/cliente/?clienteId=${id}`);
+        const response = await axios.get(`https://if-delivery-api-final.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/cliente/?clienteId=${id}`);
         const data = response.data.enderecos || [];
         setAddresses(data);
         await loadFavoriteAddress(id);
@@ -88,7 +88,7 @@ export default function Addresses() {
     }
 
     try {
-      await axios.delete(`https://api-1-drn7.onrender.com/api/cliente/endereco/${id}`);
+      await axios.delete(`https://if-delivery-api-final.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/cliente/endereco/${id}`);
       setAddresses((prevAddresses) => prevAddresses.filter((address) => address.id !== id));
       if (favoriteAddress?.id === id) {
         setFavoriteAddress(null);

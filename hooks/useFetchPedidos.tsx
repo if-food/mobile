@@ -19,7 +19,7 @@ export default function useFetchPedidos(limit?: number) {
         const userData = JSON.parse(storedData);
         const clienteId = userData.id;
 
-        const response = await fetch(`https://api-1-drn7.onrender.com/api/pedido/?clienteId=${clienteId}`);
+        const response = await fetch(`https://if-delivery-api-final.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/pedido/?clienteId=${clienteId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch pedidos');
         }

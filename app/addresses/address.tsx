@@ -93,8 +93,8 @@ export default function Address() {
       console.log(clienteId);
 
       const url = id
-        ? `https://api-1-drn7.onrender.com/api/cliente/endereco/${id}`
-        : `https://api-1-drn7.onrender.com/api/cliente/endereco/${clienteId}`;
+        ? `https://if-delivery-api-final.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/cliente/endereco/${id}`
+        : `https://if-delivery-api-final.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/cliente/endereco/${clienteId}`;
 
       const method = id ? "PUT" : "POST";
 

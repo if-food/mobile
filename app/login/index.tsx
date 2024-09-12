@@ -41,7 +41,7 @@ export default function Login() {
     setLoading(true);
     try {
       // Faz a requisição para o endpoint de autenticação
-      const response = await axios.post('https://api-1-drn7.onrender.com/api/auth', {
+      const response = await axios.post('https://if-delivery-api-final.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/auth', {
         username: data.email,
         password: data.password,
       });
@@ -55,7 +55,7 @@ export default function Login() {
       }
   
       // Faz a requisição para obter os dados do usuário
-      const clientResponse = await axios.get(`https://api-1-drn7.onrender.com/api/cliente/?usuarioId=${id}`);
+      const clientResponse = await axios.get(`https://if-delivery-api-final.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/cliente/?usuarioId=${id}`);
   
       // Armazena o token e os dados do usuário no AsyncStorage
       await AsyncStorage.setItem('userToken', token);

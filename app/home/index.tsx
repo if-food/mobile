@@ -32,7 +32,7 @@ export default function Home() {
     const fetchRestaurants = async () => {
       try {
         const response = await axios.get<Restaurant[]>(
-          "https://api-1-drn7.onrender.com/api/restaurante"
+          "https://if-delivery-api-final.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/restaurante"
         );
         setRestaurants(response.data);
       } catch (error) {
@@ -55,7 +55,7 @@ export default function Home() {
 
   return (
     <View className="flex-1 items-center justify-start bg-[#2c2d33]">
-      <Header title="Av bulhões 77" />
+      <Header />
       <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{ flex: 1 }}>
         <View className="w-full items-center mt-4">
           <Carousel
