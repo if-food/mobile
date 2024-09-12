@@ -1,11 +1,5 @@
-import { useMemo, useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { useMemo, useState, useEffect } from "react";
+import { View, Text, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ButtonCustom from "components/ButtonCustom";
@@ -19,8 +13,9 @@ import RadioGroup, { RadioButtonProps } from "react-native-radio-buttons-group";
 import { fetchAddressByCep, formatCep } from "utils/formatters";
 
 export default function Address() {
-  const { id } = useLocalSearchParams();
+  const { address: addressParam } = useLocalSearchParams();
   const [isLoading, setIsLoading] = useState(false);
+  const [address, setAddress] = useState<Address | null>(null);
 
   const radioButtons: RadioButtonProps[] = useMemo(
     () => [
@@ -58,13 +53,9 @@ export default function Address() {
     []
   );
 
-  const handleAddress= () => {
-    router.push('../addresses');
-  };
-
   const [selectedId, setSelectedId] = useState<string | undefined>();
-  const isEditMode = !!id;
-  const buttonText = isEditMode ? "Alterar" : "Salvar";
+
+  console.log(address);
 
   const {
     control,
@@ -76,6 +67,33 @@ export default function Address() {
     resolver: yupResolver(addressSchema),
     mode: "onBlur",
   });
+
+  useEffect(() => {
+    if (addressParam) {
+      try {
+        const parsedAddress = JSON.parse(addressParam as string) as Address;
+        setAddress(parsedAddress);
+        setSelectedId(radioButtons.find(button => button.value === parsedAddress.tipo)?.id);
+        
+        setValue("cep", parsedAddress.cep || "");
+        setValue("state", parsedAddress.estado || "");
+        setValue("city", parsedAddress.cidade || "");
+        setValue("neighborhood", parsedAddress.bairro || "");
+        setValue("street", parsedAddress.rua || "");
+        setValue("number", parsedAddress.numero || "");
+        setValue("complement", parsedAddress.complemento || "");
+      } catch (error) {
+        console.error("Error parsing address data:", error);
+      }
+    }
+  }, [addressParam, radioButtons, setValue]);
+
+  const handleAddress = () => {
+    router.push('../addresses');
+  };
+
+  const isEditMode = !!address;
+  const buttonText = isEditMode ? "Alterar" : "Salvar";
 
   const onSubmit = async (data) => {
     setIsLoading(true);
@@ -92,11 +110,11 @@ export default function Address() {
 
       console.log(clienteId);
 
-      const url = id
-        ? `https://if-delivery-api-final.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/cliente/endereco/${id}`
+      const url = address
+        ? `https://if-delivery-api-final.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/cliente/endereco/${address.id}`
         : `https://if-delivery-api-final.proudcoast-55fa0165.brazilsouth.azurecontainerapps.io/api/cliente/endereco/${clienteId}`;
 
-      const method = id ? "PUT" : "POST";
+      const method = address ? "PUT" : "POST";
 
       const payload = {
         bairro: data.neighborhood,
@@ -328,7 +346,7 @@ export default function Address() {
                 <>
                   <CustomInput
                     titleInput="Complemento"
-                    placeholder="Insira o complemento"
+                    placeholder="Insira o complemento (opcional)"
                     onChangeText={onChange}
                     onBlur={onBlur}
                     value={value}
@@ -343,15 +361,22 @@ export default function Address() {
             />
           </View>
 
-          <ButtonCustom
-            texto={buttonText} 
-            onPress={handleSubmit(onSubmit)}
-            disabled={isLoading}
-            style={{marginTop: 24}}
-          />
+          <View
+            style={{
+              marginVertical: 16,
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <ButtonCustom
+              loading={isLoading}
+              onPress={handleSubmit(onSubmit)}
+              texto={buttonText}
+            />
+          </View>
         </Form>
-      </ScrollView>
         <Footer />
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 }

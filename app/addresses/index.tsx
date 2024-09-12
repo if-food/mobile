@@ -105,10 +105,10 @@ export default function Addresses() {
     router.push('./address'); 
   };
 
-  const handleEditAddress = (id: number) => {
+  const handleEditAddress = (address: Address) => {
     router.push({
       pathname: './address',
-      params: { id }
+      params: { address: JSON.stringify(address) } 
     });
   };
 
@@ -148,7 +148,7 @@ export default function Addresses() {
                     address={`${address.rua}, ${address.numero}, ${address.bairro}, ${address.cidade} - ${address.estado}`}
                     complement={address.complemento || "Complemento não especificado"}
                     isFavorited={favoriteAddress?.id === address.id}
-                    onEditPress={() => handleEditAddress(address.id)}
+                    onEditPress={() => handleEditAddress(address)}
                     onDeletePress={() => {
                       Alert.alert(
                         "Confirmar exclusão",
